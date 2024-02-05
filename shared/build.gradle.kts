@@ -26,12 +26,10 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-            api("io.insert-koin:koin-core:3.4.3")
-            api("io.insert-koin:koin-compose:1.0.4")
+
 
             api("moe.tlaster:precompose:1.5.0")
             api("moe.tlaster:precompose-viewmodel:1.5.0")
-            api("moe.tlaster:precompose-koin:1.5.0")
         }
         androidMain.dependencies {
             // put your Multiplatform dependencies here
