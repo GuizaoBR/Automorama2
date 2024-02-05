@@ -1,0 +1,25 @@
+CREATE TABLE Veiculos (
+    id INTEGER NOT NULL,
+    marca TEXT NOT NULL,
+    modelo TEXT NOT NULL,
+    anoFabricacao INTEGER NOT NULL,
+    anoModelo INTEGER NOT NULL,
+    placa TEXT NOT NULL,
+    apelido TEXT
+);
+
+selectAllVeiculos:
+SELECT *
+FROM Veiculos;
+
+insertVeiculo:
+INSERT INTO Veiculos(id, marca, modelo, anoFabricacao, anoModelo, placa, apelido)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+deleteVeiculo:
+DELETE FROM  Veiculos WHERE  id = ?;
+
+updateVeiculo:
+UPDATE Veiculos
+SET  marca = :marca, modelo = :modelo, anoFabricacao = :anoFabricacao, anoModelo = :anoModelo, placa = :placa, apelido = :apelido
+WHERE id = :id;
