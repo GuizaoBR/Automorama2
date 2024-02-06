@@ -20,28 +20,31 @@ kotlin {
     iosSimulatorArm64()
     
     jvm()
-    val coroutinesVersion = "1.7.3"
-    val sqlDelightVersion = "2.0.1"
-    
+
     sourceSets {
         commonMain.dependencies {
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+            implementation(libs.kotlinx.coroutines.core)
 
 
-            api("moe.tlaster:precompose:1.5.0")
-            api("moe.tlaster:precompose-viewmodel:1.5.0")
+            api(libs.precompose)
+            api(libs.precompose.viewmodel)
+            api(libs.precompose.molecule)
+            implementation(libs.coroutines.extensions)
         }
         androidMain.dependencies {
             // put your Multiplatform dependencies here
-            implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
+            implementation(libs.android.driver)
         }
         iosMain.dependencies {
             // put your Multiplatform dependencies here
-            implementation("app.cash.sqldelight:native-driver:$sqlDelightVersion")
+            implementation(libs.native.driver)
 
         }
         nativeMain.dependencies {
-            implementation("app.cash.sqldelight:native-driver:$sqlDelightVersion")
+            implementation(libs.native.driver)
+        }
+        jvmMain.dependencies {
+            implementation(libs.sqlite.driver)
         }
     }
     
@@ -53,12 +56,12 @@ android {
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        this.kotlinCompilerExtensionVersion = "1.5.8-dev-k1.9.22-42b6ec2b037"
-    }
+//    buildFeatures {
+//        compose = true
+//    }
+//    composeOptions {
+//        this.kotlinCompilerExtensionVersion = "1.5.8-dev-k1.9.22-42b6ec2b037"
+//    }
 }
 
 sqldelight {

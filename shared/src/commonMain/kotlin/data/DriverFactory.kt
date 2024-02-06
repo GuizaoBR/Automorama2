@@ -1,10 +1,15 @@
 package data
 
+import app.cash.sqldelight.coroutines.asFlow
+import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.db.SqlDriver
 import data.mapper.toVeiculo
 import data.models.Veiculo
 import germano.guilherme.automorama2.Automorama2Database
 import germano.guilherme.automorama2.Veiculos
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.map
 
 expect class DriverFactory {
     fun createDriver(): SqlDriver
@@ -28,9 +33,9 @@ fun Automorama2Database.setVeiculo(veiculo: Veiculo){
     )
 }
 
-fun Automorama2Database.getAll(): List<Veiculo> {
-    return veiculosQueries.selectAllVeiculos().executeAsList().map {
-        it.toVeiculo()
+fun Automorama2Database.getAll(): Flow<List<Veiculo>> {
+    return veiculosQueries.selectAllVeiculos().asFlow().map {
+        it.executeAsList().map { it.toVeiculo() }
     }
 }
 

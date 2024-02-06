@@ -51,6 +51,7 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
         }
+
     }
 }
 

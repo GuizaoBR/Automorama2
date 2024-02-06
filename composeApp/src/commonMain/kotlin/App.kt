@@ -1,35 +1,46 @@
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import ViewModels.VeiculoViewModel
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import app.cash.sqldelight.db.SqlDriver
+import moe.tlaster.precompose.PreComposeApp
+import moe.tlaster.precompose.navigation.NavHost
+import moe.tlaster.precompose.navigation.rememberNavigator
+import moe.tlaster.precompose.navigation.transition.NavTransition
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import ui.Veiculos.VeiculosListScreen
+import ui.Veiculos.VeiculosListUiState
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun App() {
-    MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        val greeting = remember { Greeting().greet() }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource("compose-multiplatform.xml"), null)
-                    Text("Compose: $greeting")
+fun App(sqlDriver: SqlDriver) {
+    PreComposeApp {
+        val navigator = rememberNavigator()
+        NavHost(
+            navigator = navigator,
+            initialRoute = "veiculosList",
+            navTransition = NavTransition()
+        ){
+            scene(
+                "veiculosList",
+                navTransition = NavTransition()
+            ){
+                val viewModel = remember {
+                    VeiculoViewModel(sqlDriver)
                 }
+                val uiState by viewModel.uiState.collectAsState(VeiculosListUiState())
+                VeiculosListScreen(
+                    uiState = uiState,
+                    onNewVeiculoClick = {
+                                        viewModel.save()
+
+                    },
+                    onVeiculoClick = {
+
+                    }
+
+                )
             }
         }
     }
