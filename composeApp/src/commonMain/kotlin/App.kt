@@ -9,6 +9,7 @@ import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import ui.VeiculoForm.VeiculoForm
 import ui.Veiculos.VeiculosListScreen
 import ui.Veiculos.VeiculosListUiState
 
@@ -33,7 +34,7 @@ fun App(sqlDriver: SqlDriver) {
                 VeiculosListScreen(
                     uiState = uiState,
                     onNewVeiculoClick = {
-                                        viewModel.save()
+                                        navigator.navigate("veiculoForm")
 
                     },
                     onVeiculoClick = {
@@ -41,6 +42,12 @@ fun App(sqlDriver: SqlDriver) {
                     }
 
                 )
+            }
+            scene(
+                "veiculoForm/{id}?",
+                navTransition = NavTransition()
+            ) {
+                VeiculoForm()
             }
         }
     }

@@ -47,9 +47,12 @@ kotlin {
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
             implementation(projects.shared)
+
+
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+            implementation(libs.material3.desktop)
         }
 
     }
@@ -93,6 +96,9 @@ android {
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
     }
+}
+dependencies {
+    implementation(libs.androidx.material3.android)
 }
 
 compose.desktop {

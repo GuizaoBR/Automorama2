@@ -1,11 +1,11 @@
 package data.models
 data class Veiculo(
-    val id: Long,
-    val marca: String,
-    val modelo: String,
-    val anoFabricacao: Long,
-    val anoModelo: Long,
-    val placa: String,
+    val id: Long = 0,
+    var marca: String = "",
+    var modelo: String = "",
+    var anoFabricacao: Long = 0,
+    var anoModelo: Long = 0,
+    var placa: String = "",
 ){
-    val apelido: String = ""
+    var apelido: String = ""
 }
