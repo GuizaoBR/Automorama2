@@ -84,7 +84,7 @@ fun VeiculosListScreen(
                         ) {
                             FlowColumn {
                                 Text(
-                                    text = veiculo.marca,
+                                    text = veiculo.fabricante,
                                     style = TextStyle.Default.copy(
                                         fontSize = 24.sp,
                                         fontWeight = FontWeight.Bold

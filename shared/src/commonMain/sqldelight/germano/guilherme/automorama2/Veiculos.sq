@@ -1,6 +1,6 @@
 CREATE TABLE Veiculos (
-    id INTEGER NOT NULL,
-    marca TEXT NOT NULL,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fabricante TEXT NOT NULL,
     modelo TEXT NOT NULL,
     anoFabricacao INTEGER NOT NULL,
     anoModelo INTEGER NOT NULL,
@@ -13,7 +13,7 @@ SELECT *
 FROM Veiculos;
 
 insertVeiculo:
-INSERT INTO Veiculos(id, marca, modelo, anoFabricacao, anoModelo, placa, apelido)
+INSERT INTO Veiculos(id, fabricante, modelo, anoFabricacao, anoModelo, placa, apelido)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
 deleteVeiculo:
@@ -21,5 +21,5 @@ DELETE FROM  Veiculos WHERE  id = ?;
 
 updateVeiculo:
 UPDATE Veiculos
-SET  marca = :marca, modelo = :modelo, anoFabricacao = :anoFabricacao, anoModelo = :anoModelo, placa = :placa, apelido = :apelido
+SET  fabricante = :fabricante, modelo = :modelo, anoFabricacao = :anoFabricacao, anoModelo = :anoModelo, placa = :placa, apelido = :apelido
 WHERE id = :id;
