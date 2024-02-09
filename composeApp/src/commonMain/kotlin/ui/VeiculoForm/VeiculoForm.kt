@@ -16,6 +16,11 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -25,13 +30,15 @@ import androidx.compose.ui.unit.dp
 import data.models.Veiculo
 
 @Composable
-fun VeiculoForm(veiculo: Veiculo = Veiculo()){
-//    var text by rememberSaveable { mutableStateOf("")}
+fun VeiculoForm(uiState: VeiculoFormUIState,
+                modifier: Modifier = Modifier,
+                onSaveClick: () -> Unit
+                ){
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Novo Veiículo",
+                    Text("Novo Veículo",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -39,11 +46,10 @@ fun VeiculoForm(veiculo: Veiculo = Veiculo()){
                 actions = {
                     OutlinedButton(
                         onClick = {
-
+                                  onSaveClick()
                         },
-
+                        enabled = uiState.isValid,
                         shape = RoundedCornerShape(50.dp)
-
 
                     ) {
                         Text("Salvar")
@@ -55,6 +61,7 @@ fun VeiculoForm(veiculo: Veiculo = Veiculo()){
 
         },
         content = { innerPadding ->
+            val(fabricante, modelo, anoFabricacao, anoModelo, placa, apelido) = uiState
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -64,23 +71,24 @@ fun VeiculoForm(veiculo: Veiculo = Veiculo()){
                     .fillMaxSize()
             ) {
                 OutlinedTextField(
-                    value = veiculo.marca,
-                    onValueChange = { veiculo.marca = it },
+                    value = fabricante,
+                    onValueChange = uiState.onFabricanteChange ,
                     label = {
                         Text("Fabricante")
-                    }
+                    },
+                    isError = fabricante.isEmpty()
                 )
                 OutlinedTextField(
-                    value = veiculo.modelo,
-                    onValueChange = { veiculo.modelo = it },
+                    value = modelo,
+                    onValueChange = uiState.onModeloChange,
                     label = {
                         Text("Modelo")
                     }
                 )
                 Row(modifier = Modifier.fillMaxWidth()) {
                     OutlinedTextField(
-                        value = veiculo.anoFabricacao.toString(),
-                        onValueChange = { veiculo.anoFabricacao = it.toLong()},
+                        value = anoFabricacao.toString(),
+                        onValueChange = uiState.onAnoFabricacaoChange,
                         label = {
                             Text("Ano Fabricação")
                         },
@@ -89,8 +97,8 @@ fun VeiculoForm(veiculo: Veiculo = Veiculo()){
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     OutlinedTextField(
-                        value = veiculo.anoModelo.toString(),
-                        onValueChange = { veiculo.anoModelo = it.toLong()},
+                        value = anoModelo.toString(),
+                        onValueChange = uiState.onAnoModeloChange,
                         label = {
                             Text("Ano Modelo")
                         },
@@ -100,19 +108,20 @@ fun VeiculoForm(veiculo: Veiculo = Veiculo()){
 
                 }
                 OutlinedTextField(
-                    value = veiculo.placa,
-                    onValueChange = { veiculo.placa = it},
+                    value = placa,
+                    onValueChange = uiState.onPlacaChange,
                     label = {
                         Text("Placa")
                     },
 
                     )
                 OutlinedTextField(
-                    value = veiculo.apelido,
-                    onValueChange = { veiculo.apelido = it},
+                    value = apelido,
+                    onValueChange = uiState.onApelidoChange,
                     label = {
                         Text("Apelido")
                     },
+
 
                     )
 

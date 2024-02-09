@@ -1,3 +1,4 @@
+import ViewModels.VeiculoFormViewModel
 import ViewModels.VeiculoViewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,7 +48,17 @@ fun App(sqlDriver: SqlDriver) {
                 "veiculoForm/{id}?",
                 navTransition = NavTransition()
             ) {
-                VeiculoForm()
+                val viewModel = remember {
+                    VeiculoFormViewModel(sqlDriver, null)
+                }
+                val uiState by viewModel.uiState.collectAsState()
+                VeiculoForm(
+                    uiState = uiState,
+                    onSaveClick = {
+                        viewModel.save()
+                        navigator.goBack()
+                    }
+                )
             }
         }
     }
