@@ -38,7 +38,7 @@ fun VeiculoForm(uiState: VeiculoFormUIState,
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Novo Veículo",
+                    Text(uiState.topAppBarTitle,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -65,7 +65,7 @@ fun VeiculoForm(uiState: VeiculoFormUIState,
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
+                verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.Top),
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxSize()
@@ -83,7 +83,8 @@ fun VeiculoForm(uiState: VeiculoFormUIState,
                     onValueChange = uiState.onModeloChange,
                     label = {
                         Text("Modelo")
-                    }
+                    },
+                    isError =  uiState.modelo.isEmpty()
                 )
                 Row(modifier = Modifier.fillMaxWidth()) {
                     OutlinedTextField(
@@ -93,7 +94,8 @@ fun VeiculoForm(uiState: VeiculoFormUIState,
                             Text("Ano Fabricação")
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        isError = uiState.anoFabricacao.isEmpty()
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     OutlinedTextField(
@@ -103,7 +105,8 @@ fun VeiculoForm(uiState: VeiculoFormUIState,
                             Text("Ano Modelo")
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        isError = uiState.anoModelo.isEmpty()
                     )
 
                 }
@@ -113,6 +116,7 @@ fun VeiculoForm(uiState: VeiculoFormUIState,
                     label = {
                         Text("Placa")
                     },
+                    isError = uiState.placa.isEmpty()
 
                     )
                 OutlinedTextField(

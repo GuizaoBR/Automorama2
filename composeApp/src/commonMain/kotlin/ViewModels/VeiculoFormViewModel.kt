@@ -2,19 +2,23 @@ package ViewModels
 
 import app.cash.sqldelight.db.SqlDriver
 import data.models.Veiculo
+import data.repositories.VeiculoRepository
 import data.setVeiculo
 import germano.guilherme.automorama2.Automorama2Database
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import moe.tlaster.precompose.viewmodel.ViewModel
 import ui.VeiculoForm.VeiculoFormUIState
 
 class VeiculoFormViewModel(
-    driver: SqlDriver,
+    private val repository: VeiculoRepository,
     private val id: Long?
 ): ViewModel() {
-    private val database = Automorama2Database(driver)
     private  val _uiState: MutableStateFlow<VeiculoFormUIState> = MutableStateFlow(VeiculoFormUIState())
 
     val uiState = _uiState.asStateFlow()
@@ -77,9 +81,33 @@ class VeiculoFormViewModel(
 
             )
         }
+        id?.let {
+            MainScope().launch {
+                val veiculo = repository.veiculos.value
+                    .find {
+                        it.id == id
+                    }
+                if (veiculo != null) {
+                    _uiState.update {
+                        it.copy(
+                            topAppBarTitle = "Editando Veículo",
+                            fabricante = veiculo.fabricante,
+                            modelo = veiculo.modelo,
+                            anoFabricacao =  veiculo.anoFabricacao.toString(),
+                            anoModelo = veiculo.anoModelo.toString(),
+                            placa = veiculo.placa,
+                            apelido = veiculo.apelido
+                        )
+                    }
+                }
+            }
 
 
-    }
+            }
+        }
+
+
+
 
     fun checkIsValid(): Boolean {
         return with(_uiState.value){
@@ -89,9 +117,9 @@ class VeiculoFormViewModel(
 
     fun save() {
         with(_uiState.value) {
-            database.setVeiculo(
+            repository.saveVeiculo(
                 Veiculo(
-                    id = null,
+                    id = id,
                     fabricante = this.fabricante,
                     modelo = this.modelo,
                     anoFabricacao = this.anoFabricacao.toLong(),
