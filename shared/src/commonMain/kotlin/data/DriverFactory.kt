@@ -29,10 +29,10 @@ fun Automorama2Database.setVeiculo(veiculo: Veiculo){
 }
 
 
-fun Automorama2Database.getAll(): List<Veiculo> {
+fun Automorama2Database.getAll(): MutableList<Veiculo> {
     return veiculosQueries.selectAllVeiculos().executeAsList().map {
         it.toVeiculo()
-    }
+    }.toMutableList()
 }
 
 fun Automorama2Database.updateVeiculo(veiculo: Veiculo) {
@@ -46,4 +46,5 @@ fun Automorama2Database.updateVeiculo(veiculo: Veiculo) {
         veiculo.id!!
     )
 }
-//fun Automorama2Database.getById(id: Long): Veiculo = veiculosQueries.selectById(id).asFlow()
+
+fun Automorama2Database.deleteVeiculo(id: Long) = veiculosQueries.deleteVeiculo(id)

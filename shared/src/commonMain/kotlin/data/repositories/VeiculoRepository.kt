@@ -1,6 +1,7 @@
 package data.repositories
 
 import app.cash.sqldelight.db.SqlDriver
+import data.deleteVeiculo
 import data.getAll
 import data.models.Veiculo
 import data.setVeiculo
@@ -15,7 +16,7 @@ class VeiculoRepository(driver: SqlDriver) {
 
     companion object {
         private val _veiculos =
-            MutableStateFlow<List<Veiculo>>(emptyList())
+            MutableStateFlow<MutableList<Veiculo>>(mutableListOf())
     }
 
     val veiculos get() = _veiculos.asStateFlow()
@@ -29,8 +30,7 @@ class VeiculoRepository(driver: SqlDriver) {
         _veiculos.update { listVeiculo ->
             if (veiculo.id == null){
                 database.setVeiculo(veiculo)
-                listVeiculo + veiculo
-
+                listVeiculo.add(veiculo)
             } else {
                 database.updateVeiculo(veiculo)
                 listVeiculo.find { it.id == veiculo.id }?.let {
@@ -41,9 +41,15 @@ class VeiculoRepository(driver: SqlDriver) {
                     it.placa = veiculo.placa
                     it.apelido = veiculo.apelido
                 }
-                listVeiculo
             }
+            listVeiculo
+        }
+    }
 
+    fun deleteVeiculo(veiculo: Veiculo) {
+        _veiculos.update {
+            database.deleteVeiculo(veiculo.id!!)
+            database.getAll()
         }
     }
 }

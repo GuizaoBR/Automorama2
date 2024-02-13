@@ -16,7 +16,7 @@ fun VeiculoListPreview() {
         veiculos.add(
             Veiculo(
             1,
-            "teste",
+            "te",
             "teste",
             2021,
             2023,
