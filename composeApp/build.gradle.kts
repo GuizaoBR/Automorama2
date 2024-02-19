@@ -43,7 +43,12 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+//            implementation(compose.material)
+            implementation(compose.material3)
+//            implementation("androidx.compose.material3:material3:1.2.0")
+//            implementation("androidx.compose.material3:material3-window-size-class:1.2.0")
+//            implementation("androidx.compose.material3:material3-adaptive:1.0.0-alpha06")
+//            implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.0.0-alpha03")
             implementation(compose.ui)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
@@ -53,7 +58,6 @@ kotlin {
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
-            implementation(libs.material3.desktop)
         }
 
     }
@@ -99,9 +103,6 @@ android {
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
     }
-}
-dependencies {
-    implementation(libs.androidx.material3.android)
 }
 
 compose.desktop {

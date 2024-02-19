@@ -2,17 +2,20 @@ package data
 
 import app.cash.sqldelight.db.SqlDriver
 import data.mapper.toVeiculo
+import data.models.Combustivel
 import data.models.Veiculo
 import germano.guilherme.automorama2.Automorama2Database
+import germano.guilherme.automorama2.Combustiveis
 
 expect class DriverFactory {
     fun createDriver(): SqlDriver
 }
-fun createDatabase(driverFactory: DriverFactory) {
-    val driver = driverFactory.createDriver()
+fun createCombustiveis(driver: SqlDriver) {
     val database = Automorama2Database(driver)
-
-    // Do more work with the database (see below).
+    database.setCombustivel(Combustivel(nome = "Gasolina Commum"))
+    database.setCombustivel(Combustivel(nome = "Gasolina Aditivada"))
+    database.setCombustivel(Combustivel(nome = "Gasolina Premium"))
+    database.setCombustivel(Combustivel(nome = "Etanol"))
 }
 
 
@@ -48,3 +51,5 @@ fun Automorama2Database.updateVeiculo(veiculo: Veiculo) {
 }
 
 fun Automorama2Database.deleteVeiculo(id: Long) = veiculosQueries.deleteVeiculo(id)
+
+fun Automorama2Database.setCombustivel(combustivel: Combustivel) = combustiveisQueries.insertCombustivei(combustivel.nome)

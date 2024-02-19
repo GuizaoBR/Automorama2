@@ -23,6 +23,9 @@ class VeiculoFormViewModel(
 
     val uiState = _uiState.asStateFlow()
     init {
+        _uiState.update {
+            it.copy(topAppBarTitle = "Novo Veículo")
+        }
         _uiState.update {currentState ->
             currentState.copy(
                 onFabricanteChange = { fabricante ->

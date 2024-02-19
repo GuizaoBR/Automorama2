@@ -1,0 +1,20 @@
+CREATE TABLE Combustiveis (
+    id INTEGER PRIMARY KEY AUTOINCREMENT ,
+    nome TEXT
+);
+
+selectAllCombustivel:
+SELECT *
+FROM Combustiveis;
+
+insertCombustivei:
+INSERT INTO Combustiveis( nome)
+VALUES (?);
+
+deleteCombustivei:
+DELETE FROM Combustiveis WHERE  id = ?;
+
+updateCombustivei:
+UPDATE Combustiveis
+SET  nome = :nome
+WHERE id = :id;

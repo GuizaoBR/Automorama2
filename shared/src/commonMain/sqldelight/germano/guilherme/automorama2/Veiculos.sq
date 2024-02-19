@@ -23,7 +23,3 @@ updateVeiculo:
 UPDATE Veiculos
 SET  fabricante = :fabricante, modelo = :modelo, anoFabricacao = :anoFabricacao, anoModelo = :anoModelo, placa = :placa, apelido = :apelido
 WHERE id = :id;
-
--- selectById:
--- SELECT * FROM Veiculos
--- WHERE id = :id;

@@ -6,6 +6,9 @@ import germano.guilherme.automorama2.Automorama2Database
 
 actual class DriverFactory {
     actual fun createDriver(): SqlDriver {
-        return NativeSqliteDriver(Automorama2Database.Schema, "Automorama2Database.db")
+        val nativeSqliteDriver =
+            NativeSqliteDriver(Automorama2Database.Schema, "Automorama2Database.db")
+        createCombustiveis(nativeSqliteDriver)
+        return nativeSqliteDriver
     }
 }

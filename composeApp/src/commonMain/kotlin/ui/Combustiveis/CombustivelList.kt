@@ -1,4 +1,4 @@
-package ui.Veiculos
+package ui.Combustiveis
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -49,29 +50,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import data.models.Veiculo
+import data.models.Combustivel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
-fun VeiculosListScreen(
-    uiState: VeiculosListUiState,
+fun CombustivelListScreen(
+    uiState: CombustivelListUIState,
     modifier: Modifier = Modifier,
-    onNewVeiculoClick: () -> Unit = {},
-    onVeiculoClick: (Veiculo) -> Unit = {},
-    onDeleteClick: (Veiculo) -> Unit = {}
+    onNewCombustivelClick: () -> Unit = {},
+    onCombustivelClick: (Combustivel) -> Unit = {},
+    onDeleteClick: (Combustivel) -> Unit = {}
 ) {
 
 
     Box(modifier.fillMaxSize()) {
         ExtendedFloatingActionButton(
-            onClick = onNewVeiculoClick,
+            onClick = onNewCombustivelClick,
             content = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Icon(Icons.Filled.Add, contentDescription = "Add new task icon")
-                    Text(text = "Novo Veículo")
+                    Icon(Icons.Filled.Add, contentDescription = "Adicionar novo combustivel")
+                    Text(text = "Novo Combustível")
                 }
             },
             modifier = Modifier
@@ -81,14 +82,14 @@ fun VeiculosListScreen(
         )
 
         LazyVerticalGrid(columns = GridCells.Adaptive(300.dp)) {
-            items(uiState.veiculos) { veiculo ->
+            items(uiState.combustiveis) { combustivel ->
 
                 ElevatedCard(
                     modifier = Modifier
                         .padding(16.dp)
                         .combinedClickable(
                             onClick = {
-                                onVeiculoClick(veiculo)
+                                onCombustivelClick(combustivel)
                             },
                         )
                         .animateContentSize(
@@ -103,7 +104,7 @@ fun VeiculosListScreen(
                     )
 
                 ) {
-                    CardContent(veiculo, modifier, onDeleteClick)
+                    CardContent(combustivel, modifier, onDeleteClick)
                 }
 
 
@@ -116,7 +117,7 @@ fun VeiculosListScreen(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun CardContent(veiculo: Veiculo, modifier: Modifier, onDeleteClick: (Veiculo) -> Unit) {
+fun CardContent(combustivel: Combustivel, modifier: Modifier, onDeleteClick: (Combustivel) -> Unit) {
     var expandedState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(
         targetValue = if (expandedState) 180f else 0f
@@ -143,48 +144,20 @@ fun CardContent(veiculo: Veiculo, modifier: Modifier, onDeleteClick: (Veiculo) -
                 )
             }
         }
-        FlowColumn {
-
+        FlowColumn(
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.Center
+        ) {
             FlowRow(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                    .fillMaxHeight()
+                    .align(Alignment.CenterHorizontally)
             ) {
                 Text(
-                    text = veiculo.fabricante,
+                    text = combustivel.nome,
                     style = TextStyle.Default.copy(
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
-                    )
-                )
-                Spacer(modifier = Modifier.padding(16.dp))
-                Text(
-                    text = veiculo.modelo,
-                    style = TextStyle.Default.copy(
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-            }
-            FlowRow(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "${veiculo.anoFabricacao}/${veiculo.anoModelo}",
-                    style = TextStyle.Default.copy(
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 20.sp
-                    )
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = veiculo.placa,
-                    style = TextStyle.Default.copy(
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 20.sp
                     )
                 )
 
@@ -198,7 +171,7 @@ fun CardContent(veiculo: Veiculo, modifier: Modifier, onDeleteClick: (Veiculo) -
                 ) {
                     OutlinedButton(
                         onClick = {
-                                  showDeleteDialog = true
+                            showDeleteDialog = true
                         },
                         shape = RoundedCornerShape(50.dp)
 
@@ -207,94 +180,31 @@ fun CardContent(veiculo: Veiculo, modifier: Modifier, onDeleteClick: (Veiculo) -
                     }
                 }
             }
+
         }
 
 
     }
     if(showDeleteDialog){
-        AlertDeleteVeiculo(veiculo, onDeleteClick) { showDeleteDialog = false }
+        AlertDeleteCombustivel(combustivel, onDeleteClick) { showDeleteDialog = false }
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun AlertDeleteVeiculo(veiculo: Veiculo, onDeleteClick: (Veiculo) -> Unit = {}, onCancelClick: () -> Unit = {}){
+fun AlertDeleteCombustivel(combustivel: Combustivel, onDeleteClick: (Combustivel) -> Unit = {}, onCancelClick: () -> Unit = {}){
     AlertDialog(
         title = {
             Text(text = "ATENÇÃO")
         },
         text = {
             Column {
-                Row(Modifier.fillMaxWidth()
+                Row(
+                    Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "Deseja excluir esse veículo?")
+                    Text(text = "Deseja excluir o combustivel ${combustivel.nome}?")
                 }
-                Spacer(Modifier.size(16.dp))
-                if (veiculo.apelido.isEmpty()){
 
-                    FlowColumn {
-                        FlowRow(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = veiculo.fabricante,
-                                style = TextStyle.Default.copy(
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            )
-                            Spacer(modifier = Modifier.size(16.dp))
-                            Text(
-                                text = veiculo.modelo,
-                                style = TextStyle.Default.copy(
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            )
-                        }
-                        FlowRow(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "${veiculo.anoFabricacao}/${veiculo.anoModelo}",
-                                style = TextStyle.Default.copy(
-                                    fontWeight = FontWeight.Medium,
-                                    fontSize = 15.sp
-                                )
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text(
-                                text = veiculo.placa,
-                                style = TextStyle.Default.copy(
-                                    fontWeight = FontWeight.Medium,
-                                    fontSize = 15.sp
-                                )
-                            )
-
-                        }
-                    }
-                } else {
-                    FlowColumn {
-                        FlowRow(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = veiculo.apelido,
-                                style = TextStyle.Default.copy(
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            )
-                        }
-                    }
-                }
             }
         },
         onDismissRequest = {
@@ -303,7 +213,7 @@ fun AlertDeleteVeiculo(veiculo: Veiculo, onDeleteClick: (Veiculo) -> Unit = {}, 
         confirmButton = {
             TextButton(
                 onClick = {
-                    onDeleteClick(veiculo)
+                    onDeleteClick(combustivel)
                     onCancelClick()
                 }
             ) {

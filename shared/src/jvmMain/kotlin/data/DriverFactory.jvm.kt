@@ -10,6 +10,7 @@ actual class DriverFactory {
         val driver = JdbcSqliteDriver(url = "jdbc:sqlite:Automorama2Database.db")
         if (!File("Automorama2Database.db").exists()) {
             Automorama2Database.Schema.create(driver)
+            createCombustiveis(driver)
         }
         return driver
     }
