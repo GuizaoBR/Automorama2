@@ -15,10 +15,18 @@ fun main() = application {
     }
 }
 
+
+@Preview
+@Composable
+fun AppPreview() {
+    App(
+        DriverFactory().createDriver()
+    )
+}
 @Preview
 @Composable
 fun AppDesktopPreview() {
-    var veiculos : MutableList<Veiculo> = emptyList<Veiculo>().toMutableList()
+    val veiculos : MutableList<Veiculo> = emptyList<Veiculo>().toMutableList()
 
     repeat(20){
         veiculos.add(Veiculo(

@@ -7,5 +7,5 @@ import ui.cadastro.NavigationBar
 @Preview
 @Composable
 fun NavigationBarPreview(){
-    NavigationBar()
+    NavigationBar("Veiculo")
 }

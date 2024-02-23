@@ -2,12 +2,11 @@ package data.repositories
 
 import app.cash.sqldelight.db.SqlDriver
 import data.deleteVeiculo
-import data.getAll
+import data.getAllVeiculos
 import data.models.Veiculo
 import data.setVeiculo
 import data.updateVeiculo
 import germano.guilherme.automorama2.Automorama2Database
-import germano.guilherme.automorama2.Veiculos
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -23,7 +22,7 @@ class VeiculoRepository(driver: SqlDriver) {
     private val database = Automorama2Database(driver)
 
     fun getVeiculos() = _veiculos.update {
-        database.getAll()
+        database.getAllVeiculos()
     }
 
     fun saveVeiculo(veiculo: Veiculo){
@@ -49,7 +48,8 @@ class VeiculoRepository(driver: SqlDriver) {
     fun deleteVeiculo(veiculo: Veiculo) {
         _veiculos.update {
             database.deleteVeiculo(veiculo.id!!)
-            database.getAll()
+            it.remove(veiculo)
+            it
         }
     }
 }

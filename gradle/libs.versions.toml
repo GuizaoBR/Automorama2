@@ -17,11 +17,13 @@ junit = "4.13.2"
 kotlin = "1.9.22"
 ktor = "2.3.8"
 logback = "1.4.14"
+materialIconsExtended = "1.6.0-rc02"
 preComposeVersion = "1.6.0-beta02"
 sqlDelightVersion = "2.0.1"
 
 [libraries]
 android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelightVersion" }
+androidx-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelightVersion" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }

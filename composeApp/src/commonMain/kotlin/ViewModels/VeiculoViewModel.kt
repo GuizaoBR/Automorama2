@@ -1,9 +1,6 @@
 package ViewModels
 
-import app.cash.sqldelight.db.SqlDriver
-import data.getAll
 import data.repositories.VeiculoRepository
-import germano.guilherme.automorama2.Automorama2Database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import moe.tlaster.precompose.viewmodel.ViewModel
@@ -17,7 +14,9 @@ class VeiculoViewModel(private val repository: VeiculoRepository) : ViewModel(){
 
     val uiState
         get() = _uiState.combine(repository.veiculos){ uiState, veiculos ->
-            uiState.copy(veiculos = veiculos)
+            uiState.copy(veiculos = veiculos, onDelete={ veiculo ->
+                repository.deleteVeiculo(veiculo)
+            })
         }
     init {
         repository.getVeiculos()

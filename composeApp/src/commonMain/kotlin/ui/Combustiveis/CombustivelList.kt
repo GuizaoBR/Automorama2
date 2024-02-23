@@ -59,7 +59,6 @@ fun CombustivelListScreen(
     modifier: Modifier = Modifier,
     onNewCombustivelClick: () -> Unit = {},
     onCombustivelClick: (Combustivel) -> Unit = {},
-    onDeleteClick: (Combustivel) -> Unit = {}
 ) {
 
 
@@ -104,7 +103,7 @@ fun CombustivelListScreen(
                     )
 
                 ) {
-                    CardContent(combustivel, modifier, onDeleteClick)
+                    CardContent(combustivel, Modifier, uiState.onDelete)
                 }
 
 

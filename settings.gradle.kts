@@ -16,6 +16,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         maven("https://androidx.dev/storage/compose-compiler/repository")
+        maven("https://mvnrepository.com/artifact/org.jetbrains.compose.material/material-icons-extended")
     }
 }
 

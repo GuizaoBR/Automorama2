@@ -58,7 +58,6 @@ fun VeiculosListScreen(
     modifier: Modifier = Modifier,
     onNewVeiculoClick: () -> Unit = {},
     onVeiculoClick: (Veiculo) -> Unit = {},
-    onDeleteClick: (Veiculo) -> Unit = {}
 ) {
 
 
@@ -70,7 +69,7 @@ fun VeiculosListScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    Icon(Icons.Filled.Add, contentDescription = "Add new task icon")
+                    Icon(Icons.Filled.Add, contentDescription = "Adicione novo veículo")
                     Text(text = "Novo Veículo")
                 }
             },
@@ -103,7 +102,7 @@ fun VeiculosListScreen(
                     )
 
                 ) {
-                    CardContent(veiculo, modifier, onDeleteClick)
+                    CardContent(veiculo, Modifier, uiState.onDelete)
                 }
 
 
