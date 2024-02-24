@@ -1,5 +1,6 @@
 package ViewModels
 
+import app.cash.sqldelight.db.SqlDriver
 import data.models.Combustivel
 import data.repositories.CombustivelRepository
 import kotlinx.coroutines.MainScope
@@ -11,9 +12,10 @@ import moe.tlaster.precompose.viewmodel.ViewModel
 import ui.combustivelForm.CombustivelFormUIState
 
 class CombustivelFormViewModel(
-    private val combustivelRepository: CombustivelRepository,
-    private val id: Long?
+    driver: SqlDriver,
+    private val id: Long?= null
 ) : ViewModel() {
+    private val combustivelRepository : CombustivelRepository = CombustivelRepository(driver)
     private val _uiState: MutableStateFlow<CombustivelFormUIState> = MutableStateFlow(CombustivelFormUIState())
     
     val uiState = _uiState.asStateFlow()

@@ -30,7 +30,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+    val koin = "3.2.0"
     sourceSets {
         val desktopMain by getting
 
@@ -38,6 +38,9 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("io.insert-koin:koin-android:$koin")
+            implementation("io.insert-koin:koin-androidx-compose:$koin")
+
 
         }
         commonMain.dependencies {
@@ -48,6 +51,9 @@ kotlin {
             implementation(compose.components.resources)
             implementation(projects.shared)
             implementation (libs.androidx.material.icons.extended)
+            implementation("io.insert-koin:koin-core:$koin")
+            implementation("io.insert-koin:koin-test:$koin")
+
 
 
 
