@@ -1,13 +1,18 @@
-package ViewModels
+package viewModels
 
-import data.repositories.VeiculoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import moe.tlaster.precompose.viewmodel.ViewModel
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import repositoryFactory.VeiculoRepositoryFactory
 import ui.Veiculos.VeiculosListUiState
 
-class VeiculoViewModel(private val repository: VeiculoRepository) : ViewModel(){
+class VeiculoViewModel() : ViewModel(), KoinComponent{
 
+    private val veiculoRepositoryFactory: VeiculoRepositoryFactory by inject()
+
+    private val repository = veiculoRepositoryFactory.create()
     private  val _uiState: MutableStateFlow<VeiculosListUiState> = MutableStateFlow(
         VeiculosListUiState()
     )

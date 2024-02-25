@@ -14,11 +14,9 @@ import ui.Veiculos.VeiculosListUiState
 fun main() = application {
 
     initKoin(listOf(driverFactoryModule))
-    val driverFactory: SqlDriver by inject(SqlDriver::class.java)
+
     Window(onCloseRequest = ::exitApplication, title = "Automorama2") {
-        App(
-            driverFactory
-        ).MyApp()
+        App().MyApp()
     }
 }
 
@@ -26,9 +24,7 @@ fun main() = application {
 @Preview
 @Composable
 fun AppPreview() {
-    App(
-        DriverFactory().createDriver()
-    )
+    App()
 }
 @Preview
 @Composable

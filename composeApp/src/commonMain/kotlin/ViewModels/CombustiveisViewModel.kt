@@ -1,14 +1,18 @@
-package ViewModels
+package viewModels
 
-import app.cash.sqldelight.db.SqlDriver
 import data.repositories.CombustivelRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import moe.tlaster.precompose.viewmodel.ViewModel
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import repositoryFactory.CombustivelRepositoryFactory
 import ui.Combustiveis.CombustivelListUIState
 
-class CombustiveisViewModel(driver: SqlDriver) {
+class CombustiveisViewModel(): ViewModel(), KoinComponent {
 
-    private val repository: CombustivelRepository = CombustivelRepository(driver)
+    private val repositoryInjection: CombustivelRepositoryFactory by inject()
+    private val repository: CombustivelRepository = repositoryInjection.create()
     private  val _uiState: MutableStateFlow<CombustivelListUIState> = MutableStateFlow(
         CombustivelListUIState()
     )

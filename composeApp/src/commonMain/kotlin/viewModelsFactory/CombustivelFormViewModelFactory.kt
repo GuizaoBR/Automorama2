@@ -1,12 +1,11 @@
 package viewModelsFactory
 
-import ViewModels.CombustivelFormViewModel
-import app.cash.sqldelight.db.SqlDriver
-import interfaces.CombustivelFormViewModelFactory
+import viewModels.CombustivelFormViewModel
+import interfaces.ICombustivelFormViewModelFactory
 
-class CombustivelFormViewModelFactory(private val driver: SqlDriver):
-        CombustivelFormViewModelFactory.ViewModelFactory {
+class CombustivelFormViewModelFactory():
+        ICombustivelFormViewModelFactory {
             override fun create(id: Long?): CombustivelFormViewModel {
-                return CombustivelFormViewModel(driver, id)
+                return CombustivelFormViewModel(id)
             }
         }

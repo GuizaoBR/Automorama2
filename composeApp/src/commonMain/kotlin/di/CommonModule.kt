@@ -1,33 +1,33 @@
 package di
 
-import ViewModels.CombustiveisViewModel
-import ViewModels.CombustivelFormViewModel
-import ViewModels.VeiculoFormViewModel
-import ViewModels.VeiculoViewModel
-import data.repositories.CombustivelRepository
-import data.repositories.VeiculoRepository
 import org.koin.dsl.module
+import repositoryFactory.CombustivelRepositoryFactory
+import repositoryFactory.VeiculoRepositoryFactory
 import viewModelsFactory.CombustiveisViewModelFactory
 import viewModelsFactory.CombustivelFormViewModelFactory
+import viewModelsFactory.VeiculoFormViewModelFactory
+import viewModelsFactory.VeiculosViewModelFactory
 
 fun commonModule() = module {
-    single {
-        VeiculoRepository(get())
+    single<VeiculoRepositoryFactory> {
+        VeiculoRepositoryFactory(get())
+    }
+    single<VeiculosViewModelFactory> {
+        VeiculosViewModelFactory()
+    }
+    single<VeiculoFormViewModelFactory> {
+        VeiculoFormViewModelFactory()
     }
     single<CombustiveisViewModelFactory> {
-        CombustiveisViewModelFactory(get())
+        CombustiveisViewModelFactory()
     }
-    single<CombustivelFormViewModelFactory> {
-        CombustivelFormViewModelFactory(get())
+    factory<CombustivelFormViewModelFactory> {
+        CombustivelFormViewModelFactory()
     }
-    single {
-        VeiculoViewModel(get())
+    single<CombustivelRepositoryFactory> {
+        CombustivelRepositoryFactory(get())
     }
-    single {
-        CombustiveisViewModel(get())
-    }
-    single {
-        VeiculoFormViewModel(repository = get(), id = null)
-    }
+
+
     
 }

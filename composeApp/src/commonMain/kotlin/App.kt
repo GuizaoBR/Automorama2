@@ -1,15 +1,9 @@
-import ViewModels.CombustivelFormViewModel
-import ViewModels.VeiculoFormViewModel
-import ViewModels.VeiculoViewModel
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import app.cash.sqldelight.db.SqlDriver
-import data.repositories.CombustivelRepository
-import data.repositories.VeiculoRepository
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.path
@@ -25,18 +19,21 @@ import ui.Veiculos.VeiculosListUiState
 import ui.cadastro.NavigationBar
 import viewModelsFactory.CombustiveisViewModelFactory
 import viewModelsFactory.CombustivelFormViewModelFactory
+import viewModelsFactory.VeiculoFormViewModelFactory
+import viewModelsFactory.VeiculosViewModelFactory
 
-class App(private val sqlDriver: SqlDriver): KoinComponent {
+class App(): KoinComponent {
 
     private val combustiveisViewModelFactory: CombustiveisViewModelFactory by inject()
     private val combustivelFormViewModelFactory: CombustivelFormViewModelFactory by inject()
+    private val veiculosViewModelFactory: VeiculosViewModelFactory by inject()
+    private val veiculoFormViewModelFactory: VeiculoFormViewModelFactory by inject()
+
 
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
     fun MyApp() {
         PreComposeApp {
-            val veiculoRepository = VeiculoRepository(sqlDriver)
-            val combustivelRepository = CombustivelRepository(sqlDriver)
 
             val navigator = rememberNavigator()
             var selectedMenuCadastro by remember { mutableStateOf("Veiculos") }
@@ -67,7 +64,7 @@ class App(private val sqlDriver: SqlDriver): KoinComponent {
                             navTransition = NavTransition(createTransition = slideInHorizontally())
                         ) {
                             val viewModel = remember {
-                                VeiculoViewModel(veiculoRepository)
+                                veiculosViewModelFactory.create()
                             }
                             val uiState by viewModel.uiState.collectAsState(VeiculosListUiState())
                             VeiculosListScreen(
@@ -90,7 +87,7 @@ class App(private val sqlDriver: SqlDriver): KoinComponent {
                         ) {
                             val id: Long? = it.path<Long>("id")
                             val viewModel = remember {
-                                VeiculoFormViewModel(veiculoRepository, id)
+                                veiculoFormViewModelFactory.create(id)
                             }
                             val uiState by viewModel.uiState.collectAsState()
                             VeiculoForm(
@@ -129,7 +126,6 @@ class App(private val sqlDriver: SqlDriver): KoinComponent {
                         ) {
                             val id: Long? = it.path<Long>("id")
                             val viewModel = remember {
-//                                CombustivelFormViewModel(combustivelRepository, id)
                                 combustivelFormViewModelFactory.create(id)
                             }
                             val uiState by viewModel.uiState.collectAsState()

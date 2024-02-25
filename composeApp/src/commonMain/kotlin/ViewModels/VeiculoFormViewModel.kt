@@ -1,25 +1,23 @@
-package ViewModels
+package viewModels
 
-import app.cash.sqldelight.db.SqlDriver
 import data.models.Veiculo
-import data.repositories.VeiculoRepository
-import data.setVeiculo
-import germano.guilherme.automorama2.Automorama2Database
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import moe.tlaster.precompose.viewmodel.ViewModel
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
+import repositoryFactory.VeiculoRepositoryFactory
 import ui.VeiculoForm.VeiculoFormUIState
 
 class VeiculoFormViewModel(
-    private val repository: VeiculoRepository,
     private val id: Long?
-): ViewModel() {
+): ViewModel(), KoinComponent {
     private  val _uiState: MutableStateFlow<VeiculoFormUIState> = MutableStateFlow(VeiculoFormUIState())
+    private val veiculoRepositoryFactory: VeiculoRepositoryFactory by inject()
+    private val repository = veiculoRepositoryFactory.create()
 
     val uiState = _uiState.asStateFlow()
     init {
