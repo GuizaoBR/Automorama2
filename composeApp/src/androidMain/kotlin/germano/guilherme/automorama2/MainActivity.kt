@@ -11,7 +11,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val app = App()
         setContent {
-            app.MyApp()
+            app.App()
         }
     }
 }

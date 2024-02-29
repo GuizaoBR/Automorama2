@@ -24,11 +24,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
-
-
-            api(libs.precompose)
-            api(libs.precompose.viewmodel)
-            api(libs.precompose.molecule)
             implementation(libs.coroutines.extensions)
         }
         androidMain.dependencies {

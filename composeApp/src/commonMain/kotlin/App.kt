@@ -1,148 +1,131 @@
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.animation.core.animateIntOffsetAsState
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import moe.tlaster.precompose.PreComposeApp
-import moe.tlaster.precompose.navigation.NavHost
-import moe.tlaster.precompose.navigation.path
-import moe.tlaster.precompose.navigation.rememberNavigator
-import moe.tlaster.precompose.navigation.transition.NavTransition
+import cafe.adriel.voyager.transitions.SlideTransition
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import ui.Combustiveis.CombustivelListScreen
-import ui.Combustiveis.CombustivelListUIState
-import ui.VeiculoForm.VeiculoForm
-import ui.Veiculos.VeiculosListScreen
-import ui.Veiculos.VeiculosListUiState
 import ui.cadastro.NavigationBar
-import viewModelsFactory.CombustiveisViewModelFactory
-import viewModelsFactory.CombustivelFormViewModelFactory
-import viewModelsFactory.VeiculoFormViewModelFactory
-import viewModelsFactory.VeiculosViewModelFactory
+import ui.cadastro.screens.VeiculoListScreen
+import ui.drawerMenu.DrawerMenuItens
 
-class App(): KoinComponent {
-
-    private val combustiveisViewModelFactory: CombustiveisViewModelFactory by inject()
-    private val combustivelFormViewModelFactory: CombustivelFormViewModelFactory by inject()
-    private val veiculosViewModelFactory: VeiculosViewModelFactory by inject()
-    private val veiculoFormViewModelFactory: VeiculoFormViewModelFactory by inject()
+class App() : KoinComponent {
 
 
-    @OptIn(ExperimentalLayoutApi::class)
+    val resolution: Pair<Int, Int> by inject()
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun MyApp() {
-        PreComposeApp {
+    fun App() {
+        val drawerState = rememberDrawerState(DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
 
-            val navigator = rememberNavigator()
-            var selectedMenuCadastro by remember { mutableStateOf("Veiculos") }
-            Box(modifier = Modifier.fillMaxSize()) {
-                FlowColumn(modifier = Modifier.align(Alignment.BottomEnd)) {
-                    NavigationBar(
-                        selectedMenuCadastro,
-                        onVeiculoClick = {
-                            selectedMenuCadastro = "Veiculos"
-                            navigator.navigate("veiculosList")
-                                         },
-                        onCombustivelClick = {
-                            selectedMenuCadastro = "Combustivel"
-                            navigator.navigate("combustivelList")
-                        }
-
-                    )
+        MaterialTheme {
+            ModalNavigationDrawer(
+                drawerState = drawerState,
+                drawerContent = {
+                    ModalDrawerSheet {
+                        DrawerMenuItens()
+                    }
                 }
-                NavHost(
-                    navigator = navigator,
-                    initialRoute = "cadastro",
-                    navTransition = NavTransition()
-                ) {
+            ){
 
-                    group(route = "cadastro", initialRoute = "veiculosList") {
-                        scene(
-                            "veiculosList",
-                            navTransition = NavTransition(createTransition = slideInHorizontally())
-                        ) {
-                            val viewModel = remember {
-                                veiculosViewModelFactory.create()
-                            }
-                            val uiState by viewModel.uiState.collectAsState(VeiculosListUiState())
-                            VeiculosListScreen(
-                                uiState = uiState,
-                                onNewVeiculoClick = {
-                                    navigator.navigate("veiculoForm")
+                var showBottom by remember { mutableStateOf(true) }
+
+                val offset by animateIntOffsetAsState(
+                    targetValue = if (showBottom) {
+                        IntOffset.Zero
+                    } else {
+                        IntOffset(convertDpToPx(resolution.second.toFloat()) * -1, 0)
+                    },
+                    label = "offset"
+                )
+                cafe.adriel.voyager.navigator.Navigator(screen = VeiculoListScreen(onFormClicked = {
+                    showBottom = false
+                },
+                    onFormFinished = {
+                        showBottom = true
+                    },
+                    modifier = Modifier.padding(top = 60.dp, bottom = 80.dp)
+                )) { navigator ->
+                    Scaffold(
+                        topBar = {
+                            TopAppBar(
+                                title = {
+                                    Text("AUTOMORAMA")
                                 },
-                                onVeiculoClick = {
-                                    navigator.navigate("veiculoForm/${it.id}")
-
-                                },
-
-                                modifier = Modifier.padding(bottom = 80.dp)
-
-                            )
-                        }
-                        scene(
-                            "veiculoForm/{id}?",
-                            navTransition = NavTransition()
-                        ) {
-                            val id: Long? = it.path<Long>("id")
-                            val viewModel = remember {
-                                veiculoFormViewModelFactory.create(id)
-                            }
-                            val uiState by viewModel.uiState.collectAsState()
-                            VeiculoForm(
-                                uiState = uiState,
-                                onSaveClick = {
-                                    viewModel.save()
-                                    navigator.goBack()
+                                navigationIcon = {
+                                    IconButton(onClick = {
+                                        scope.launch {
+                                            drawerState.apply {
+                                                if (isClosed) open() else close()
+                                            }
+                                        }
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Menu,
+                                            contentDescription = "Localized description"
+                                        )
+                                    }
                                 }
                             )
-                        }
-                        scene(
-                            "combustivelList",
-                            navTransition = NavTransition(createTransition = slideInHorizontally())
-                        ) {
-                            val viewModel = remember {
-                                combustiveisViewModelFactory.create()
-                            }
-                            val uiState by viewModel.uiState.collectAsState(CombustivelListUIState())
-                            CombustivelListScreen(
-                                uiState = uiState,
-                                modifier = Modifier.padding(bottom = 80.dp),
-                                onNewCombustivelClick = {
-                                    navigator.navigate("combustivelForm")
-                                },
-                                onCombustivelClick = {
-                                    navigator.navigate("combustivelForm/${it.id}")
-                                },
-
-
-                                )
-
-                        }
-                        scene(
-                            "combustivelForm/{id}?",
-                            navTransition = NavTransition()
-                        ) {
-                            val id: Long? = it.path<Long>("id")
-                            val viewModel = remember {
-                                combustivelFormViewModelFactory.create(id)
-                            }
-                            val uiState by viewModel.uiState.collectAsState()
-                            CombustivelFormScreen(
-                                uiState = uiState,
-                                onSaveClick = {
-                                    viewModel.save()
-                                    navigator.goBack()
-                                },
-                                onBackClick = {
-                                    navigator.goBack()
-                                }
+                        },
+                        bottomBar = {
+                            NavigationBar(
+                                onCombustivelClick = { navigator.push(ui.cadastro.screens.CombustivelListScreen(
+                                    onFormClicked = {
+                                        showBottom = false
+                                    },
+                                    onFormFinished = {
+                                        showBottom = true
+                                    },
+                                    modifier = Modifier.padding(top = 60.dp, bottom = 80.dp)
+                                )) },
+                                onVeiculoClick = { navigator.pop() },
+                                modifier = Modifier
+                                    .offset {
+                                        offset
+                                    }
                             )
+
                         }
+
+                    ) {
+                        SlideTransition(navigator)
                     }
                 }
             }
         }
     }
+
+    @Composable
+    fun convertDpToPx(dp: Float): Int {
+        val density = LocalDensity.current.density
+        return (dp * density).toInt()
+    }
+
+
 }
+

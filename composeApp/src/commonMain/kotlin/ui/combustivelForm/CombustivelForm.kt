@@ -14,9 +14,10 @@ import ui.combustivelForm.CombustivelFormUIState
 fun CombustivelFormScreen(
     uiState: CombustivelFormUIState = CombustivelFormUIState(),
     onSaveClick: () -> Unit= {},
-    onBackClick: () -> Unit = {}
+    onBackClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
-    Scaffold(
+    Scaffold( modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { Text("Create New Combustivel") },
