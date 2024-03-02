@@ -1,12 +1,12 @@
 package viewModels
 
+import com.hoc081098.kmp.viewmodel.ViewModel
 import data.models.Veiculo
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import moe.tlaster.precompose.viewmodel.ViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import repositoryFactory.VeiculoRepositoryFactory

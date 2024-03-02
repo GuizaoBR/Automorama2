@@ -28,6 +28,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            export("io.github.hoc081098:kmp-viewmodel:0.7.1")
         }
     }
 
@@ -47,6 +48,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
+            implementation(compose.material)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
             implementation(projects.shared)
@@ -59,7 +61,8 @@ kotlin {
             implementation(libs.voyager.tab.navigator)
             implementation(libs.voyager.transitions)
 //            implementation(libs.voyager.hilt)
-            api(libs.precompose.viewmodel)
+            //api(libs.precompose.viewmodel)
+            api("io.github.hoc081098:kmp-viewmodel:0.7.1")
             implementation(compose.ui)
             implementation(compose.components.uiToolingPreview)
 

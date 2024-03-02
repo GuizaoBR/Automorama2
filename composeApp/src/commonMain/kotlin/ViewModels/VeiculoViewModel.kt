@@ -1,8 +1,8 @@
 package viewModels
 
+import com.hoc081098.kmp.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import moe.tlaster.precompose.viewmodel.ViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import repositoryFactory.VeiculoRepositoryFactory

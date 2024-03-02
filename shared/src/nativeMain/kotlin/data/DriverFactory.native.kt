@@ -11,10 +11,13 @@ import platform.Foundation.NSDocumentDirectory
 actual class DriverFactory {
        actual fun createDriver(): SqlDriver {
         val paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, true)
-        val documentsDirectory = paths[0] as String
+        println("paths $paths")
+           val documentsDirectory = paths[0] as String
+           println("diretorio $documentsDirectory")
         val databasePath = "$documentsDirectory/Automorama2Database.db"
 
         val exist = NSFileManager.defaultManager.fileExistsAtPath(databasePath)
+           println("arquivos : ${NSFileManager.defaultManager.contentsAtPath(documentsDirectory)}")
 
                println(databasePath)
                println("$exist")
