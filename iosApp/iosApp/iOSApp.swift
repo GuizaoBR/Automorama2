@@ -1,8 +1,13 @@
+import ComposeApp
 import SwiftUI
 
 @main
-struct iOSApp: App {
-	var body: some Scene {
+struct iOSApp: SwiftUI.App {
+    init() {
+		MainViewControllerKt.doInitKoin()
+    }
+
+    var body: some Scene {
 		WindowGroup {
 			ContentView()
 		}

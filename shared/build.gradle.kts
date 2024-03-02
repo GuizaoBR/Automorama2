@@ -33,6 +33,7 @@ kotlin {
         iosMain.dependencies {
             // put your Multiplatform dependencies here
             implementation(libs.native.driver)
+            implementation("co.touchlab:stately-common:2.0.5")
 
         }
         nativeMain.dependencies {

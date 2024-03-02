@@ -2,6 +2,6 @@ package plataform
 
 actual class DeviceInfo {
     actual fun getScreenResolution(): Pair<Int, Int> {
-        TODO("Not yet implemented")
+        return Pair<Int, Int>(0, 0)
     }
 }

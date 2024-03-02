@@ -60,6 +60,8 @@ kotlin {
             implementation(libs.voyager.transitions)
 //            implementation(libs.voyager.hilt)
             api(libs.precompose.viewmodel)
+            implementation(compose.ui)
+            implementation(compose.components.uiToolingPreview)
 
 
 
