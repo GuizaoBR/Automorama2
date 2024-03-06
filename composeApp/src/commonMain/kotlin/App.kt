@@ -1,34 +1,28 @@
 import androidx.compose.animation.core.animateIntOffsetAsState
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import ui.cadastro.NavigationBar
+import ui.cadastro.NavigationItem
+import ui.cadastro.screens.CombustivelListScreen
 import ui.cadastro.screens.VeiculoListScreen
 import ui.drawerMenu.DrawerMenuItens
 
@@ -36,7 +30,9 @@ class App() : KoinComponent {
 
 
     val resolution: Pair<Int, Int> by inject()
+
     @OptIn(ExperimentalMaterial3Api::class)
+    @Preview
     @Composable
     fun App() {
         val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -47,10 +43,50 @@ class App() : KoinComponent {
                 drawerState = drawerState,
                 drawerContent = {
                     ModalDrawerSheet {
-                        DrawerMenuItens()
+                        //DrawerMenuItens()
+                        val typography = Typography(
+                            titleMedium = TextStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 22.sp,
+                                lineHeight =  28.sp
+                            )
+                        )
+                        val cadastroItem = NavigationItem(
+                            name = "Cadastro",
+                            label = {
+                                Icon(Icons.Default.Add, contentDescription = "Cadastro", modifier = Modifier.padding(start = 16.dp, top = 6.dp) )
+                                Spacer(modifier = Modifier.padding(start = 32.dp))
+                                Text("Cadastro",
+                                     fontWeight = typography.titleMedium.fontWeight,
+                                     fontSize = typography.titleMedium.fontSize,
+                                     lineHeight = typography.titleMedium.lineHeight
+                                )
+                            },
+                            onClick = {
+
+                            },
+                            modifier = Modifier.padding(start = 16.dp, top = 6.dp)
+                        )
+                        val gastosItem = NavigationItem(
+                            name = "Gastos",
+                            label = {
+                                Icon(Icons.Default.Payments, contentDescription = "Gastos", modifier = Modifier.padding(start = 16.dp, top = 6.dp) )
+                                Spacer(modifier = Modifier.padding(start = 32.dp))
+                                Text("Gastos",
+                                     fontWeight = typography.titleMedium.fontWeight,
+                                     fontSize = typography.titleMedium.fontSize,
+                                     lineHeight = typography.titleMedium.lineHeight
+                                )
+                                    },
+                            onClick = {
+
+                            },
+                            modifier = Modifier.padding(start = 16.dp, top = 6.dp)
+                        )
+                        DrawerMenuItens(listOf(cadastroItem, gastosItem))
                     }
                 }
-            ){
+            ) {
 
                 var showBottom by remember { mutableStateOf(true) }
 
@@ -62,14 +98,14 @@ class App() : KoinComponent {
                     },
                     label = "offset"
                 )
-                cafe.adriel.voyager.navigator.Navigator(screen = VeiculoListScreen(onFormClicked = {
-                    showBottom = false
-                },
-                    onFormFinished = {
-                        showBottom = true
+                Navigator(
+                    screen = ShowVeiculoListScreen(onFormClicked = {
+                        showBottom = false
                     },
-                    modifier = Modifier.padding(top = 60.dp, bottom = 80.dp)
-                )) { navigator ->
+                        onFormFinished = {
+                            showBottom = true
+                        })
+                ) { navigator ->
                     Scaffold(
                         topBar = {
                             TopAppBar(
@@ -93,17 +129,57 @@ class App() : KoinComponent {
                             )
                         },
                         bottomBar = {
+                            var selectedItem by remember { mutableStateOf(NavigationItem(
+                                name = "Veículos",
+                                label = { Text("Veículos") },
+                                icon = { Icon(Icons.Default.DirectionsCar, contentDescription = null) },
+                                onClick = {
+                                }
+                            )) }
+                            val combustivelItem = NavigationItem(
+                                name = "Combustíveis",
+                                label = { Text("Combustíveis") },
+                                icon = { Icon(Icons.Default.LocalGasStation, contentDescription = null) },
+                                onClick = {
+                                    if(selectedItem == it) return@NavigationItem
+                                    selectedItem = it
+                                    navigator.replace(
+                                        CombustivelListScreen(
+                                            onFormClicked = {
+                                                showBottom = false
+                                                            },
+                                            onFormFinished = {
+                                                showBottom = true
+                                                             },
+                                            modifier = Modifier.padding(top = 60.dp, bottom = 80.dp)
+                                        )
+                                    )
+                                }
+                            )
+
+                            val veiculoItem = NavigationItem(
+                                name = "Veículos",
+                                label = { Text("Veículos") },
+                                icon = { Icon(Icons.Default.DirectionsCar, contentDescription = null) },
+                                onClick = {
+                                    if(selectedItem == it) return@NavigationItem
+                                    selectedItem = it
+                                    navigator.replace(
+                                        VeiculoListScreen(
+                                            onFormClicked = {
+                                                showBottom = false
+                                                            },
+                                            onFormFinished = {
+                                                showBottom = true
+                                                             },
+                                            modifier = Modifier.padding(top = 60.dp, bottom = 80.dp)
+                                        )
+                                    )
+                                }
+                            )
                             NavigationBar(
-                                onCombustivelClick = { navigator.push(ui.cadastro.screens.CombustivelListScreen(
-                                    onFormClicked = {
-                                        showBottom = false
-                                    },
-                                    onFormFinished = {
-                                        showBottom = true
-                                    },
-                                    modifier = Modifier.padding(top = 60.dp, bottom = 80.dp)
-                                )) },
-                                onVeiculoClick = { navigator.pop() },
+                                itens = listOf(veiculoItem, combustivelItem),
+                                selectedItem = selectedItem,
                                 modifier = Modifier
                                     .offset {
                                         offset
@@ -124,6 +200,15 @@ class App() : KoinComponent {
     fun convertDpToPx(dp: Float): Int {
         val density = LocalDensity.current.density
         return (dp * density).toInt()
+    }
+
+
+    fun ShowVeiculoListScreen(onFormClicked: () -> Unit = {}, onFormFinished: () -> Unit = {}): Screen {
+        return VeiculoListScreen(
+            onFormClicked = onFormClicked,
+            onFormFinished = onFormFinished,
+            modifier = Modifier.padding(top = 60.dp, bottom = 80.dp)
+        )
     }
 
 

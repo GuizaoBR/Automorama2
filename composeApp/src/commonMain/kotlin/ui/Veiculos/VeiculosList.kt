@@ -217,7 +217,7 @@ fun CardContent(veiculo: Veiculo, modifier: Modifier, onDeleteClick: (Veiculo) -
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun AlertDeleteVeiculo(veiculo: Veiculo, onDeleteClick: (Veiculo) -> Unit = {}, onCancelClick: () -> Unit = {}){
+fun AlertDeleteVeiculo(veiculo: Veiculo = Veiculo(), onDeleteClick: (Veiculo) -> Unit = {}, onCancelClick: () -> Unit = {}){
     AlertDialog(
         title = {
             Text(text = "ATENÇÃO")

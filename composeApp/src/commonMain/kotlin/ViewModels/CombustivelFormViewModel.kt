@@ -23,6 +23,9 @@ class CombustivelFormViewModel(
     val uiState = _uiState.asStateFlow()
     
     init {
+        _uiState.update {
+            it.copy(topAppBarTitle = "Novo Combustível")
+        }
         _uiState.update { curresteState ->
             curresteState.copy(onNomeChange = {nome ->
                 _uiState.update {
@@ -38,7 +41,7 @@ class CombustivelFormViewModel(
                     }
                 if (combustivel != null) {
                     _uiState.update {
-                        it.copy(nome = combustivel.nome)
+                        it.copy(nome = combustivel.nome, topAppBarTitle = "Editando Combustível")
                     }
                 }
             }

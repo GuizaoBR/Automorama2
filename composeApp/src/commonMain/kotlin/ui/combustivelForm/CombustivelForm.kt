@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ui.combustivelForm.CombustivelFormUIState
 
@@ -13,14 +14,20 @@ import ui.combustivelForm.CombustivelFormUIState
 @Composable
 fun CombustivelFormScreen(
     uiState: CombustivelFormUIState = CombustivelFormUIState(),
-    onSaveClick: () -> Unit= {},
+    onSaveClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    Scaffold( modifier = modifier,
+    Scaffold(modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text("Create New Combustivel") },
+                title = {
+                    Text(
+                        uiState.topAppBarTitle,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
@@ -28,7 +35,8 @@ fun CombustivelFormScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary),
+                    titleContentColor = MaterialTheme.colorScheme.primary
+                ),
                 actions = {
                     IconButton(onClick = { onSaveClick() }) {
                         Icon(Icons.Default.Save, contentDescription = "Save")
@@ -36,9 +44,9 @@ fun CombustivelFormScreen(
                 }
             )
         },
-        content = {innerPadding ->
+        content = { innerPadding ->
             val nome = uiState.nome
-            
+
             FlowColumn(
                 modifier = Modifier.padding(innerPadding).fillMaxSize(),
                 horizontalArrangement = Arrangement.Center,
@@ -53,8 +61,8 @@ fun CombustivelFormScreen(
                     isError = nome.isEmpty()
                 )
             }
-           
-           
+
+
         }
     )
 }

@@ -41,6 +41,9 @@ data class VeiculoFormScreen(
                 viewModel.save()
                 navigator.pop()
             },
+            onBackClick = {
+                navigator.pop()
+            },
             modifier = modifier.padding(top = 60.dp)
 
         )
