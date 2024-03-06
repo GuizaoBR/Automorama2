@@ -7,5 +7,5 @@ import ui.drawerMenu.DrawerMenuItens
 @Preview
 @Composable
 fun DrawerMenuItensPreview(){
-    DrawerMenuItens()
+//    DrawerMenuItens()
 }

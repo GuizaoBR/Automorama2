@@ -8,6 +8,6 @@ import ui.drawerMenu.DrawerMenuItens
 @Composable
 fun DrawerMenuItensPreview(){
     ModalDrawerSheet {
-        DrawerMenuItens()
+        //DrawerMenuItens()
     }
 }

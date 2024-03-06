@@ -25,6 +25,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.coroutines.extensions)
+//            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
         }
         androidMain.dependencies {
             // put your Multiplatform dependencies here
@@ -33,7 +34,7 @@ kotlin {
         iosMain.dependencies {
             // put your Multiplatform dependencies here
             implementation(libs.native.driver)
-            implementation("co.touchlab:stately-common:2.0.5")
+            implementation(libs.co.touchlab.stately.common)
 
         }
         nativeMain.dependencies {
@@ -41,6 +42,7 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(libs.sqlite.driver)
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
     
