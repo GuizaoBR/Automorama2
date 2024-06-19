@@ -7,4 +7,7 @@ plugins {
     alias(libs.plugins.kotlinJvm) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     id("app.cash.sqldelight").version("2.0.1") apply false
+    alias(libs.plugins.compose.compiler) apply false
+
+
 }

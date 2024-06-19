@@ -5,6 +5,9 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose.compiler)
+
+
 }
 
 kotlin {
@@ -16,10 +19,11 @@ kotlin {
         }
 
 
+
     }
-    
+
     jvm("desktop")
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -35,7 +39,7 @@ kotlin {
     sourceSets {
         val desktopMain by getting
 
-        
+
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
@@ -74,6 +78,7 @@ kotlin {
             implementation(compose.desktop.currentOs)
         }
 
+
     }
 }
 
@@ -85,9 +90,9 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        this.kotlinCompilerExtensionVersion = "1.5.8-dev-k1.9.22-42b6ec2b037"
-    }
+//    composeOptions {
+//        this.kotlinCompilerExtensionVersion = "1.5.11-dev-k2.0.0-Beta4-21f5e479a96"
+//    }
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")

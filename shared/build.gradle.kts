@@ -3,9 +3,14 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     id("app.cash.sqldelight")
+    //alias(libs.plugins.compose.compiler)
+
+
 }
 
 kotlin {
+//    androidTarget()
+//    jvm("desktop")
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -25,7 +30,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.coroutines.extensions)
-//            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+            implementation(libs.kotlinx.datetime)
         }
         androidMain.dependencies {
             // put your Multiplatform dependencies here
@@ -58,12 +63,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    //    buildFeatures {
-//        compose = true
-//    }
-//    composeOptions {
-//        this.kotlinCompilerExtensionVersion = "1.5.8-dev-k1.9.22-42b6ec2b037"
-//    }
+
+}
+dependencies {
+    implementation(libs.androidx.media3.common)
 }
 
 sqldelight {

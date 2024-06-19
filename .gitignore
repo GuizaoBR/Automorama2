@@ -16,3 +16,31 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 /composeApp/Automorama2Database.db
+
+*.class
+*.hprof
+
+*.apk
+*.aab
+*.ipa
+*.app
+
+*.log
+*.tmp# Arquivos de chave e senhas (NÃO VERSIONAR!)
+*.keystore
+*.jks
+*.properties
+
+# Arquivos de cache do Kotlin
+.kotlin_builtins
+
+# Arquivos de build do Kotlin Native
+*.klib
+*.bc
+*.o
+
+# Arquivos de build do Kotlin/JS
+*.js
+*.js.map
+
+.kotlin/metadata
