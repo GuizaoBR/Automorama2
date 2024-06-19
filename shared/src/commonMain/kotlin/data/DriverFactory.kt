@@ -2,8 +2,10 @@ package data
 
 import app.cash.sqldelight.db.SqlDriver
 import data.mapper.toCombustivel
+import data.mapper.toReabastecimento
 import data.mapper.toVeiculo
 import data.models.Combustivel
+import data.models.Reabastecimento
 import data.models.Veiculo
 import germano.guilherme.automorama2.Automorama2Database
 
@@ -67,3 +69,41 @@ fun Automorama2Database.updateCombustivel(combustivel: Combustivel) {
 }
 
 fun Automorama2Database.deleteCombustivel(id: Long) =  combustiveisQueries.deleteCombustivei(id)
+
+
+fun Automorama2Database.getReabastecimetoByVeiculo(veiculoId: Long): MutableList<Reabastecimento>{
+    return reabastecimentoQueries.selectReabastecimentosByVeiculo(veiculoId).executeAsList().map {
+        it.toReabastecimento()
+    }.toMutableList()
+
+}
+
+fun Automorama2Database.updateReabastecimento(reabastecimento: Reabastecimento){
+    return reabastecimentoQueries.updateReabastecimento(
+        reabastecimento.combustivel.id,
+        reabastecimento.veiculo.id,
+        reabastecimento.valorTotal,
+        reabastecimento.valorLitro,
+        reabastecimento.litro,
+        reabastecimento.data.toString(),
+        reabastecimento.quilometragemAnterior,
+        reabastecimento.quilometragemAtual,
+        reabastecimento.id
+    )
+}
+fun Automorama2Database.deleteReabastecimentio(id: Long) = reabastecimentoQueries.deleteReabastecimento(id)
+
+fun Automorama2Database.setReabastecimento(reabastecimento: Reabastecimento){
+    return reabastecimentoQueries.insertReabastecimento(
+        reabastecimento.id,
+        reabastecimento.combustivel.id,
+        reabastecimento.veiculo.id,
+        reabastecimento.valorTotal,
+        reabastecimento.valorLitro,
+        reabastecimento.litro,
+        reabastecimento.data.toString(),
+        reabastecimento.quilometragemAnterior,
+        reabastecimento.quilometragemAtual
+    )
+}
+
