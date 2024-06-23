@@ -43,6 +43,7 @@ class App() : KoinComponent {
                 drawerState = drawerState,
                 drawerContent = {
                     DrawerMenu()
+
                 }
             ) {
                 var showBottom by remember { mutableStateOf(true) }
@@ -92,6 +93,7 @@ class App() : KoinComponent {
     }
 
     @Composable
+    @Preview
     fun DrawerMenu() {
         ModalDrawerSheet {
             val typography = Typography(
@@ -138,6 +140,7 @@ class App() : KoinComponent {
     }
 
     @OptIn(ExperimentalMaterial3Api::class)
+    @Preview
     @Composable
     fun TopBar(drawerState: DrawerState) {
         val scope = rememberCoroutineScope()
@@ -162,6 +165,7 @@ class App() : KoinComponent {
         )
     }
 
+    @Preview
     @Composable
     fun BottomBar(
         navigator: Navigator,
