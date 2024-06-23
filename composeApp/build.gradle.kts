@@ -69,6 +69,7 @@ kotlin {
             api(libs.io.github.hoc081098.kmp.viewmodel)
             implementation(compose.ui)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.kotlinx.datetime)
 
 
 
@@ -123,6 +124,7 @@ android {
         debugImplementation(libs.compose.ui.tooling)
     }
 }
+
 
 compose.desktop {
     application {
