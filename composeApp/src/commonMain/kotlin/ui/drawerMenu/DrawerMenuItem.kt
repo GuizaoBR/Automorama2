@@ -1,5 +1,6 @@
 package ui.drawerMenu
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +19,11 @@ fun DrawerMenuItens(
 
     itens.forEach {
         Row(modifier= modifier
-            .fillMaxWidth(), content = {it.label()})
+            .fillMaxWidth()
+            .clickable(onClick = { it.onClick(it) }),
+            content = {it.label()},
+
+        )
         HorizontalDivider()
     }
 

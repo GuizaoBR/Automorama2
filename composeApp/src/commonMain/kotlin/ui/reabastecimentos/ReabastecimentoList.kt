@@ -14,13 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingFlat
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -38,45 +33,101 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import data.models.Reabastecimento
+import data.models.Veiculo
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-
-@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
-fun ReabastecimentoListScreen() {
+fun VeiculoDropDownTopAppBar(veiculos: List<Veiculo>, onVeiculoSelected: (Veiculo) -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedVehicle by remember { mutableStateOf<Veiculo?>(null) }
 
-    val mock = Reabastecimento().createReabastecimentosList()
-    Box(Modifier.fillMaxSize()) {
-        ExtendedFloatingActionButton(
-            onClick = { },
-            content = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+    TopAppBar(
+        title = { Text(selectedVehicle?.modelo ?: "Selecione um veículo") },
+        actions = {
+            Box {
+                TextButton(
+                    onClick = { expanded = true },
+                    content = { Text(selectedVehicle?.modelo ?: "Selecione") }
+                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
                 ) {
-                    Icon(Icons.Filled.Add, contentDescription = "Adicione novo reabastecimento")
-                    Text(text = "Novo Reabastecimento")
+                    veiculos.forEach { vehicle ->
+                        DropdownMenuItem(onClick = {
+                            selectedVehicle = vehicle
+                            onVeiculoSelected(vehicle)
+                            expanded = false
+                        }, text = { Text("${vehicle.fabricante} ${vehicle.modelo}")})
+                    }
                 }
-            },
-            modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.BottomEnd)
-                .zIndex(1f)
-        )
-
-        LazyVerticalGrid(columns = GridCells.Adaptive(300.dp)) {
-            items(mock) { reabastecimento ->
-
-                Card(Modifier, reabastecimento)
-
-
             }
         }
+    )
+}
+@Composable
+@Preview
+fun ReabastecimentoListPreview() {
+    ReabastecimentoList(Modifier.padding(top = 60.dp))
+}
 
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun ReabastecimentoList(modifier: Modifier = Modifier) {
+
+    val mock = Reabastecimento().createReabastecimentosList()
+    val mockVeiculos = listOf(
+    Veiculo(id = 1, fabricante = "Toyota", modelo = "Corolla", anoFabricacao = 2016, anoModelo = 2016, placa = "XYZ123", apelido = "Meu carro"),
+    Veiculo(id = 2, fabricante = "Honda", modelo = "Civic", anoFabricacao = 2018, anoModelo = 2018, placa = "ABC456", apelido = "Carro da esposa"),
+    Veiculo(id = 3, fabricante = "Ford", modelo = "Mustang", anoFabricacao = 2022, anoModelo = 2022, placa = "DEF789", apelido = "Carro do sonho")
+)
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
+    Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = { VeiculoDropDownTopAppBar(mockVeiculos, { }) },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = { /*TODO*/ },
+                text = { Text("Novo Reabastecimento") },
+                icon = { Icon(Icons.Filled.Add, contentDescription = "Adicione novo reabastecimento") },
+            )
+        },
+    ) {
+        Box(Modifier.fillMaxSize()) {
+            ExtendedFloatingActionButton(
+                onClick = { },
+                content = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(Icons.Filled.Add, contentDescription = "Adicione novo reabastecimento")
+                        Text(text = "Novo Reabastecimento")
+                    }
+                },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.BottomEnd)
+                    .zIndex(1f)
+            )
+
+            LazyVerticalGrid(columns = GridCells.Adaptive(300.dp), contentPadding = it) {
+                items(mock) { reabastecimento ->
+
+                    Card(Modifier, reabastecimento)
+
+
+                }
+            }
+
+        }
     }
 }
 
@@ -88,7 +139,7 @@ fun Card(
     modifier: Modifier = Modifier,
     reabastecimento: Reabastecimento
 ) {
-    var expandedState by remember { mutableStateOf(true) }
+    var expandedState by remember { mutableStateOf(false) }
     ElevatedCard(
         modifier = Modifier
             .height(if (expandedState) 205.dp else 180.dp)
@@ -105,7 +156,6 @@ fun Card(
                     easing = LinearOutSlowInEasing
                 )
             ),
-        //shape = RoundedCornerShape(50.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
         )
