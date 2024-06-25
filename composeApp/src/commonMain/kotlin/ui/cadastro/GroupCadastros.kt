@@ -38,8 +38,52 @@ fun GroupCadastros(resolution:  Pair<Int, Int>){
                 },
                 label = "offset"
             )
+            var selectedItem by remember { mutableStateOf(NavigationItem(
+                name = "Veículos",
+                label = { Text("Veículos") },
+                icon = { Icon(Icons.Default.DirectionsCar, contentDescription = null) },
+                onClick = {
+
+                }
+            )) }
+            val combustivelItem = NavigationItem(
+                name = "Combustíveis",
+                label = { Text("Combustíveis") },
+                icon = { Icon(Icons.Default.LocalGasStation, contentDescription = null) },
+                onClick = {
+                    if(selectedItem == it) return@NavigationItem
+                    selectedItem = it
+                    navigator.replace(
+                        CombustivelListScreen(
+                            onFormClicked = onHideBottom,
+                            onFormFinished = {
+                                onShowBottomScreen()
+                                selectedItem = it
+                                             },
+                        )
+                    )
+                }
+            )
+
+            val veiculoItem = NavigationItem(
+                name = "Veículos",
+                label = { Text("Veículos") },
+                icon = { Icon(Icons.Default.DirectionsCar, contentDescription = null) },
+                onClick = {
+                    if(selectedItem == it) return@NavigationItem
+                    selectedItem = it
+                    navigator.replace(
+                        VeiculoListScreen(
+                            onFormClicked = onHideBottom,
+                            onFormFinished = onShowBottomScreen,
+                        )
+                    )
+                }
+            )
+
+
             if (showBottom){
-                BottomBar(navigator, onShowBottomScreen, onHideBottom, modifier = Modifier.offset { offset })
+                BottomBar(listOf(veiculoItem, combustivelItem), selectedItem,  modifier = Modifier.offset { offset })
             }
         }) {
             SlideTransition(navigator, modifier= Modifier.padding(it))
@@ -50,55 +94,13 @@ fun GroupCadastros(resolution:  Pair<Int, Int>){
 
     @Composable
     fun BottomBar(
-        navigator: Navigator,
-        onShowBottomScreen: () -> Unit,
-        onHideBottom: () -> Unit,
+        itens: List<NavigationItem>,
+        selectedItem: NavigationItem,
         modifier: Modifier = Modifier
     ) {
 
-        var selectedItem by remember { mutableStateOf(NavigationItem(
-            name = "Veículos",
-            label = { Text("Veículos") },
-            icon = { Icon(Icons.Default.DirectionsCar, contentDescription = null) },
-            onClick = {
-                
-            }
-        )) }
-        
-       
-        val combustivelItem = NavigationItem(
-            name = "Combustíveis",
-            label = { Text("Combustíveis") },
-            icon = { Icon(Icons.Default.LocalGasStation, contentDescription = null) },
-            onClick = {
-                if(selectedItem == it) return@NavigationItem
-                selectedItem = it
-                navigator.replace(
-                    CombustivelListScreen(
-                        onFormClicked = onHideBottom,
-                        onFormFinished = onShowBottomScreen,
-                    )
-                )
-            }
-        )
-
-        val veiculoItem = NavigationItem(
-            name = "Veículos",
-            label = { Text("Veículos") },
-            icon = { Icon(Icons.Default.DirectionsCar, contentDescription = null) },
-            onClick = {
-                if(selectedItem == it) return@NavigationItem
-                selectedItem = it
-                navigator.replace(
-                    VeiculoListScreen(
-                        onFormClicked = onHideBottom,
-                        onFormFinished = onShowBottomScreen,
-                    )
-                )
-            }
-        )
         NavigationBar(
-            itens = listOf(veiculoItem, combustivelItem),
+            itens = itens,
             selectedItem = selectedItem,
             modifier = modifier
                 .fillMaxWidth()
