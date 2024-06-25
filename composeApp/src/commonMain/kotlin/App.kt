@@ -21,6 +21,7 @@ import ui.cadastro.NavigationItem
 import ui.cadastro.screens.GroupCadastrosScreen
 import ui.recursos.reabastecimentos.screens.ReabastecimentoListScreen
 import ui.drawerMenu.DrawerMenuItens
+import ui.recursos.reabastecimentos.screens.ReabastecimentoFormScreen
 
 class App() : KoinComponent {
 
@@ -35,6 +36,9 @@ class App() : KoinComponent {
             Navigator(
                 screen = ShowGroupScreen()
             ) { navigator ->
+                val onFormClicked = {
+                    navigator.push(ReabastecimentoFormScreen())
+                }
 
                 /* Pass navigator to ModalNavigationDrawer and subsequently to DrawerMenu */
                 ModalNavigationDrawer(
@@ -47,7 +51,7 @@ class App() : KoinComponent {
                         TopBar(drawerState)
                     },
                     ) {
-                        ScaleTransition(navigator)
+                        ScaleTransition(navigator, modifier = Modifier.padding(it))
                     }
                 }
             }
@@ -112,7 +116,7 @@ class App() : KoinComponent {
                             if (isOpen) close()
                         }
                     }
-                    navigator.replace(ReabastecimentoListScreen(modifier= Modifier.padding(top = 60.dp)))
+                    navigator.replace(ReabastecimentoListScreen())
 
                 },
                 modifier = Modifier.padding(start = 16.dp, top = 6.dp)

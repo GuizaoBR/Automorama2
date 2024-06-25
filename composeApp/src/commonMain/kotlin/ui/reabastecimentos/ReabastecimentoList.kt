@@ -38,6 +38,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import ui.recursos.reabastecimentos.screens.ReabastecimentoFormScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,14 +73,14 @@ fun VeiculoDropDownTopAppBar(veiculos: List<Veiculo>, onVeiculoSelected: (Veicul
 @Composable
 @Preview
 fun ReabastecimentoListPreview() {
-    ReabastecimentoList(Modifier.padding(top = 60.dp))
+    ReabastecimentoList()
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun ReabastecimentoList(modifier: Modifier = Modifier) {
+fun ReabastecimentoList(modifier: Modifier = Modifier, newReabastecimento: () -> Unit = {}) {
 
     val mock = Reabastecimento().createReabastecimentosList()
     val mockVeiculos = listOf(
@@ -94,7 +95,7 @@ fun ReabastecimentoList(modifier: Modifier = Modifier) {
         topBar = { VeiculoDropDownTopAppBar(mockVeiculos, { }) },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { /*TODO*/ },
+                onClick = { newReabastecimento() },
                 text = { Text("Novo Reabastecimento") },
                 icon = { Icon(Icons.Filled.Add, contentDescription = "Adicione novo reabastecimento") },
             )

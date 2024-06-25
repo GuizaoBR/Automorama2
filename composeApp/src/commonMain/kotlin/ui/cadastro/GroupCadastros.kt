@@ -14,7 +14,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import ui.cadastro.screens.CombustivelListScreen
@@ -27,35 +26,36 @@ fun GroupCadastros(resolution:  Pair<Int, Int>){
     val onShowBottomScreen = { showBottom = true }
     Navigator(
         screen = VeiculoListScreen(onFormClicked = onHideBottom,
-                                   onFormFinished = onShowBottomScreen,
-                                   Modifier.padding(top = 60.dp, bottom = 80.dp)),
+                                   onFormFinished = onShowBottomScreen),
     ) { navigator ->
         Scaffold(
         bottomBar = {
-            BottomBar(navigator, resolution)
+            val offset by animateIntOffsetAsState(
+                targetValue = if (showBottom) {
+                    IntOffset.Zero
+                } else {
+                    IntOffset(convertDpToPx(resolution.second.toFloat()) * -1, 0)
+                },
+                label = "offset"
+            )
+            if (showBottom){
+                BottomBar(navigator, onShowBottomScreen, onHideBottom, modifier = Modifier.offset { offset })
+            }
         }) {
-            SlideTransition(navigator)
+            SlideTransition(navigator, modifier= Modifier.padding(it))
         }
     }
-    
+
 }
 
     @Composable
     fun BottomBar(
         navigator: Navigator,
-        resolution: Pair<Int, Int>
+        onShowBottomScreen: () -> Unit,
+        onHideBottom: () -> Unit,
+        modifier: Modifier = Modifier
     ) {
-        var showBottom by remember { mutableStateOf(true) }
-        val onHideBottom = { showBottom = false }
-        val onShowBottomScreen = { showBottom = true }
-        val offset by animateIntOffsetAsState(
-            targetValue = if (showBottom) {
-                IntOffset.Zero
-            } else {
-                IntOffset(convertDpToPx(resolution.second.toFloat()) * -1, 0)
-            },
-            label = "offset"
-        )
+
         var selectedItem by remember { mutableStateOf(NavigationItem(
             name = "Veículos",
             label = { Text("Veículos") },
@@ -77,7 +77,6 @@ fun GroupCadastros(resolution:  Pair<Int, Int>){
                     CombustivelListScreen(
                         onFormClicked = onHideBottom,
                         onFormFinished = onShowBottomScreen,
-                        modifier = Modifier.padding(top = 60.dp, bottom = 80.dp)
                     )
                 )
             }
@@ -94,7 +93,6 @@ fun GroupCadastros(resolution:  Pair<Int, Int>){
                     VeiculoListScreen(
                         onFormClicked = onHideBottom,
                         onFormFinished = onShowBottomScreen,
-                        modifier = Modifier.padding(top = 60.dp, bottom = 80.dp)
                     )
                 )
             }
@@ -102,11 +100,9 @@ fun GroupCadastros(resolution:  Pair<Int, Int>){
         NavigationBar(
             itens = listOf(veiculoItem, combustivelItem),
             selectedItem = selectedItem,
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
-                .offset {
-                    offset
-                }
+
         )
     }
 

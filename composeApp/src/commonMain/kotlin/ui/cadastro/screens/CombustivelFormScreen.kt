@@ -44,7 +44,6 @@ data class CombustivelFormScreen(
             onBackClick = {
                 navigator.pop()
             },
-            modifier = modifier.padding(top = 60.dp)
         )
     }
 }

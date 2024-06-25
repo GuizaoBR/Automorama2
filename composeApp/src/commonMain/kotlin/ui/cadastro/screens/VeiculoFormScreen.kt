@@ -44,8 +44,6 @@ data class VeiculoFormScreen(
             onBackClick = {
                 navigator.pop()
             },
-            modifier = modifier.padding(top = 60.dp)
-
         )
     }
 }

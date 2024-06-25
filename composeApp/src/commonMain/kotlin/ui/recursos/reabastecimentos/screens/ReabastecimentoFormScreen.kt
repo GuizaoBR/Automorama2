@@ -1,15 +1,12 @@
 package ui.recursos.reabastecimentos.screens
 
+import ReabastecimentoForm
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import org.koin.core.component.KoinComponent
-import ui.reabastecimentos.ReabastecimentoList
 
-data class ReabastecimentoListScreen(
+data class ReabastecimentoFormScreen(
     private val onFormClicked: () -> Unit = {},
     private val onFormFinished: () -> Unit = {},
     private val modifier: Modifier = Modifier
@@ -17,8 +14,6 @@ data class ReabastecimentoListScreen(
 
     @Composable
     override fun Content() {
-        val navigator: Navigator = LocalNavigator.currentOrThrow
-
-        ReabastecimentoList(modifier = modifier) { navigator.push(ReabastecimentoFormScreen()) }
+        ReabastecimentoForm(modifier = modifier)
     }
 }

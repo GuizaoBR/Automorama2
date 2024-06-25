@@ -32,7 +32,7 @@ fun VeiculoForm(uiState: VeiculoFormUIState,
                 ){
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection).then(Modifier.padding(bottom= 0.dp)),
         topBar = {
             TopAppBar(
                 title = {
