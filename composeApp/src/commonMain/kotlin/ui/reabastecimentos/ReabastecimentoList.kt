@@ -5,6 +5,7 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -143,7 +145,7 @@ fun Card(
     var expandedState by remember { mutableStateOf(false) }
     ElevatedCard(
         modifier = Modifier
-            .height(if (expandedState) 205.dp else 180.dp)
+          //  .height(if (expandedState) 205.dp else 180.dp)
             .padding(16.dp)
             .clip(RoundedCornerShape(16.dp))
             .combinedClickable(
@@ -172,7 +174,8 @@ fun Card(
 fun CardContent(
     modifier: Modifier = Modifier, reabastecimento: Reabastecimento, expandedState: Boolean,
     onClick: () -> Unit
-) {
+)
+{
 
     val rotationState by animateFloatAsState(
         targetValue = if (expandedState) 180f else 0f
@@ -198,140 +201,153 @@ fun CardContent(
                 )
             }
         }
-        FlowColumn {
-            Icon(
-                imageVector = Icons.Default.LocalGasStation,
-                contentDescription = "Local Gas Stattion",
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(start = 8.dp)
-                    .size(40.dp)
+        Row(modifier = Modifier.fillMaxWidth())
+        {
+            Column(modifier = Modifier
+                .align(Alignment.CenterVertically),
+                verticalArrangement = Arrangement.Center
 
             )
-
-            FlowRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-            ) {
-                Text(
-                    text = reabastecimento.data.format(LocalDate.Format {
-                        dayOfMonth()
-                        char('/')
-                        monthNumber()
-                        char('/')
-                        year()
-                    }),
-                    style = TextStyle.Default.copy(
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
+            {
+                Icon(
+                    imageVector = Icons.Default.LocalGasStation,
+                    contentDescription = "Local Gas Stattion",
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 50.dp),
-                    textAlign = TextAlign.End
+                        .padding(start = 8.dp)
+                        .size(40.dp)
+
                 )
-                Spacer(modifier = Modifier.padding(start = 8.dp))
+            }
+
+            Column(modifier = Modifier.weight(3f)) {
+
                 FlowRow(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 8.dp)
-                ) {
-                    Box(Modifier.align(Alignment.CenterVertically)) {
-                        Text(
-                            text = reabastecimento.combustivel.nome,
-                            style = TextStyle.Default.copy(
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold
-                            ),
-                            textAlign = TextAlign.End
-                        )
-                    }
-                    Spacer(modifier = Modifier.padding(start = 8.dp))
-                    Box(Modifier.align(Alignment.CenterVertically)) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.TrendingFlat,
-                            contentDescription = null
-                        )
-                    }
-                    Spacer(modifier = Modifier.padding(start = 8.dp))
-                    Box(Modifier.align(Alignment.CenterVertically)) {
-                        Text(
-                            text = "${reabastecimento.quilometroLitro} km/l",
-                            style = TextStyle.Default.copy(
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                        )
-                    }
-                }
-                FlowRow(
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 8.dp)
-                        .fillMaxWidth(),
-                ) {
-                    Box(Modifier.align(Alignment.CenterVertically)) {
-                        Text(
-                            text = "R$ ${reabastecimento.valorTotal}",
-                            style = TextStyle.Default.copy(
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                        )
-                    }
-                    Box(Modifier.align(Alignment.CenterVertically)) {
-
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.TrendingFlat,
-                            contentDescription = null
-                        )
-                    }
-                    Box(Modifier.align(Alignment.CenterVertically)) {
-
-                        Text(
-                            text = "R$ ${reabastecimento.valorLitro} /l",
-                            style = TextStyle.Default.copy(
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                        )
-                    }
-                }
-
-
-            }
-            FlowRow(
-                modifier = Modifier.padding(start = 16.dp, top = 8.dp)
-            ) {
-                Box(Modifier.align(Alignment.CenterVertically)) {
-                    Icon(
-                        imageVector = Icons.Default.Moving,
-                        contentDescription = null
-                    )
-                }
-                Spacer(modifier = Modifier.padding(start = 8.dp))
-                Box(Modifier.align(Alignment.CenterVertically)) {
+                        .padding(top = 8.dp),
+                )
+                {
                     Text(
-                        text = "${reabastecimento.quilometragemAtual - reabastecimento.quilometragemAnterior} Km"
+                        text = reabastecimento.data.format(LocalDate.Format {
+                            dayOfMonth()
+                            char('/')
+                            monthNumber()
+                            char('/')
+                            year()
+                        }),
+                        style = TextStyle.Default.copy(
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        modifier = Modifier
+                            .padding(end = 12.dp)
+                            .weight(1f),
+                        textAlign = TextAlign.End
                     )
-                }
-            }
-            if (expandedState) {
-                FlowRow(
-                    modifier = Modifier
-                        .padding(end = 60.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
 
+
+//                    Spacer(modifier = Modifier.padding(start = 8.dp))
+                    FlowRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp, end = 50.dp)
+                    ) {
+                        Box(Modifier.align(Alignment.CenterVertically)) {
+                            Text(
+                                text = reabastecimento.combustivel.nome,
+                                style = TextStyle.Default.copy(
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold
+                                ),
+                                textAlign = TextAlign.End
+                            )
+                        }
+                        Spacer(modifier = Modifier.padding(start = 8.dp))
+                        Box(Modifier.align(Alignment.CenterVertically)) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.TrendingFlat,
+                                contentDescription = null
+                            )
+                        }
+                        Spacer(modifier = Modifier.padding(start = 8.dp))
+                        Box(Modifier.align(Alignment.CenterVertically)) {
+                            Text(
+                                text = "${reabastecimento.quilometroLitro} km/l",
+                                style = TextStyle.Default.copy(
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            )
+                        }
+                    }
+                    FlowRow(
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 8.dp, end = 50.dp)
+                            .fillMaxWidth(),
+                    ) {
+                        Box(Modifier.align(Alignment.CenterVertically)) {
+                            Text(
+                                text = "R$ ${reabastecimento.valorTotal}",
+                                style = TextStyle.Default.copy(
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            )
+                        }
+                        Box(Modifier.align(Alignment.CenterVertically)) {
+
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.TrendingFlat,
+                                contentDescription = null
+                            )
+                        }
+                        Box(Modifier.align(Alignment.CenterVertically)) {
+
+                            Text(
+                                text = "R$ ${reabastecimento.valorLitro} /l",
+                                style = TextStyle.Default.copy(
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            )
+                        }
+                    }
+
+
+                }
+                FlowRow(
+                    modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 50.dp, bottom = 8.dp)
                 ) {
-                    OutlinedButton(
-                        onClick = {
-                            showDeleteDialog = true
-                        },
-                        shape = RoundedCornerShape(50.dp)
+                    Box(Modifier.align(Alignment.CenterVertically)) {
+                        Icon(
+                            imageVector = Icons.Default.Moving,
+                            contentDescription = null
+                        )
+                    }
+                    Spacer(modifier = Modifier.padding(start = 8.dp))
+                    Box(Modifier.align(Alignment.CenterVertically)) {
+                        Text(
+                            text = "${reabastecimento.quilometragemAtual - reabastecimento.quilometragemAnterior} Km"
+                        )
+                    }
+                }
+                if (expandedState) {
+                    FlowRow(
+                        modifier = Modifier
+                            .padding(end = 60.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
 
                     ) {
-                        Text("Deletar")
+                        OutlinedButton(
+                            onClick = {
+                                showDeleteDialog = true
+                            },
+                            shape = RoundedCornerShape(50.dp)
+
+                        ) {
+                            Text("Deletar")
+                        }
                     }
                 }
             }
