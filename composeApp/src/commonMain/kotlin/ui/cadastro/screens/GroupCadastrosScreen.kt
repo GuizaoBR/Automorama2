@@ -16,6 +16,7 @@ data class GroupCadastrosScreen(
     override fun Content() {
         GroupCadastros(
             resolution = resolution,
+            modifier = modifier
         )
 
     }

@@ -1,5 +1,6 @@
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -30,11 +31,11 @@ class App() : KoinComponent {
 
     @Preview
     @Composable
-    fun App() {
+    fun App(modifier: Modifier = Modifier) {
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         AutomoramaTheme{
             Navigator(
-                screen = ShowGroupScreen()
+                screen = ShowGroupScreen(modifier = modifier)
             ) { navigator ->
                 val onFormClicked = {
                     navigator.push(ReabastecimentoFormScreen())
@@ -44,14 +45,16 @@ class App() : KoinComponent {
                 ModalNavigationDrawer(
                     drawerState = drawerState,
                     drawerContent = {
-                        DrawerMenu(navigator, drawerState)
+                        DrawerMenu(navigator, drawerState, modifier = modifier)
                     }
                 ) {
-                    Scaffold(topBar = {
+                    Scaffold(
+                        modifier = modifier.statusBarsPadding(),
+                        topBar = {
                         TopBar(drawerState)
                     },
                     ) {
-                        ScaleTransition(navigator, modifier = Modifier.padding(it))
+                        ScaleTransition(navigator, modifier = modifier.padding(it))
                     }
                 }
             }
@@ -61,13 +64,13 @@ class App() : KoinComponent {
 
 
 
-    fun ShowGroupScreen(onFormClicked: () -> Unit = {}, onFormFinished: () -> Unit = {}): Screen {
-        return GroupCadastrosScreen(resolution = resolution)
+    fun ShowGroupScreen(onFormClicked: () -> Unit = {}, onFormFinished: () -> Unit = {}, modifier: Modifier): Screen {
+        return GroupCadastrosScreen(resolution = resolution, modifier = modifier)
     }
 
     @Composable
     @Preview
-    fun DrawerMenu(navigator: Navigator, drawerState: DrawerState) {
+    fun DrawerMenu(navigator: Navigator, drawerState: DrawerState, modifier: Modifier) {
         val scope = rememberCoroutineScope()
         ModalDrawerSheet {
             val typography = Typography(
@@ -94,7 +97,7 @@ class App() : KoinComponent {
                             if (isOpen) close()
                         }
                     }
-                    navigator.replace(ShowGroupScreen())
+                    navigator.replace(ShowGroupScreen(modifier= modifier))
 
                 },
                 modifier = Modifier.padding(start = 16.dp, top = 6.dp)

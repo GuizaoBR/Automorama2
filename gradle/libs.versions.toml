@@ -1,4 +1,7 @@
 [versions]
+accompanistInsets = "0.30.1"
+accompanistInsetsVersion = "0.31.5-beta"
+accompanistSystemuicontroller = "0.16.1"
 agp = "8.3.0"
 android-compileSdk = "34"
 android-minSdk = "24"
@@ -27,9 +30,12 @@ io-github-hoc081098-kmp-viewmodel-version = "0.7.1"
 media3Common = "1.3.1"
 
 [libraries]
+accompanist-insets-v0301 = { module = "com.google.accompanist:accompanist-insets", version.ref = "accompanistInsets" }
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelightVersion" }
 androidx-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelightVersion" }
+google-accompanist-insets = { module = "com.google.accompanist:accompanist-insets", version.ref = "accompanistInsetsVersion" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }

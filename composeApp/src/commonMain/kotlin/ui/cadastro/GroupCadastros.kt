@@ -20,13 +20,14 @@ import ui.cadastro.screens.CombustivelListScreen
 import ui.cadastro.screens.VeiculoListScreen
 
 @Composable
-fun GroupCadastros(resolution:  Pair<Int, Int>){
+fun GroupCadastros(resolution: Pair<Int, Int>, modifier: Modifier){
     var showBottom by remember { mutableStateOf(true) }
     val onHideBottom = { showBottom = false }
     val onShowBottomScreen = { showBottom = true }
     Navigator(
         screen = VeiculoListScreen(onFormClicked = onHideBottom,
-                                   onFormFinished = onShowBottomScreen),
+                                   onFormFinished = onShowBottomScreen,
+            modifier = modifier),
     ) { navigator ->
         Scaffold(
         bottomBar = {
@@ -76,6 +77,7 @@ fun GroupCadastros(resolution:  Pair<Int, Int>){
                         VeiculoListScreen(
                             onFormClicked = onHideBottom,
                             onFormFinished = onShowBottomScreen,
+                            modifier = modifier
                         )
                     )
                 }

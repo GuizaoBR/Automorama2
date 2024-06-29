@@ -45,6 +45,11 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+            implementation (libs.accompanist.insets.v0301)
+            implementation(libs.google.accompanist.insets)
+            implementation (libs.accompanist.systemuicontroller)
+
+
 
 
         }
@@ -70,6 +75,9 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.kotlinx.datetime)
+            
+
+
 
 
 
