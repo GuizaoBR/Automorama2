@@ -53,6 +53,11 @@ fun Automorama2Database.updateVeiculo(veiculo: Veiculo) {
     )
 }
 
+fun Automorama2Database.getVeiculoById(id: Long): Veiculo {
+    return veiculosQueries.getVeiculosById(id).executeAsOne().toVeiculo()
+}
+
+
 fun Automorama2Database.deleteVeiculo(id: Long) = veiculosQueries.deleteVeiculo(id)
 
 fun Automorama2Database.setCombustivel(combustivel: Combustivel) = combustiveisQueries.insertCombustivei(combustivel.nome)
@@ -72,14 +77,14 @@ fun Automorama2Database.deleteCombustivel(id: Long) =  combustiveisQueries.delet
 
 
 fun Automorama2Database.getReabastecimetoByVeiculo(veiculoId: Long): MutableList<Reabastecimento>{
-    return reabastecimentoQueries.selectReabastecimentosByVeiculo(veiculoId).executeAsList().map {
+    return reabastecimentosQueries.selectReabastecimentosByVeiculo(veiculoId).executeAsList().map {
         it.toReabastecimento()
     }.toMutableList()
 
 }
 
 fun Automorama2Database.updateReabastecimento(reabastecimento: Reabastecimento){
-    return reabastecimentoQueries.updateReabastecimento(
+    return reabastecimentosQueries.updateReabastecimento(
         reabastecimento.combustivel.id,
         reabastecimento.veiculo.id,
         reabastecimento.valorTotal,
@@ -88,14 +93,14 @@ fun Automorama2Database.updateReabastecimento(reabastecimento: Reabastecimento){
         reabastecimento.data.toString(),
         reabastecimento.quilometragemAnterior,
         reabastecimento.quilometragemAtual,
+        reabastecimento.quilometragemLitro,
         reabastecimento.id
     )
 }
-fun Automorama2Database.deleteReabastecimentio(id: Long) = reabastecimentoQueries.deleteReabastecimento(id)
+fun Automorama2Database.deleteReabastecimentio(id: Long) = reabastecimentosQueries.deleteReabastecimento(id)
 
 fun Automorama2Database.setReabastecimento(reabastecimento: Reabastecimento){
-    return reabastecimentoQueries.insertReabastecimento(
-        reabastecimento.id,
+    return reabastecimentosQueries.insertReabastecimento(
         reabastecimento.combustivel.id,
         reabastecimento.veiculo.id,
         reabastecimento.valorTotal,
@@ -103,7 +108,8 @@ fun Automorama2Database.setReabastecimento(reabastecimento: Reabastecimento){
         reabastecimento.litro,
         reabastecimento.data.toString(),
         reabastecimento.quilometragemAnterior,
-        reabastecimento.quilometragemAtual
+        reabastecimento.quilometragemAtual,
+        reabastecimento.quilometragemLitro
     )
 }
 

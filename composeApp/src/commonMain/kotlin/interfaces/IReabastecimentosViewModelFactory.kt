@@ -1,7 +1,7 @@
 package interfaces
 
-import viewModels.VeiculoViewModel
+import viewModels.ReabastecimentoListViewModel
 
-interface IReabastecimentoViewModelFactory {
-    fun create(): VeiculoViewModel
+interface IReabastecimentoListViewModelFactory {
+    fun create(veiculoId: Long): ReabastecimentoListViewModel
 }

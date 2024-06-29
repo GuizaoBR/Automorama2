@@ -33,100 +33,125 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import data.models.Reabastecimento
 import data.models.Veiculo
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import ui.recursos.reabastecimentos.screens.ReabastecimentoFormScreen
+import ui.theme.AutomoramaTheme
+
+
+@Composable
+@Preview
+fun VeiculosDropDownPreview(){
+    AutomoramaTheme(true){
+        val mockVeiculos = listOf(
+            Veiculo(id = 1, fabricante = "Toyota", modelo = "Corolla", anoFabricacao = 2016, anoModelo = 2016, placa = "XYZ123", apelido = "Meu carro"),
+            Veiculo(id = 2, fabricante = "Honda", modelo = "Civic", anoFabricacao = 2018, anoModelo = 2018, placa = "ABC456", apelido = "Carro da esposa"),
+            Veiculo(id = 3, fabricante = "Ford", modelo = "Mustang", anoFabricacao = 2022, anoModelo = 2022, placa = "DEF789", apelido = "Carro do sonho")
+        )
+        VeiculoDropDownTopAppBar()
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VeiculoDropDownTopAppBar(veiculos: List<Veiculo>, onVeiculoSelected: (Veiculo) -> Unit) {
+fun VeiculoDropDownTopAppBar(
+    uiState: ReabastecimentoListUIState = ReabastecimentoListUIState(),
+    onChangeVeiculo: () -> Unit= {},
+) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedVehicle by remember { mutableStateOf<Veiculo?>(null) }
 
     TopAppBar(
-        title = { Text(selectedVehicle?.modelo ?: "Selecione um veículo") },
-        actions = {
-            Box {
-                TextButton(
-                    onClick = { expanded = true },
-                    content = { Text(selectedVehicle?.modelo ?: "Selecione") }
-                )
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
+        title = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+            ){
+                Box(modifier = Modifier
+                    .fillMaxWidth(fraction = 0.7f)
                 ) {
-                    veiculos.forEach { vehicle ->
-                        DropdownMenuItem(onClick = {
-                            selectedVehicle = vehicle
-                            onVeiculoSelected(vehicle)
-                            expanded = false
-                        }, text = { Text("${vehicle.fabricante} ${vehicle.modelo}")})
+                    TextButton(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .background(Color.Black.copy(alpha = 0.2f), shape = RoundedCornerShape(16.dp))
+                            .fillMaxWidth(),
+                        onClick = { expanded = true },
+                        content = { Text(uiState.veiculo?.modelo ?: "Selecione") }
+                    )
+                    DropdownMenu(
+                        modifier = Modifier.align(Alignment.Center).fillMaxWidth(fraction = 0.7f),
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                    ) {
+                        uiState.veiculos.forEach { veiculo ->
+                            DropdownMenuItem(
+                                onClick = {
+                                uiState.onChangeVeiculo(veiculo)
+                                expanded = false
+                            },
+                                text = { Text("${veiculo.fabricante} ${veiculo.modelo}")})
+                        }
                     }
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = "Drop-Down Arrow",
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .alpha(0.2f),
+                )
+
                 }
             }
-        }
+                },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primary
+        )
+
     )
 }
 @Composable
 @Preview
 fun ReabastecimentoListPreview() {
-    ReabastecimentoList()
+    AutomoramaTheme(true){
+
+       ReabastecimentoList()
+    }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-fun ReabastecimentoList(modifier: Modifier = Modifier, newReabastecimento: () -> Unit = {}) {
+fun ReabastecimentoList(
+    uiState: ReabastecimentoListUIState = ReabastecimentoListUIState(),
+    modifier: Modifier = Modifier,
+    newReabastecimento: (veiculoId: Long) -> Unit = {},
+) {
 
-    val mock = Reabastecimento().createReabastecimentosList()
-    val mockVeiculos = listOf(
-    Veiculo(id = 1, fabricante = "Toyota", modelo = "Corolla", anoFabricacao = 2016, anoModelo = 2016, placa = "XYZ123", apelido = "Meu carro"),
-    Veiculo(id = 2, fabricante = "Honda", modelo = "Civic", anoFabricacao = 2018, anoModelo = 2018, placa = "ABC456", apelido = "Carro da esposa"),
-    Veiculo(id = 3, fabricante = "Ford", modelo = "Mustang", anoFabricacao = 2022, anoModelo = 2022, placa = "DEF789", apelido = "Carro do sonho")
-)
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { VeiculoDropDownTopAppBar(mockVeiculos, { }) },
+        topBar = { VeiculoDropDownTopAppBar(uiState) },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { newReabastecimento() },
+                onClick = { newReabastecimento(uiState.veiculo.id!!) },
                 text = { Text("Novo Reabastecimento") },
                 icon = { Icon(Icons.Filled.Add, contentDescription = "Adicione novo reabastecimento") },
             )
         },
     ) {
         Box(Modifier.fillMaxSize()) {
-            ExtendedFloatingActionButton(
-                onClick = { },
-                content = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Icon(Icons.Filled.Add, contentDescription = "Adicione novo reabastecimento")
-                        Text(text = "Novo Reabastecimento")
-                    }
-                },
-                modifier = Modifier
-                    .padding(16.dp)
-                    .align(Alignment.BottomEnd)
-                    .zIndex(1f)
-            )
 
             LazyVerticalGrid(columns = GridCells.Adaptive(300.dp), contentPadding = it) {
-                items(mock) { reabastecimento ->
-
+                items(uiState.reabastecimentos) { reabastecimento ->
                     Card(Modifier, reabastecimento)
-
-
                 }
             }
 
@@ -165,6 +190,13 @@ fun Card(
 
     ) {
         CardContent(Modifier, reabastecimento, expandedState, { expandedState = !expandedState })
+    }
+}
+@Composable
+@Preview
+fun CardPreview(){
+    AutomoramaTheme(true){
+        Card(reabastecimento = Reabastecimento().createReabastecimentosList().first())
     }
 }
 
@@ -272,7 +304,7 @@ fun CardContent(
                         Spacer(modifier = Modifier.padding(start = 8.dp))
                         Box(Modifier.align(Alignment.CenterVertically)) {
                             Text(
-                                text = "${reabastecimento.quilometroLitro} km/l",
+                                text = "${reabastecimento.quilometragemLitro} km/l",
                                 style = TextStyle.Default.copy(
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Medium

@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS Combustiveis (
+    id INTEGER PRIMARY KEY AUTOINCREMENT ,
+    nome TEXT
+);
+
+CREATE TABLE IF NOT EXISTS Veiculos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fabricante TEXT NOT NULL,
+    modelo TEXT NOT NULL,
+    anoFabricacao INTEGER NOT NULL,
+    anoModelo INTEGER NOT NULL,
+    placa TEXT NOT NULL,
+    apelido TEXT
+);

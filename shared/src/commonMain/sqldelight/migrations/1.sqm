@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS Reabastecimentos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    combustivelId INTEGER,
+    veiculoId INTEGER,
+    valorTotal REAL,
+    valorLitro REAL,
+    litro REAL,
+    data TEXT,
+    quilometragemAnterior REAL,
+    quilometragemAtual REAL,
+    FOREIGN KEY (combustivelId) REFERENCES Combustiveis(id),
+    FOREIGN KEY (veiculoId) REFERENCES Veiculos(id)
+);

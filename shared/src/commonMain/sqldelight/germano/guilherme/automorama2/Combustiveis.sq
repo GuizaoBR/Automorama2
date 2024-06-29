@@ -1,7 +1,3 @@
-CREATE TABLE Combustiveis (
-    id INTEGER PRIMARY KEY AUTOINCREMENT ,
-    nome TEXT
-);
 
 selectAllCombustivel:
 SELECT *

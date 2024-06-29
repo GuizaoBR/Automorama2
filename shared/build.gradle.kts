@@ -73,6 +73,9 @@ sqldelight {
     databases {
         create("Automorama2Database") {
             packageName.set("germano.guilherme.automorama2")
+            deriveSchemaFromMigrations.set(true)
+            verifyMigrations.set(true)
+
         }
     }
 }

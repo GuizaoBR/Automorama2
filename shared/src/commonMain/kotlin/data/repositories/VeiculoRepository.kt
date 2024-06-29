@@ -3,6 +3,7 @@ package data.repositories
 import app.cash.sqldelight.db.SqlDriver
 import data.deleteVeiculo
 import data.getAllVeiculos
+import data.getVeiculoById
 import data.models.Veiculo
 import data.setVeiculo
 import data.updateVeiculo
@@ -51,5 +52,9 @@ class VeiculoRepository(driver: SqlDriver) {
             it.remove(veiculo)
             it
         }
+    }
+
+    fun getVeiculosById(id: Long) : Veiculo {
+        return database.getVeiculoById(id)
     }
 }

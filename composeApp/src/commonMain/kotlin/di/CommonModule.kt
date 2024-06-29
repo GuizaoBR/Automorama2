@@ -2,9 +2,12 @@ package di
 
 import org.koin.dsl.module
 import repositoryFactory.CombustivelRepositoryFactory
+import repositoryFactory.ReabastecimentoRepositoryFactory
 import repositoryFactory.VeiculoRepositoryFactory
 import viewModelsFactory.CombustiveisViewModelFactory
 import viewModelsFactory.CombustivelFormViewModelFactory
+import viewModelsFactory.ReabastecimentoFormViewModelFactory
+import viewModelsFactory.ReabastecimentoListViewModelFactory
 import viewModelsFactory.VeiculoFormViewModelFactory
 import viewModelsFactory.VeiculosViewModelFactory
 
@@ -21,11 +24,21 @@ fun commonModule() = module {
     single<CombustiveisViewModelFactory> {
         CombustiveisViewModelFactory()
     }
-    factory<CombustivelFormViewModelFactory> {
+    single<CombustivelFormViewModelFactory> {
         CombustivelFormViewModelFactory()
     }
     single<CombustivelRepositoryFactory> {
         CombustivelRepositoryFactory(get())
+    }
+    single<ReabastecimentoRepositoryFactory> {
+        ReabastecimentoRepositoryFactory(get())
+    }
+    single<ReabastecimentoListViewModelFactory> {
+        ReabastecimentoListViewModelFactory()
+
+    }
+    single<ReabastecimentoFormViewModelFactory> {
+        ReabastecimentoFormViewModelFactory()
     }
 
 

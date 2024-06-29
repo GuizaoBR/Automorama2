@@ -1,0 +1,23 @@
+
+selectReabastecimentosByVeiculo:
+SELECT *
+FROM Reabastecimentos R
+JOIN Combustiveis C ON R.combustivelId = C.id
+JOIN Veiculos V ON R.veiculoId = V.id
+WHERE R.veiculoId = :veiculoId;
+
+insertReabastecimento:
+INSERT INTO Reabastecimentos(combustivelId, veiculoId, valorTotal, valorLitro, litro, data, quilometragemAnterior, quilometragemAtual, quilometragemLitro)
+VALUES
+(?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+
+
+deleteReabastecimento:
+DELETE FROM Reabastecimentos WHERE  id = ?;
+
+updateReabastecimento:
+UPDATE Reabastecimentos
+SET  combustivelId = :combustivelId, veiculoId = :veiculoId, valorTotal = :valorToral, valorLitro = :valorLitro, litro = :litro, data = :data
+, quilometragemAnterior = :quilometragemAnterior, quilometragemAtual = :quilometragemAtual, quilometragemLitro = :quilometragemLitro
+WHERE id = :id;

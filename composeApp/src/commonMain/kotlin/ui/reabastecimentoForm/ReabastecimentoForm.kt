@@ -25,16 +25,25 @@ import data.models.Reabastecimento
 import helpers.WindowSize
 import helpers.WindowSize.Companion.screenSizeWidth
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.format
+import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import ui.reabastecimentoForm.ReabastecimentoFormUIState
 import ui.theme.AutomoramaTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun ReabastecimentoForm(
-    reabastecimento: Reabastecimento = Reabastecimento(),
-    modifier: Modifier = Modifier
+    uiState: ReabastecimentoFormUIState = ReabastecimentoFormUIState(),
+    modifier: Modifier = Modifier,
+    onSaveClick: () -> Unit = {},
+    onBackClick: () -> Unit = {},
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    var (id, combustivel, veiculo, valorTotal, valorLitro, litro, data, quilometragemAnterior, quilometragemAtual, quilometroLitro) = uiState
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -47,7 +56,7 @@ fun ReabastecimentoForm(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = onBackClick) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
                     }
                 },
@@ -57,8 +66,7 @@ fun ReabastecimentoForm(
                 ),
                 actions = {
                     OutlinedButton(
-                        onClick = {
-                        },
+                        onClick = onSaveClick,
                         enabled = true,
                         shape = RoundedCornerShape(50.dp)
 
@@ -136,8 +144,8 @@ fun ReabastecimentoForm(
                         composable { modifier ->
 
                             TextField(
-                                value = "",
-                                onValueChange = { },
+                                value = quilometragemAnterior,
+                                onValueChange = uiState.onQuilometragemAnteriorChange,
                                 label = {
                                     Row(modifier = Modifier.fillMaxWidth()) {
                                         Icon(
@@ -162,8 +170,8 @@ fun ReabastecimentoForm(
 
 
                             TextField(
-                                value = "",
-                                onValueChange = { },
+                                value = quilometragemAtual,
+                                onValueChange = uiState.onQuilometragemAtualChange,
                                 label = {
                                     Row(modifier = Modifier.fillMaxWidth()) {
                                         Icon(
@@ -187,8 +195,8 @@ fun ReabastecimentoForm(
                         composable { modifier ->
 
                             TextField(
-                                value = "",
-                                onValueChange = { },
+                                value = litro,
+                                onValueChange = uiState.onLitroChange,
                                 label = {
                                     Row(modifier = Modifier.fillMaxWidth()) {
                                         Icon(
@@ -213,8 +221,8 @@ fun ReabastecimentoForm(
 
 
                             TextField(
-                                value = "",
-                                onValueChange = { },
+                                value = valorTotal,
+                                onValueChange = uiState.onValorTotalChange,
                                 label = {
 
                                     Row(modifier = Modifier.fillMaxWidth()) {
@@ -237,8 +245,8 @@ fun ReabastecimentoForm(
                         composable { modifier ->
 
                             TextField(
-                                value = "",
-                                onValueChange = { },
+                                value = valorLitro,
+                                onValueChange = uiState.onValorLitroChange,
                                 label = {
                                     Row(modifier = Modifier.fillMaxWidth()) {
                                         Icon(
@@ -263,11 +271,10 @@ fun ReabastecimentoForm(
                             var openDialog by remember { mutableStateOf(false) }
                             //                        val snackState = remember { SnackbarHostState() }
                             //                        val snackScope = rememberCoroutineScope()
-                            var selectedDateText by remember { mutableStateOf("") } // Armazena a data selecionada como texto
 
                             TextField(
-                                value = selectedDateText,
-                                onValueChange = { },
+                                value = data,
+                                onValueChange = {uiState.onDataChange(data)},
                                 label = {
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
@@ -309,6 +316,16 @@ fun ReabastecimentoForm(
                                         TextButton(
                                             onClick = {
                                                 openDialog = false
+                                                data = Instant.fromEpochMilliseconds(datePickerState.selectedDateMillis!!)
+                                                    .toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date.format(LocalDate.Format {
+                                                        dayOfMonth()
+                                                        char('/')
+                                                        monthNumber()
+                                                        char('/')
+                                                        year()
+                                                    })
+                                                uiState.onDataChange(data)
+
                                                 //                                            snackScope.launch {
                                                 //                                                snackState.showSnackbar(
                                                 //                                                    "Selected date timestamp: ${datePickerState.selectedDateMillis}"
@@ -333,24 +350,18 @@ fun ReabastecimentoForm(
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
-                        val combustiveis = listOf(
-                            Combustivel(1, "Gasolina"),
-                            Combustivel(2, "Etanol"),
-                            Combustivel(3, "Diesel")
-                        )
 
                         composable { modifier ->
 
                             var expanded by remember { mutableStateOf(false) }
-                            var selectedCombustivel by remember { mutableStateOf(combustiveis[0]) }
 
                             ExposedDropdownMenuBox(
                                 expanded = expanded,
                                 onExpandedChange = { expanded = !expanded }
                             ) {
                                 TextField(
-                                    value = selectedCombustivel.nome,
-                                    onValueChange = {},
+                                    value = uiState.combustivel.nome,
+                                    onValueChange = {uiState.onCombustivelChange(combustivel)},
                                     readOnly = true,
                                     label = { Text("Combustível") },
                                     trailingIcon = {
@@ -365,11 +376,11 @@ fun ReabastecimentoForm(
                                     expanded = expanded,
                                     onDismissRequest = { expanded = false }
                                 ) {
-                                    combustiveis.forEach { combustivel ->
+                                    uiState.combustiveis.forEach { combustivel ->
                                         DropdownMenuItem(
                                             text = { Text(combustivel.nome) },
                                             onClick = {
-                                                selectedCombustivel = combustivel
+                                                uiState.onCombustivelChange(combustivel)
                                                 expanded = false
                                             }
                                         )
@@ -380,19 +391,6 @@ fun ReabastecimentoForm(
 
                         }
 
-
-
-                        Column {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Text("Widht $screenWidth")
-                                Text("Height $screenHeight")
-
-                            }
-                        }
 
                     }
                 }

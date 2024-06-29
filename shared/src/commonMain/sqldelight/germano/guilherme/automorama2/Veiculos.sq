@@ -1,12 +1,3 @@
-CREATE TABLE Veiculos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    fabricante TEXT NOT NULL,
-    modelo TEXT NOT NULL,
-    anoFabricacao INTEGER NOT NULL,
-    anoModelo INTEGER NOT NULL,
-    placa TEXT NOT NULL,
-    apelido TEXT
-);
 
 selectAllVeiculos:
 SELECT *
@@ -23,3 +14,8 @@ updateVeiculo:
 UPDATE Veiculos
 SET  fabricante = :fabricante, modelo = :modelo, anoFabricacao = :anoFabricacao, anoModelo = :anoModelo, placa = :placa, apelido = :apelido
 WHERE id = :id;
+
+getVeiculosById:
+SELECT *
+FROM Veiculos
+WHERE id = ?;
