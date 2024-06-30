@@ -37,6 +37,13 @@ class ReabastecimentoListViewModel(
         _uiState.update {
             it.copy(veiculos = veiculoRepository.veiculos.value)
         }
+        if (veiculoId != 0L) {
+            _uiState.update {
+                repository.getReabastecimentoByVeiculo(veiculoId)
+
+                it.copy(veiculo = veiculoRepository.getVeiculosById(veiculoId), reabastecimentos = repository.reabastecimentos.value)
+            }
+        }
         _uiState.update { currentState ->
             currentState.copy(
                 onChangeVeiculo = { selectedVeiculo ->
