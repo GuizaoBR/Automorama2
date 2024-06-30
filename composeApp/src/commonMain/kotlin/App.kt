@@ -17,17 +17,14 @@ import ui.theme.AutomoramaTheme
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import ui.cadastro.NavigationItem
 import ui.cadastro.screens.GroupCadastrosScreen
 import ui.recursos.reabastecimentos.screens.ReabastecimentoListScreen
 import ui.drawerMenu.DrawerMenuItens
-import ui.recursos.reabastecimentos.screens.ReabastecimentoFormScreen
 
 class App() : KoinComponent {
 
 
-    private val resolution: Pair<Int, Int> by inject()
 
     @Preview
     @Composable
@@ -35,11 +32,8 @@ class App() : KoinComponent {
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         AutomoramaTheme{
             Navigator(
-                screen = ShowGroupScreen(modifier = modifier)
+                screen = ShowGroupScreen()
             ) { navigator ->
-                val onFormClicked = {
-                    navigator.push(ReabastecimentoFormScreen())
-                }
 
                 /* Pass navigator to ModalNavigationDrawer and subsequently to DrawerMenu */
                 ModalNavigationDrawer(
@@ -64,8 +58,8 @@ class App() : KoinComponent {
 
 
 
-    fun ShowGroupScreen(onFormClicked: () -> Unit = {}, onFormFinished: () -> Unit = {}, modifier: Modifier): Screen {
-        return GroupCadastrosScreen(resolution = resolution, modifier = modifier)
+    fun ShowGroupScreen(): Screen {
+        return GroupCadastrosScreen()
     }
 
     @Composable
@@ -97,7 +91,7 @@ class App() : KoinComponent {
                             if (isOpen) close()
                         }
                     }
-                    navigator.replace(ShowGroupScreen(modifier= modifier))
+                    navigator.replace(ShowGroupScreen())
 
                 },
                 modifier = Modifier.padding(start = 16.dp, top = 6.dp)

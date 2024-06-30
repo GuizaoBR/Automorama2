@@ -7,6 +7,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import data.models.Veiculo
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -15,19 +18,18 @@ import viewModelsFactory.ReabastecimentoFormViewModelFactory
 
 data class ReabastecimentoFormScreen(
     private val veiculoId: Long = 0,
-    private val onBackClick: () -> Unit = {},
-    private val modifier: Modifier = Modifier
 ) : Screen, KoinComponent {
-    private val viewModelFactory: ReabastecimentoFormViewModelFactory by inject()
     @Composable
     override fun Content() {
+        val navigator: Navigator = LocalNavigator.currentOrThrow
+        val viewModelFactory: ReabastecimentoFormViewModelFactory by inject()
         val viewModel = remember {
             viewModelFactory.create(null, veiculoId)
         }
         val uiState by viewModel.uiState.collectAsState(ReabastecimentoFormUIState())
-        ReabastecimentoForm(modifier = modifier, onBackClick = onBackClick, uiState = uiState, onSaveClick = {
+        ReabastecimentoForm(onBackClick = { navigator.pop() }, uiState = uiState, onSaveClick = {
             viewModel.saveReabastecimento()
-            onBackClick()
+            navigator.pop()
         } )
     }
 }

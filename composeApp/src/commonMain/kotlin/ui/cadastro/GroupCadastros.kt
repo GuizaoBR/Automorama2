@@ -1,6 +1,11 @@
 package ui.cadastro
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateIntOffsetAsState
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -14,20 +19,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.SlideTransition
+import ui.cadastro.screens.CombustivelFormScreen
 import ui.cadastro.screens.CombustivelListScreen
+import ui.cadastro.screens.VeiculoFormScreen
 import ui.cadastro.screens.VeiculoListScreen
 
 @Composable
-fun GroupCadastros(resolution: Pair<Int, Int>, modifier: Modifier){
+fun GroupCadastros(resolution: Pair<Int, Int>, modifier: Modifier = Modifier){
     var showBottom by remember { mutableStateOf(true) }
     val onHideBottom = { showBottom = false }
     val onShowBottomScreen = { showBottom = true }
     Navigator(
-        screen = VeiculoListScreen(onFormClicked = onHideBottom,
-                                   onFormFinished = onShowBottomScreen,
-            modifier = modifier),
+        screen = VeiculoListScreen(),
     ) { navigator ->
         Scaffold(
         bottomBar = {
@@ -56,11 +62,6 @@ fun GroupCadastros(resolution: Pair<Int, Int>, modifier: Modifier){
                     selectedItem = it
                     navigator.replace(
                         CombustivelListScreen(
-                            onFormClicked = onHideBottom,
-                            onFormFinished = {
-                                onShowBottomScreen()
-                                selectedItem = it
-                                             },
                         )
                     )
                 }
@@ -74,11 +75,7 @@ fun GroupCadastros(resolution: Pair<Int, Int>, modifier: Modifier){
                     if(selectedItem == it) return@NavigationItem
                     selectedItem = it
                     navigator.replace(
-                        VeiculoListScreen(
-                            onFormClicked = onHideBottom,
-                            onFormFinished = onShowBottomScreen,
-                            modifier = modifier
-                        )
+                        VeiculoListScreen()
                     )
                 }
             )
@@ -94,21 +91,27 @@ fun GroupCadastros(resolution: Pair<Int, Int>, modifier: Modifier){
 
 }
 
-    @Composable
-    fun BottomBar(
-        itens: List<NavigationItem>,
-        selectedItem: NavigationItem,
-        modifier: Modifier = Modifier
-    ) {
+@Composable
+fun BottomBar(
+    itens: List<NavigationItem>,
+    selectedItem: NavigationItem,
+    modifier: Modifier = Modifier
+) {
+    val navigator = LocalNavigator.current
 
-        NavigationBar(
-            itens = itens,
-            selectedItem = selectedItem,
-            modifier = modifier
-                .fillMaxWidth()
-
-        )
+    if (navigator != null) {
+        AnimatedVisibility(
+            visible = (navigator.lastItem !is VeiculoFormScreen && navigator.lastItem !is CombustivelFormScreen),
+            enter = slideInHorizontally(), // Customize the enter animation
+        ) {
+            NavigationBar(
+                itens = itens,
+                selectedItem = selectedItem,
+                modifier =modifier.fillMaxWidth()
+            )
+        }
     }
+}
 
 @Composable
     fun convertDpToPx(dp: Float): Int {

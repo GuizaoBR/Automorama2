@@ -21,14 +21,12 @@ import viewModelsFactory.CombustiveisViewModelFactory
 import viewModelsFactory.VeiculosViewModelFactory
 
 class CombustivelListScreen(
-    private val onFormClicked: () -> Unit = {},
-    private val onFormFinished: () -> Unit = {},
-    private val modifier: Modifier = Modifier
+
 ) : Screen, KoinComponent {
-    private val combustiveisViewModelFactory: CombustiveisViewModelFactory by inject()
 
     @Composable
     override fun Content() {
+        val combustiveisViewModelFactory: CombustiveisViewModelFactory by inject()
         val navigator: Navigator = LocalNavigator.currentOrThrow
         val viewModel = remember {
             combustiveisViewModelFactory.create()
@@ -37,15 +35,12 @@ class CombustivelListScreen(
         CombustivelListScreen(
             uiState = uiState,
             onNewCombustivelClick = {
-                onFormClicked()
-                navigator.push(CombustivelFormScreen(onFormFinished= onFormFinished))
+                navigator.push(CombustivelFormScreen())
             },
             onCombustivelClick = {
-                onFormClicked()
-                navigator.push(CombustivelFormScreen(it.id, onFormFinished= onFormFinished))
+                navigator.push(CombustivelFormScreen(it.id))
 
             },
-            modifier = modifier
 
         )
     }

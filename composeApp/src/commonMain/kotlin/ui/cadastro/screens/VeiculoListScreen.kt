@@ -15,15 +15,14 @@ import ui.Veiculos.VeiculosListScreen
 import ui.Veiculos.VeiculosListUiState
 import viewModelsFactory.VeiculosViewModelFactory
 
-data class VeiculoListScreen(
-    private val onFormClicked: () -> Unit = {},
-    private val onFormFinished: () -> Unit = {},
-    private val modifier: Modifier = Modifier
+class VeiculoListScreen(
+
 ) : Screen, KoinComponent {
-    private val veiculosViewModelFactory: VeiculosViewModelFactory by inject()
+
 
     @Composable
     override fun Content() {
+        val veiculosViewModelFactory: VeiculosViewModelFactory by inject()
         val navigator: Navigator = LocalNavigator.currentOrThrow
         val viewModel = remember {
             veiculosViewModelFactory.create()
@@ -32,16 +31,13 @@ data class VeiculoListScreen(
         VeiculosListScreen(
             uiState = uiState,
             onNewVeiculoClick = {
-                onFormClicked()
-                navigator.push(VeiculoFormScreen(onFormFinished= onFormFinished))
+                navigator.push(VeiculoFormScreen())
 
             },
             onVeiculoClick = {
-                onFormClicked()
-                navigator.push(VeiculoFormScreen(it.id, onFormFinished))
+                navigator.push(VeiculoFormScreen(it.id))
 
             },
-            modifier = modifier
 
         )
     }

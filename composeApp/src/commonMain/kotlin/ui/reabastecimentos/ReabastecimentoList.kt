@@ -59,7 +59,7 @@ fun VeiculosDropDownPreview(){
 @Composable
 fun VeiculoDropDownTopAppBar(
     uiState: ReabastecimentoListUIState = ReabastecimentoListUIState(),
-    onChangeVeiculo: () -> Unit= {},
+    onChangeVeiculo: (veiculoId: Long) -> Unit = {},
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -90,6 +90,7 @@ fun VeiculoDropDownTopAppBar(
                             DropdownMenuItem(
                                 onClick = {
                                 uiState.onChangeVeiculo(veiculo)
+                                    onChangeVeiculo(veiculo.id!!)
                                 expanded = false
                             },
                                 text = { Text("${veiculo.fabricante} ${veiculo.modelo}")})
@@ -129,7 +130,9 @@ fun ReabastecimentoListPreview() {
 fun ReabastecimentoList(
     uiState: ReabastecimentoListUIState = ReabastecimentoListUIState(),
     modifier: Modifier = Modifier,
+    onChangeVeiculoId: (veiculoId: Long) -> Unit = {},
     newReabastecimento: (veiculoId: Long) -> Unit = {},
+
 ) {
 
 
@@ -138,7 +141,7 @@ fun ReabastecimentoList(
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { VeiculoDropDownTopAppBar(uiState) },
+        topBar = { VeiculoDropDownTopAppBar(uiState, onChangeVeiculoId) },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = { newReabastecimento(uiState.veiculo.id!!) },

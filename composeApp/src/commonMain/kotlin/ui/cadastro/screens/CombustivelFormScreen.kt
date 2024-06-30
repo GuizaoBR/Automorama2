@@ -20,16 +20,13 @@ import viewModelsFactory.CombustivelFormViewModelFactory
 
 data class CombustivelFormScreen(
     private val id: Long? = null,
-    private val modifier: Modifier = Modifier,
-    private val onFormFinished:  () -> Unit = {},
+
 ) : Screen, KoinComponent {
-    private val combustivelFormViewModelFactory: CombustivelFormViewModelFactory by inject()
 
     @Composable
     override fun Content() {
-        LifecycleEffect(
-            onDisposed = onFormFinished
-        )
+
+        val combustivelFormViewModelFactory: CombustivelFormViewModelFactory by inject()
         val navigator: Navigator = LocalNavigator.currentOrThrow
         val viewModel = remember {
             combustivelFormViewModelFactory.create(id)
