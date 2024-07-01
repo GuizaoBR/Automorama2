@@ -131,9 +131,10 @@ fun ReabastecimentoList(
     uiState: ReabastecimentoListUIState = ReabastecimentoListUIState(),
     modifier: Modifier = Modifier,
     onChangeVeiculoId: (veiculoId: Long) -> Unit = {},
+    editReabastecimento: (veiculoId: Long, reabastecimentoId: Long) -> Unit = { veiculoId: Long, reabastecimentoId: Long -> },
     newReabastecimento: (veiculoId: Long) -> Unit = {},
 
-) {
+    ) {
 
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -154,7 +155,7 @@ fun ReabastecimentoList(
 
             LazyVerticalGrid(columns = GridCells.Adaptive(300.dp), contentPadding = it) {
                 items(uiState.reabastecimentos) { reabastecimento ->
-                    Card(Modifier, reabastecimento)
+                    Card(Modifier, reabastecimento, editReabastecimento, uiState.onDelete)
                 }
             }
 
@@ -168,7 +169,9 @@ fun ReabastecimentoList(
 @Preview
 fun Card(
     modifier: Modifier = Modifier,
-    reabastecimento: Reabastecimento
+    reabastecimento: Reabastecimento,
+    editReabastecimento: (veiculoId: Long, reabastecimentoId: Long) -> Unit,
+    onDelete: (id: Long) -> Unit
 ) {
     var expandedState by remember { mutableStateOf(false) }
     ElevatedCard(
@@ -178,6 +181,10 @@ fun Card(
             .clip(RoundedCornerShape(16.dp))
             .combinedClickable(
                 onClick = {
+                    editReabastecimento(reabastecimento.veiculo.id!!, reabastecimento.id!!)
+                },
+                onLongClick = {
+                    expandedState = !expandedState
 
                 },
             )
@@ -192,14 +199,18 @@ fun Card(
         )
 
     ) {
-        CardContent(Modifier, reabastecimento, expandedState, { expandedState = !expandedState })
+        CardContent(Modifier, reabastecimento, expandedState, { expandedState = !expandedState }, onDelete)
     }
 }
 @Composable
 @Preview
 fun CardPreview(){
     AutomoramaTheme(true){
-        Card(reabastecimento = Reabastecimento().createReabastecimentosList().first())
+        Card(
+            reabastecimento = Reabastecimento().createReabastecimentosList().first(),
+            editReabastecimento = { veiculoId, reabastecimentoId ->  },
+            onDelete = {  }
+        )
     }
 }
 
@@ -208,7 +219,8 @@ fun CardPreview(){
 @Preview
 fun CardContent(
     modifier: Modifier = Modifier, reabastecimento: Reabastecimento, expandedState: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDelete: (id: Long) -> Unit
 )
 {
 
@@ -391,115 +403,51 @@ fun CardContent(
     }
 
 
+    if(showDeleteDialog){
+        AlertDeleteVeiculo(reabastecimento, onDelete) { showDeleteDialog = false }
+    }
 }
-//    if(showDeleteDialog){
-//        AlertDeleteVeiculo(reabastecimento, onDeleteClick) { showDeleteDialog = false }
-//    }
 
 
-//@OptIn(ExperimentalLayoutApi::class)
-//@Composable
-//fun AlertDeleteVeiculo(veiculo: Veiculo = Veiculo(), onDeleteClick: (Veiculo) -> Unit = {}, onCancelClick: () -> Unit = {}){
-//    AlertDialog(
-//        title = {
-//            Text(text = "ATENÇÃO")
-//        },
-//        text = {
-//            Column {
-//                Row(Modifier.fillMaxWidth()
-//                ) {
-//                    Text(text = "Deseja excluir esse veículo?")
-//                }
-//                Spacer(Modifier.size(16.dp))
-//                if (veiculo.apelido.isEmpty()){
-//
-//                    FlowColumn {
-//                        FlowRow(
-//                            modifier = Modifier
-//                                .fillMaxWidth(),
-//                            horizontalArrangement = Arrangement.Center
-//                        ) {
-//                            Text(
-//                                text = veiculo.fabricante,
-//                                style = TextStyle.Default.copy(
-//                                    fontSize = 15.sp,
-//                                    fontWeight = FontWeight.Bold
-//                                )
-//                            )
-//                            Spacer(modifier = Modifier.size(16.dp))
-//                            Text(
-//                                text = veiculo.modelo,
-//                                style = TextStyle.Default.copy(
-//                                    fontSize = 15.sp,
-//                                    fontWeight = FontWeight.Bold
-//                                )
-//                            )
-//                        }
-//                        FlowRow(
-//                            modifier = Modifier
-//                                .padding(16.dp)
-//                                .fillMaxWidth(),
-//                            horizontalArrangement = Arrangement.Center
-//                        ) {
-//                            Text(
-//                                text = "${veiculo.anoFabricacao}/${veiculo.anoModelo}",
-//                                style = TextStyle.Default.copy(
-//                                    fontWeight = FontWeight.Medium,
-//                                    fontSize = 15.sp
-//                                )
-//                            )
-//                            Spacer(modifier = Modifier.width(16.dp))
-//                            Text(
-//                                text = veiculo.placa,
-//                                style = TextStyle.Default.copy(
-//                                    fontWeight = FontWeight.Medium,
-//                                    fontSize = 15.sp
-//                                )
-//                            )
-//
-//                        }
-//                    }
-//                } else {
-//                    FlowColumn {
-//                        FlowRow(
-//                            modifier = Modifier
-//                                .fillMaxWidth(),
-//                            horizontalArrangement = Arrangement.Center
-//                        ) {
-//                            Text(
-//                                text = veiculo.apelido,
-//                                style = TextStyle.Default.copy(
-//                                    fontSize = 15.sp,
-//                                    fontWeight = FontWeight.Bold
-//                                )
-//                            )
-//                        }
-//                    }
-//                }
-//            }
-//               },
-//        onDismissRequest = {
-//
-//        },
-//        confirmButton = {
-//            TextButton(
-//                onClick = {
-//                    onDeleteClick(veiculo)
-//                    onCancelClick()
-//                }
-//            ) {
-//                Text("Sim")
-//            }
-//                        },
-//        dismissButton = {
-//            TextButton(
-//                onClick = onCancelClick
-//            ) {
-//                Text("Não")
-//            }
-//        }
-//    )
-//}
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun AlertDeleteVeiculo(reabastecimento: Reabastecimento = Reabastecimento(), onDeleteClick: (id: Long) -> Unit = {}, onCancelClick: () -> Unit = {}){
+    AlertDialog(
+        title = {
+            Text(text = "ATENÇÃO")
+        },
+        text = {
+            Column {
+                Row(Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Deseja excluir esse veículo?")
+                }
+                Spacer(Modifier.size(16.dp))
+
+            }
+               },
+        onDismissRequest = {
+
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onDeleteClick(reabastecimento.id!!)
+                    onCancelClick()
+                }
+            ) {
+                Text("Sim")
+            }
+                        },
+        dismissButton = {
+            TextButton(
+                onClick = onCancelClick
+            ) {
+                Text("Não")
+            }
+        }
+    )
+}
 
 
 

@@ -6,7 +6,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 
 data class Reabastecimento(
-    val id: Long = 0,
+    val id: Long? = null,
     val combustivel: Combustivel = Combustivel(),
     val veiculo: Veiculo = Veiculo(),
     val valorTotal: Double = 0.0,

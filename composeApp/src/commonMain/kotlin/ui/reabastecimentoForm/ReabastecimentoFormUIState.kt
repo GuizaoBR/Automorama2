@@ -4,7 +4,7 @@ import data.models.Combustivel
 import data.models.Veiculo
 
 data class ReabastecimentoFormUIState(
-    val id: Long = 0,
+    val id: Long? = null,
     val combustivel: Combustivel = Combustivel(),
     val veiculoId: Long = 0,
     val valorTotal: String = "",

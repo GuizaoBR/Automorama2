@@ -18,13 +18,14 @@ import viewModelsFactory.ReabastecimentoFormViewModelFactory
 
 data class ReabastecimentoFormScreen(
     private val veiculoId: Long = 0,
+    private val reabastecimentoId: Long? = null
 ) : Screen, KoinComponent {
     @Composable
     override fun Content() {
         val navigator: Navigator = LocalNavigator.currentOrThrow
         val viewModelFactory: ReabastecimentoFormViewModelFactory by inject()
         val viewModel = remember {
-            viewModelFactory.create(null, veiculoId)
+            viewModelFactory.create(reabastecimentoId, veiculoId)
         }
         val uiState by viewModel.uiState.collectAsState(ReabastecimentoFormUIState())
         ReabastecimentoForm(onBackClick = { navigator.pop() }, uiState = uiState, onSaveClick = {

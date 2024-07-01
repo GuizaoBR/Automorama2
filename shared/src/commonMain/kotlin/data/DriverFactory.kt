@@ -94,7 +94,7 @@ fun Automorama2Database.updateReabastecimento(reabastecimento: Reabastecimento){
         reabastecimento.quilometragemAnterior,
         reabastecimento.quilometragemAtual,
         reabastecimento.quilometragemLitro,
-        reabastecimento.id
+        reabastecimento.id?: 0
     )
 }
 fun Automorama2Database.deleteReabastecimentio(id: Long) = reabastecimentosQueries.deleteReabastecimento(id)

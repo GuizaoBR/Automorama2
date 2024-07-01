@@ -27,7 +27,11 @@ class ReabastecimentoListScreen : Screen, KoinComponent {
 
         ReabastecimentoList(uiState = uiState, onChangeVeiculoId = { veiculoId ->
             mainVeiculoId = veiculoId
-        }) { veiculoid ->
+        },
+        editReabastecimento = { veiculoId, reabastecimentoId ->
+            navigator.push(ReabastecimentoFormScreen(veiculoId = veiculoId, reabastecimentoId = reabastecimentoId))
+        }
+        ) { veiculoid ->
             navigator.push(ReabastecimentoFormScreen(veiculoId = veiculoid))
         }
     }

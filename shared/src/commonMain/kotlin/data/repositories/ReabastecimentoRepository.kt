@@ -24,7 +24,7 @@ class ReabastecimentoRepository(driver: SqlDriver) {
 
     fun saveReabastecimento(reabastecimento: Reabastecimento){
         _reabastecimentos.update { listReabastecimento ->
-            if (reabastecimento.id == 0L){
+            if (reabastecimento.id == null){
                 database.setReabastecimento(reabastecimento)
                 listReabastecimento.add(reabastecimento)
             } else {
@@ -42,10 +42,12 @@ class ReabastecimentoRepository(driver: SqlDriver) {
         }
     }
 
-    fun deleteReabastecimento(reabastecimento: Reabastecimento) {
+    fun deleteReabastecimento(id: Long) {
         _reabastecimentos.update {
-            database.deleteReabastecimentio(reabastecimento.id)
-            it.remove(reabastecimento)
+            database.deleteReabastecimentio(id)
+            it.remove(it.find { reabastecimento ->
+                reabastecimento.id == id
+            })
             it
         }
     }
