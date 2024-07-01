@@ -17,17 +17,13 @@ import ui.VeiculoForm.VeiculoFormUIState
 import viewModelsFactory.VeiculoFormViewModelFactory
 
 data class VeiculoFormScreen(
-    private val id: Long? = null,
-    private val onFormFinished:  () -> Unit = {},
-    private val modifier: Modifier = Modifier
+    private val id: Long? = null
 ) : Screen, KoinComponent {
-    private val veiculoFormViewModelFactory: VeiculoFormViewModelFactory by inject()
 
     @Composable
     override fun Content() {
-        LifecycleEffect(
-            onDisposed = onFormFinished
-        )
+        val veiculoFormViewModelFactory: VeiculoFormViewModelFactory by inject()
+
         val navigator: Navigator = LocalNavigator.currentOrThrow
         val viewModel = remember {
             veiculoFormViewModelFactory.create(id)
