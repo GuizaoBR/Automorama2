@@ -4,6 +4,7 @@ import com.hoc081098.kmp.viewmodel.ViewModel
 import data.models.Reabastecimento
 import data.models.Veiculo
 import helpers.round
+import helpers.toBrazilFormat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -81,13 +82,13 @@ class ReabastecimentoFormViewModel(
                 if (reabastecimento != null) {
                     _uiState.update {
                         it.copy(
-                            id = reabastecimento.id,
+                            id = reabastecimento.id!!,
                             combustivel = reabastecimento.combustivel,
                             veiculoId = reabastecimento.veiculo.id!!,
                             valorTotal = reabastecimento.valorTotal.toString(),
                             valorLitro = reabastecimento.valorLitro.toString(),
                             litro = reabastecimento.litro.toString(),
-                            data = reabastecimento.data.toString(),
+                            data = reabastecimento.data.toBrazilFormat(),
                             quilometragemAnterior = reabastecimento.quilometragemAnterior.toString(),
                             quilometragemAtual = reabastecimento.quilometragemAtual.toString(),
                             quilometroLitro = reabastecimento.quilometragemLitro.toString(),

@@ -35,7 +35,10 @@ class ReabastecimentoListViewModel(
         )
     init {
         _uiState.update {
-            it.copy(veiculos = veiculoRepository.veiculos.value)
+            it.copy(veiculos = veiculoRepository.veiculos.value,
+                onDelete = { id ->
+                    repository.deleteReabastecimento(id)
+                })
         }
         if (veiculoId != 0L) {
             _uiState.update {
