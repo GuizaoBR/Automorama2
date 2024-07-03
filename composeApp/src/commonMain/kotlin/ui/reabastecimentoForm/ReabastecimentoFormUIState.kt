@@ -5,7 +5,7 @@ import data.models.Veiculo
 
 data class ReabastecimentoFormUIState(
     val id: Long? = null,
-    val combustivel: Combustivel = Combustivel(),
+    val combustivel: Combustivel? = null,
     val veiculoId: Long = 0,
     val valorTotal: String = "",
     val valorLitro: String = "",
@@ -26,7 +26,7 @@ data class ReabastecimentoFormUIState(
     val onQuilometragemAnteriorChange: (String) -> Unit = {},
     val onQuilometragemAtualChange: (String) -> Unit = {},
     val onQuilometroLitroChange: (String) -> Unit = {},
-    val onCombustivelChange: (Combustivel) -> Unit = {},
+    val onCombustivelChange: (Combustivel?) -> Unit = {},
     val onVeiculoChange: (Veiculo) -> Unit = {},
     val onSaveClick: () -> Unit = {},
 )

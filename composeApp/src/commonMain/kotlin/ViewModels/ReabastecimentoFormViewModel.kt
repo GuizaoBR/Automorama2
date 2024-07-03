@@ -5,6 +5,7 @@ import data.models.Reabastecimento
 import data.models.Veiculo
 import helpers.round
 import helpers.toBrazilFormat
+import helpers.toBrazilFormatWithoutScape
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -47,6 +48,11 @@ class ReabastecimentoFormViewModel(
             currentState.copy(
                 onValorTotalChange = { valorTotal ->
                     _uiState.update { it.copy(valorTotal = valorTotal, isValid = checkIsValid()) }
+                    if(_uiState.value.litro.isNotEmpty() && _uiState.value.litro.toDouble() > 0 ){
+                        val valorLitro = (valorTotal.toDoubleOrNull()
+                            ?.div(_uiState.value.litro.toDouble()))?.round(2)
+                        _uiState.update { it.copy(valorLitro = valorLitro.toString()) }
+                    }
                 },
                 onValorLitroChange = { valorLitro ->
                     _uiState.update { it.copy(valorLitro = valorLitro, isValid = checkIsValid()) }
@@ -67,7 +73,8 @@ class ReabastecimentoFormViewModel(
                     _uiState.update { it.copy(quilometroLitro = quilometroLitro, isValid = checkIsValid()) }
                 },
                 onCombustivelChange = { combustivel ->
-                    _uiState.update { it.copy(combustivel = combustivel, isValid = checkIsValid()) }
+                    _uiState.update { it.copy(combustivel = combustivel) }
+                    _uiState.update { it.copy(isValid = checkIsValid()) }
                 },
 
             )
@@ -88,7 +95,7 @@ class ReabastecimentoFormViewModel(
                             valorTotal = reabastecimento.valorTotal.toString(),
                             valorLitro = reabastecimento.valorLitro.toString(),
                             litro = reabastecimento.litro.toString(),
-                            data = reabastecimento.data.toBrazilFormat(),
+                            data = reabastecimento.data.toBrazilFormatWithoutScape(),
                             quilometragemAnterior = reabastecimento.quilometragemAnterior.toString(),
                             quilometragemAtual = reabastecimento.quilometragemAtual.toString(),
                             quilometroLitro = reabastecimento.quilometragemLitro.toString(),
@@ -104,7 +111,15 @@ class ReabastecimentoFormViewModel(
 
 
     fun checkIsValid(): Boolean {
-        return true
+        with(_uiState.value){
+            return valorTotal.isNotEmpty() &&
+                    valorLitro.isNotEmpty() &&
+                    litro.isNotEmpty() &&
+                    data.isNotEmpty() &&
+                    quilometragemAnterior.isNotEmpty() &&
+                    quilometragemAtual.isNotEmpty() &&
+                    combustivel != null
+        }
     }
 
     fun saveReabastecimento() {
@@ -114,14 +129,12 @@ class ReabastecimentoFormViewModel(
             with(_uiState.value) { // Use with(_uiState.value) here
                 val formatter = LocalDate.Format {
                     dayOfMonth()
-                    char('/')
                     monthNumber()
-                    char('/')
                     year()
                 }
                 val reabastecimentoToSave = Reabastecimento(
                     id = id,
-                    combustivel = combustivel,
+                    combustivel = combustivel!!,
                     veiculo = Veiculo(id = veiculoId),
                     valorTotal = valorTotal.toDoubleOrNull() ?: 0.0,
                     valorLitro = valorLitro.toDoubleOrNull() ?: 0.0,

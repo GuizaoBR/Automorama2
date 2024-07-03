@@ -420,7 +420,7 @@ fun AlertDeleteVeiculo(reabastecimento: Reabastecimento = Reabastecimento(), onD
             Column {
                 Row(Modifier.fillMaxWidth()
                 ) {
-                    Text(text = "Deseja excluir esse veículo?")
+                    Text(text = "Deseja excluir esse reabastecimento?")
                 }
                 Spacer(Modifier.size(16.dp))
 

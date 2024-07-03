@@ -2,10 +2,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.TrendingFlat
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.FormatColorFill
 import androidx.compose.material.icons.filled.LocationOn
@@ -17,18 +17,29 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import data.models.Combustivel
-import data.models.Reabastecimento
+
 import helpers.WindowSize
 import helpers.WindowSize.Companion.screenSizeWidth
-import kotlinx.coroutines.launch
+import helpers.chekDateValidWithouScape
+import helpers.filterNumbersAndDecimal
+import helpers.isValidDay
+import helpers.isValidMonth
+import helpers.toBrazilFormatWithoutScape
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.format
-import kotlinx.datetime.format.char
+import kotlinx.datetime.TimeZone
+
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.reabastecimentoForm.ReabastecimentoFormUIState
@@ -44,6 +55,9 @@ fun ReabastecimentoForm(
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var (id, combustivel, veiculo, valorTotal, valorLitro, litro, data, quilometragemAnterior, quilometragemAtual, quilometroLitro) = uiState
+
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -67,7 +81,7 @@ fun ReabastecimentoForm(
                 actions = {
                     OutlinedButton(
                         onClick = onSaveClick,
-                        enabled = true,
+                        enabled = uiState.isValid,
                         shape = RoundedCornerShape(50.dp)
 
                     ) {
@@ -144,8 +158,9 @@ fun ReabastecimentoForm(
                         composable { modifier ->
 
                             TextField(
-                                value = quilometragemAnterior,
+                                value = filterNumbersAndDecimal(quilometragemAnterior),
                                 onValueChange = uiState.onQuilometragemAnteriorChange,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 label = {
                                     Row(modifier = Modifier.fillMaxWidth()) {
                                         Icon(
@@ -158,7 +173,15 @@ fun ReabastecimentoForm(
 
                                     }
                                 },
-                                modifier = modifier
+                                isError = quilometragemAnterior.isEmpty(),
+                                modifier = modifier.onKeyEvent {
+                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                        focusManager.moveFocus(FocusDirection.Next)
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                }
                             )
 
 
@@ -170,8 +193,9 @@ fun ReabastecimentoForm(
 
 
                             TextField(
-                                value = quilometragemAtual,
+                                value = filterNumbersAndDecimal(quilometragemAtual),
                                 onValueChange = uiState.onQuilometragemAtualChange,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 label = {
                                     Row(modifier = Modifier.fillMaxWidth()) {
                                         Icon(
@@ -184,7 +208,15 @@ fun ReabastecimentoForm(
 
 
                                 },
-                                modifier = modifier
+                                isError = quilometragemAtual.isEmpty(),
+                                modifier = modifier.onKeyEvent {
+                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                        focusManager.moveFocus(FocusDirection.Next)
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                }
                             )
 
                         }
@@ -195,7 +227,7 @@ fun ReabastecimentoForm(
                         composable { modifier ->
 
                             TextField(
-                                value = litro,
+                                value = filterNumbersAndDecimal(litro),
                                 onValueChange = uiState.onLitroChange,
                                 label = {
                                     Row(modifier = Modifier.fillMaxWidth()) {
@@ -209,7 +241,15 @@ fun ReabastecimentoForm(
 
 
                                 },
-                                modifier = modifier
+                                isError = litro.isEmpty(),
+                                modifier = modifier.onKeyEvent {
+                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                        focusManager.moveFocus(FocusDirection.Next)
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                }
                             )
 
 
@@ -221,7 +261,7 @@ fun ReabastecimentoForm(
 
 
                             TextField(
-                                value = valorTotal,
+                                value = filterNumbersAndDecimal(valorTotal),
                                 onValueChange = uiState.onValorTotalChange,
                                 label = {
 
@@ -235,7 +275,15 @@ fun ReabastecimentoForm(
                                     }
 
                                 },
-                                modifier = modifier
+                                isError = valorTotal.isEmpty(),
+                                modifier = modifier.onKeyEvent {
+                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                        focusManager.moveFocus(FocusDirection.Next)
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                }
                             )
 
                         }
@@ -245,7 +293,7 @@ fun ReabastecimentoForm(
                         composable { modifier ->
 
                             TextField(
-                                value = valorLitro,
+                                value = filterNumbersAndDecimal(valorLitro),
                                 onValueChange = uiState.onValorLitroChange,
                                 label = {
                                     Row(modifier = Modifier.fillMaxWidth()) {
@@ -258,7 +306,15 @@ fun ReabastecimentoForm(
                                     }
 
                                 },
-                                modifier = modifier
+                                isError = valorLitro.isEmpty(),
+                                modifier = modifier.onKeyEvent {
+                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                        focusManager.moveFocus(FocusDirection.Next)
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                }
                             )
 
 
@@ -269,12 +325,84 @@ fun ReabastecimentoForm(
                             }
 
                             var openDialog by remember { mutableStateOf(false) }
-                            //                        val snackState = remember { SnackbarHostState() }
-                            //                        val snackScope = rememberCoroutineScope()
+                            val dateMask = "__/__/____"
+                            val BrazilDateFormatOffSet = object :OffsetMapping {
+                            override fun originalToTransformed(offset: Int): Int {
+                                return when {
+                                    offset <= 1 -> offset
+                                    offset <= 3 -> offset + 1
+                                    offset <= 8 -> offset + 2
+                                    else -> offset
+                                }
+                            }
 
+                            override fun transformedToOriginal(offset: Int): Int {
+                               return when {
+                                    offset <= 2 -> offset
+                                    offset <= 5 -> offset - 1
+                                    offset <= 10 -> offset - 2
+                                    else -> 8
+                                }
+                            }
+                        }
                             TextField(
                                 value = data,
-                                onValueChange = {uiState.onDataChange(data)},
+                                onValueChange = { newValue ->
+                                    val filteredValue = newValue.filter { it.isDigit() }.take(8)
+                                    if(filteredValue.length == 1) {
+                                        if (filteredValue.toInt() > 3)
+                                            return@TextField
+                                    }
+
+                                    val day = if (filteredValue.length >= 2) filteredValue.substring(0, 2) else ""
+                                    if(filteredValue.length == 3){
+                                        if(filteredValue.substring(2,3).toInt() > 1)
+                                            return@TextField
+                                    }
+                                    val month = if (filteredValue.length >= 4) filteredValue.substring(2, 4) else ""
+                                    if (
+                                    (day.isEmpty() || (isValidDay(day) && day.length == 2)) &&
+                                    (month.isEmpty() || (isValidMonth(month) && month.length == 2))
+                                ) {
+                                    uiState.onDataChange(filteredValue)
+                                } else {
+                                    // Optionally: provide feedback to the user about invalid input
+                                }
+
+                                },
+                                visualTransformation = VisualTransformation { text ->
+
+                                    val maskedText = StringBuilder()
+                                    var textIndex = 0
+                                    for (i in dateMask.indices) {
+                                        if (textIndex < text.length) { // Use text.length here
+                                            maskedText.append(text[textIndex++]) // Use text[textIndex] here
+                                            if (i == 1 || i == 3) {
+                                                maskedText.append('/')
+
+                                            }
+                                        } else {
+                                            break
+                                        }
+                                    }
+                                    TransformedText(
+                                        text = AnnotatedString(maskedText.toString()),
+                                        offsetMapping = BrazilDateFormatOffSet
+                                    )
+                                },
+                                trailingIcon = {
+                                    IconButton(
+                                        onClick = { openDialog = true },
+
+                                        ){
+                                        Icon(
+                                            imageVector = Icons.Default.CalendarMonth,
+                                            contentDescription = null,
+                                            modifier = Modifier.clickable { openDialog = true }
+                                        )
+                                    }
+
+                                },
                                 label = {
                                     Row(
                                         modifier = Modifier.fillMaxWidth(),
@@ -285,10 +413,20 @@ fun ReabastecimentoForm(
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text("Data")
+
+
                                     }
                                 },
-                                enabled = false,
-                                modifier = modifier.then(Modifier.clickable { openDialog = true }),
+                                isError = data.isEmpty() || !data.chekDateValidWithouScape() ,
+                                modifier = modifier.onKeyEvent {
+                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+
+                                        focusManager.moveFocus(FocusDirection.Next)
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
                                 colors = TextFieldDefaults.textFieldColors(
                                     disabledTextColor = LocalContentColor.current.copy(
                                         LocalContentAlpha.current
@@ -307,9 +445,6 @@ fun ReabastecimentoForm(
                                 }
                                 DatePickerDialog(
                                     onDismissRequest = {
-                                        // Dismiss the dialog when the user clicks outside the dialog or on the back
-                                        // button. If you want to disable that functionality, simply use an empty
-                                        // onDismissRequest.
                                         openDialog = false
                                     },
                                     confirmButton = {
@@ -317,20 +452,9 @@ fun ReabastecimentoForm(
                                             onClick = {
                                                 openDialog = false
                                                 data = Instant.fromEpochMilliseconds(datePickerState.selectedDateMillis!!)
-                                                    .toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date.format(LocalDate.Format {
-                                                        dayOfMonth()
-                                                        char('/')
-                                                        monthNumber()
-                                                        char('/')
-                                                        year()
-                                                    })
+                                                    .toLocalDateTime(TimeZone.UTC).date.toBrazilFormatWithoutScape()
                                                 uiState.onDataChange(data)
 
-                                                //                                            snackScope.launch {
-                                                //                                                snackState.showSnackbar(
-                                                //                                                    "Selected date timestamp: ${datePickerState.selectedDateMillis}"
-                                                //                                                )
-                                                //                                            }
                                             },
                                             enabled = confirmEnabled.value
                                         ) {
@@ -360,8 +484,11 @@ fun ReabastecimentoForm(
                                 onExpandedChange = { expanded = !expanded }
                             ) {
                                 TextField(
-                                    value = uiState.combustivel.nome,
-                                    onValueChange = {uiState.onCombustivelChange(combustivel)},
+                                    value = uiState.combustivel?.nome?: "Selecione",
+                                    onValueChange = {
+//                                            uiState.onCombustivelChange(combustivel!!)
+
+                                    },
                                     readOnly = true,
                                     label = { Text("Combustível") },
                                     trailingIcon = {
