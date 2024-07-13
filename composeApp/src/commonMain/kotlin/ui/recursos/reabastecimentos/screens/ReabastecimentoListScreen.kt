@@ -1,8 +1,12 @@
 package ui.recursos.reabastecimentos.screens
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
@@ -14,20 +18,19 @@ import ui.reabastecimentos.ReabastecimentoListUIState
 import viewModelsFactory.ReabastecimentoListViewModelFactory
 
 class ReabastecimentoListScreen : Screen, KoinComponent {
-    private var mainVeiculoId: Long  = 0
+
 
     @Composable
     override fun Content() {
         val navigator: Navigator = LocalNavigator.currentOrThrow
         val reabastecimentoViewModelFactory: ReabastecimentoListViewModelFactory by inject()
-        val viewModel = reabastecimentoViewModelFactory.create(mainVeiculoId)
+        val viewModel = rememberScreenModel {reabastecimentoViewModelFactory.create() }
 
 
         val uiState by viewModel.uiState.collectAsState(ReabastecimentoListUIState())
 
-        ReabastecimentoList(uiState = uiState, onChangeVeiculoId = { veiculoId ->
-            mainVeiculoId = veiculoId
-        },
+
+        ReabastecimentoList(uiState = uiState,
         editReabastecimento = { veiculoId, reabastecimentoId ->
             navigator.push(ReabastecimentoFormScreen(veiculoId = veiculoId, reabastecimentoId = reabastecimentoId))
         }
@@ -35,4 +38,6 @@ class ReabastecimentoListScreen : Screen, KoinComponent {
             navigator.push(ReabastecimentoFormScreen(veiculoId = veiculoid))
         }
     }
+
+
 }

@@ -7,8 +7,13 @@ insertCombustivei:
 INSERT INTO Combustiveis( nome)
 VALUES (?);
 
+lastInsertRowId:
+SELECT last_insert_rowid();
+
 deleteCombustivei:
 DELETE FROM Combustiveis WHERE  id = ?;
+
+
 
 updateCombustivei:
 UPDATE Combustiveis

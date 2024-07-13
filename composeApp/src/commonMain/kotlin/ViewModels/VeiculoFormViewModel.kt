@@ -1,5 +1,6 @@
 package viewModels
 
+import cafe.adriel.voyager.core.model.ScreenModel
 import com.hoc081098.kmp.viewmodel.ViewModel
 import data.models.Veiculo
 import kotlinx.coroutines.MainScope
@@ -14,7 +15,7 @@ import ui.VeiculoForm.VeiculoFormUIState
 
 class VeiculoFormViewModel(
     private val id: Long?
-): ViewModel(), KoinComponent {
+): ScreenModel, KoinComponent {
     private  val _uiState: MutableStateFlow<VeiculoFormUIState> = MutableStateFlow(VeiculoFormUIState())
     private val veiculoRepositoryFactory: VeiculoRepositoryFactory by inject()
     private val repository = veiculoRepositoryFactory.create()

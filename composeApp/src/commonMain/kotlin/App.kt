@@ -10,7 +10,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.ScaleTransition
 import ui.theme.AutomoramaTheme
@@ -26,29 +28,33 @@ class App() : KoinComponent {
 
 
 
+    @OptIn(ExperimentalVoyagerApi::class)
     @Preview
     @Composable
     fun App(modifier: Modifier = Modifier) {
         val drawerState = rememberDrawerState(DrawerValue.Closed)
         AutomoramaTheme{
-            Navigator(
-                screen = ShowGroupScreen()
-            ) { navigator ->
+            ProvideNavigatorLifecycleKMPSupport {
 
-                /* Pass navigator to ModalNavigationDrawer and subsequently to DrawerMenu */
-                ModalNavigationDrawer(
-                    drawerState = drawerState,
-                    drawerContent = {
-                        DrawerMenu(navigator, drawerState, modifier = modifier)
-                    }
-                ) {
-                    Scaffold(
-                        modifier = modifier.statusBarsPadding(),
-                        topBar = {
-                        TopBar(drawerState)
-                    },
+                Navigator(
+                    screen = ShowGroupScreen()
+                ) { navigator ->
+
+                    /* Pass navigator to ModalNavigationDrawer and subsequently to DrawerMenu */
+                    ModalNavigationDrawer(
+                        drawerState = drawerState,
+                        drawerContent = {
+                            DrawerMenu(navigator, drawerState, modifier = modifier)
+                        }
                     ) {
-                        ScaleTransition(navigator, modifier = modifier.padding(it))
+                        Scaffold(
+                            modifier = modifier.statusBarsPadding(),
+                            topBar = {
+                            TopBar(drawerState)
+                        },
+                        ) {
+                            ScaleTransition(navigator, modifier = modifier.padding(it))
+                        }
                     }
                 }
             }

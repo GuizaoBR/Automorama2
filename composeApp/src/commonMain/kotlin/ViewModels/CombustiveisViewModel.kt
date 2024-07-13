@@ -1,5 +1,6 @@
 package viewModels
 
+import cafe.adriel.voyager.core.model.ScreenModel
 import com.hoc081098.kmp.viewmodel.ViewModel
 import data.repositories.CombustivelRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,7 +10,7 @@ import org.koin.core.component.inject
 import repositoryFactory.CombustivelRepositoryFactory
 import ui.Combustiveis.CombustivelListUIState
 
-class CombustiveisViewModel(): ViewModel(), KoinComponent {
+class CombustiveisViewModel(): ScreenModel, KoinComponent {
 
     private val repositoryInjection: CombustivelRepositoryFactory by inject()
     private val repository: CombustivelRepository = repositoryInjection.create()

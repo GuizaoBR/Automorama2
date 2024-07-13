@@ -1,6 +1,6 @@
 package ui.reabastecimentos
 
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.*
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -58,8 +58,7 @@ fun VeiculosDropDownPreview(){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VeiculoDropDownTopAppBar(
-    uiState: ReabastecimentoListUIState = ReabastecimentoListUIState(),
-    onChangeVeiculo: (veiculoId: Long) -> Unit = {},
+    uiState: ReabastecimentoListUIState = ReabastecimentoListUIState()
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -90,7 +89,6 @@ fun VeiculoDropDownTopAppBar(
                             DropdownMenuItem(
                                 onClick = {
                                 uiState.onChangeVeiculo(veiculo)
-                                    onChangeVeiculo(veiculo.id!!)
                                 expanded = false
                             },
                                 text = { Text("${veiculo.fabricante} ${veiculo.modelo}")})
@@ -122,47 +120,113 @@ fun ReabastecimentoListPreview() {
        ReabastecimentoList()
     }
 }
+@Composable
+fun AnimatedFAB(uiState: ReabastecimentoListUIState, newReabastecimento: (Long) -> Unit) {
+    val targetAlpha by animateFloatAsState(
+        targetValue = if (uiState.veiculo != null) 1f else 0f, label = "FAB Alpha Animation"
+    )
 
+    ExtendedFloatingActionButton(
+        onClick = { uiState.veiculo?.id?.let { newReabastecimento(it) } },
+        text = { Text("Novo Reabastecimento") },
+        icon = { Icon(Icons.Filled.Add, contentDescription = "Adicione novo reabastecimento") },
+        modifier = Modifier.alpha(targetAlpha)
+    )
+}
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun ReabastecimentoList(
     uiState: ReabastecimentoListUIState = ReabastecimentoListUIState(),
     modifier: Modifier = Modifier,
-    onChangeVeiculoId: (veiculoId: Long) -> Unit = {},
     editReabastecimento: (veiculoId: Long, reabastecimentoId: Long) -> Unit = { veiculoId: Long, reabastecimentoId: Long -> },
     newReabastecimento: (veiculoId: Long) -> Unit = {},
 
     ) {
-
-
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { VeiculoDropDownTopAppBar(uiState, onChangeVeiculoId) },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = { newReabastecimento(uiState.veiculo.id!!) },
-                text = { Text("Novo Reabastecimento") },
-                icon = { Icon(Icons.Filled.Add, contentDescription = "Adicione novo reabastecimento") },
-            )
-        },
-    ) {
-        Box(Modifier.fillMaxSize()) {
+        topBar = { VeiculoDropDownTopAppBar(uiState) },
+        floatingActionButton = { AnimatedFAB(uiState, newReabastecimento) },
+    ) { padding ->
+        AnimatedVisibility(
+            visible = true,
+            enter = fadeIn(animationSpec = tween(300)) + expandVertically(
+                animationSpec = tween(
+                    durationMillis = 3000,
+                    easing = LinearOutSlowInEasing
+                )
+            ),
+            exit = shrinkVertically(
+                animationSpec = tween(
+                    durationMillis = 500,
+                    easing = LinearOutSlowInEasing
+                )
+            ) + fadeOut(animationSpec = tween(300))
+        ){
 
-            LazyVerticalGrid(columns = GridCells.Adaptive(300.dp), contentPadding = it) {
-                items(uiState.reabastecimentos) { reabastecimento ->
-                    Card(Modifier, reabastecimento, editReabastecimento, uiState.onDelete)
+            Box(Modifier.fillMaxSize()) {
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(300.dp),
+                    contentPadding = padding,
+
+                ) {
+
+
+
+                    items(uiState.reabastecimentos, key = { it.id!! }) { reabastecimento ->
+                        AnimatedListItem(
+                            reabastecimento,
+                            editReabastecimento,
+                            onDelete = { id ->
+                                uiState.onDelete(id)
+                            },
+                            isVisible = reabastecimento.isVisibe
+                        )
+                    }
                 }
             }
-
         }
     }
 }
 
+
+@Composable
+fun AnimatedListItem(
+    reabastecimento: Reabastecimento,
+    editReabastecimento: (Long, Long) -> Unit,
+    onDelete: (Long) -> Unit,
+    isVisible: Boolean
+) {
+    val visibleState = remember { mutableStateOf(true) }
+
+    AnimatedVisibility(
+        visible = isVisible && visibleState.value, // Controla se o item está visível
+        enter = fadeIn(animationSpec = tween(3000)) + expandVertically(
+            animationSpec = tween(
+                durationMillis = 3000,
+                easing = LinearOutSlowInEasing
+            )
+        ),
+        exit = shrinkVertically(
+            animationSpec = tween(
+                durationMillis = 500,
+                easing = LinearOutSlowInEasing
+            )
+        ) + fadeOut(animationSpec = tween(300))
+    ) {
+        Card(
+            Modifier,
+            reabastecimento,
+            editReabastecimento
+        ) {
+            visibleState.value = false
+            onDelete(reabastecimento.id!!)
+        }
+    }
+}
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable

@@ -15,7 +15,8 @@ data class Reabastecimento(
     val data: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
     val quilometragemAnterior: Double = 0.0,
     val quilometragemAtual: Double = 0.0,
-    val quilometragemLitro: Double = 0.0
+    val quilometragemLitro: Double = 0.0,
+    val isVisibe: Boolean = true
 ) {
     public fun createReabastecimentosList(): List<Reabastecimento> {
         val reabastecimentoList = mutableListOf<Reabastecimento>()

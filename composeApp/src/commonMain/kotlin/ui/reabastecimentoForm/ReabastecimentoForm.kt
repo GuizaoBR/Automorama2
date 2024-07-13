@@ -229,6 +229,7 @@ fun ReabastecimentoForm(
                             TextField(
                                 value = filterNumbersAndDecimal(litro),
                                 onValueChange = uiState.onLitroChange,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 label = {
                                     Row(modifier = Modifier.fillMaxWidth()) {
                                         Icon(
@@ -243,7 +244,7 @@ fun ReabastecimentoForm(
                                 },
                                 isError = litro.isEmpty(),
                                 modifier = modifier.onKeyEvent {
-                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter ) {
                                         focusManager.moveFocus(FocusDirection.Next)
                                         true
                                     } else {
@@ -263,6 +264,7 @@ fun ReabastecimentoForm(
                             TextField(
                                 value = filterNumbersAndDecimal(valorTotal),
                                 onValueChange = uiState.onValorTotalChange,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 label = {
 
                                     Row(modifier = Modifier.fillMaxWidth()) {
@@ -294,6 +296,7 @@ fun ReabastecimentoForm(
 
                             TextField(
                                 value = filterNumbersAndDecimal(valorLitro),
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 onValueChange = uiState.onValorLitroChange,
                                 label = {
                                     Row(modifier = Modifier.fillMaxWidth()) {
@@ -347,6 +350,7 @@ fun ReabastecimentoForm(
                         }
                             TextField(
                                 value = data,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 onValueChange = { newValue ->
                                     val filteredValue = newValue.filter { it.isDigit() }.take(8)
                                     if(filteredValue.length == 1) {

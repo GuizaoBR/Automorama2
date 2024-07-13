@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
@@ -25,7 +26,7 @@ data class VeiculoFormScreen(
         val veiculoFormViewModelFactory: VeiculoFormViewModelFactory by inject()
 
         val navigator: Navigator = LocalNavigator.currentOrThrow
-        val viewModel = remember {
+        val viewModel = rememberScreenModel {
             veiculoFormViewModelFactory.create(id)
         }
         val uiState by viewModel.uiState.collectAsState(VeiculoFormUIState())

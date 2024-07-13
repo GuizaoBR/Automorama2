@@ -22,8 +22,8 @@ fun createCombustiveis(driver: SqlDriver) {
 
 
 
-fun Automorama2Database.setVeiculo(veiculo: Veiculo){
-    return veiculosQueries.insertVeiculo(
+fun Automorama2Database.setVeiculo(veiculo: Veiculo): Long{
+     veiculosQueries.insertVeiculo(
         veiculo.id,
         veiculo.fabricante,
         veiculo.modelo,
@@ -32,6 +32,7 @@ fun Automorama2Database.setVeiculo(veiculo: Veiculo){
         veiculo.placa,
         veiculo.apelido
     )
+    return veiculosQueries.lastInsertRowId().executeAsOne()
 }
 
 
@@ -60,7 +61,10 @@ fun Automorama2Database.getVeiculoById(id: Long): Veiculo {
 
 fun Automorama2Database.deleteVeiculo(id: Long) = veiculosQueries.deleteVeiculo(id)
 
-fun Automorama2Database.setCombustivel(combustivel: Combustivel) = combustiveisQueries.insertCombustivei(combustivel.nome)
+fun Automorama2Database.setCombustivel(combustivel: Combustivel): Long {
+    combustiveisQueries.insertCombustivei(combustivel.nome)
+    return combustiveisQueries.lastInsertRowId().executeAsOne()
+}
 fun Automorama2Database.getAllCombustiveis(): MutableList<Combustivel> {
     return combustiveisQueries.selectAllCombustivel().executeAsList().map {
         it.toCombustivel()
@@ -99,8 +103,8 @@ fun Automorama2Database.updateReabastecimento(reabastecimento: Reabastecimento){
 }
 fun Automorama2Database.deleteReabastecimentio(id: Long) = reabastecimentosQueries.deleteReabastecimento(id)
 
-fun Automorama2Database.setReabastecimento(reabastecimento: Reabastecimento){
-    return reabastecimentosQueries.insertReabastecimento(
+fun Automorama2Database.setReabastecimento(reabastecimento: Reabastecimento): Long{
+    reabastecimentosQueries.insertReabastecimento(
         reabastecimento.combustivel.id,
         reabastecimento.veiculo.id,
         reabastecimento.valorTotal,
@@ -111,5 +115,6 @@ fun Automorama2Database.setReabastecimento(reabastecimento: Reabastecimento){
         reabastecimento.quilometragemAtual,
         reabastecimento.quilometragemLitro
     )
+    return reabastecimentosQueries.lastInsertRowId().executeAsOne()
 }
 

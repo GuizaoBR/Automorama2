@@ -5,6 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
@@ -24,7 +25,7 @@ class VeiculoListScreen(
     override fun Content() {
         val veiculosViewModelFactory: VeiculosViewModelFactory by inject()
         val navigator: Navigator = LocalNavigator.currentOrThrow
-        val viewModel = remember {
+        val viewModel = rememberScreenModel {
             veiculosViewModelFactory.create()
         }
         val uiState by viewModel.uiState.collectAsState(VeiculosListUiState())

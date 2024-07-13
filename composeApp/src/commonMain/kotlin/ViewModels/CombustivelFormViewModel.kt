@@ -1,5 +1,6 @@
 package viewModels
 
+import cafe.adriel.voyager.core.model.ScreenModel
 import com.hoc081098.kmp.viewmodel.ViewModel
 import data.models.Combustivel
 import data.repositories.CombustivelRepository
@@ -15,7 +16,7 @@ import ui.combustivelForm.CombustivelFormUIState
 
 class CombustivelFormViewModel(
     private val id: Long?= null
-) : ViewModel(), KoinComponent {
+) : ScreenModel, KoinComponent {
     private val combustivelRepositoryFactory: CombustivelRepositoryFactory by inject()
     private val combustivelRepository : CombustivelRepository = combustivelRepositoryFactory.create()
     private val _uiState: MutableStateFlow<CombustivelFormUIState> = MutableStateFlow(CombustivelFormUIState())

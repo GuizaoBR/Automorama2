@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
@@ -28,7 +29,7 @@ data class CombustivelFormScreen(
 
         val combustivelFormViewModelFactory: CombustivelFormViewModelFactory by inject()
         val navigator: Navigator = LocalNavigator.currentOrThrow
-        val viewModel = remember {
+        val viewModel = rememberScreenModel {
             combustivelFormViewModelFactory.create(id)
         }
         val uiState by viewModel.uiState.collectAsState(CombustivelFormUIState())

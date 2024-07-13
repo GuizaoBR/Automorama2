@@ -29,8 +29,9 @@ class VeiculoRepository(driver: SqlDriver) {
     fun saveVeiculo(veiculo: Veiculo){
         _veiculos.update { listVeiculo ->
             if (veiculo.id == null){
-                database.setVeiculo(veiculo)
-                listVeiculo.add(veiculo)
+                val id = database.setVeiculo(veiculo)
+                val newVeiculo = veiculo.copy(id = id)
+                listVeiculo.add(newVeiculo)
             } else {
                 database.updateVeiculo(veiculo)
                 listVeiculo.find { it.id == veiculo.id }?.let {

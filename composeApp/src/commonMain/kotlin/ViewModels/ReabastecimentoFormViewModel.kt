@@ -1,5 +1,7 @@
 package viewModels
 
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.hoc081098.kmp.viewmodel.ViewModel
 import data.models.Reabastecimento
 import data.models.Veiculo
@@ -21,7 +23,7 @@ import ui.reabastecimentoForm.ReabastecimentoFormUIState
 class ReabastecimentoFormViewModel(
     private val id: Long?,
     veiculoId: Long
-): ViewModel(), KoinComponent {
+): ScreenModel, KoinComponent {
     private val _uiState: MutableStateFlow<ReabastecimentoFormUIState> = MutableStateFlow(ReabastecimentoFormUIState())
     private val repositoryFactory: ReabastecimentoRepositoryFactory by inject()
     private val combustivelRepositoryFactory: CombustivelRepositoryFactory by inject()
@@ -48,9 +50,11 @@ class ReabastecimentoFormViewModel(
             currentState.copy(
                 onValorTotalChange = { valorTotal ->
                     _uiState.update { it.copy(valorTotal = valorTotal, isValid = checkIsValid()) }
-                    if(_uiState.value.litro.isNotEmpty() && _uiState.value.litro.toDouble() > 0 ){
-                        val valorLitro = (valorTotal.toDoubleOrNull()
-                            ?.div(_uiState.value.litro.toDouble()))?.round(2)
+                    if(_uiState.value.litro.isNotEmpty() && _uiState.value.litro != "\n" && _uiState.value.litro.toDouble() > 0 ){
+                        val valorLitro = (_uiState.value.litro.toDoubleOrNull()?.let {
+                            valorTotal.toDoubleOrNull()
+                                ?.div(it)
+                        })?.round(2)
                         _uiState.update { it.copy(valorLitro = valorLitro.toString()) }
                     }
                 },
@@ -81,7 +85,7 @@ class ReabastecimentoFormViewModel(
         }
 
         if (id != null) {
-            viewModelScope.launch {
+            screenModelScope.launch {
                 _uiState.update { it.copy(isLoading = true) }
                 val reabastecimento = repository.reabastecimentos.value.find {
                     it.id == id
@@ -123,7 +127,7 @@ class ReabastecimentoFormViewModel(
     }
 
     fun saveReabastecimento() {
-        viewModelScope.launch {
+        screenModelScope.launch {
             _uiState.update { it.copy(isLoading = true)}
 
             with(_uiState.value) { // Use with(_uiState.value) here

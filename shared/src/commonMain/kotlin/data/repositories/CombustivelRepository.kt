@@ -27,8 +27,9 @@ class CombustivelRepository(driver: SqlDriver) {
     fun saveCombustivel(combustivel: Combustivel){
         _combustiveis.update { list ->
             if(combustivel.id == null) {
-                database.setCombustivel(combustivel)
-                list.add(combustivel)
+                val id = database.setCombustivel(combustivel)
+                val newCombustivel = combustivel.copy(id = id)
+                list.add(newCombustivel)
             } else {
                 database.updateCombustivel(combustivel)
                 list.find {

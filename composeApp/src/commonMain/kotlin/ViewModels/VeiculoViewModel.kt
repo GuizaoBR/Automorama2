@@ -1,5 +1,6 @@
 package viewModels
 
+import cafe.adriel.voyager.core.model.ScreenModel
 import com.hoc081098.kmp.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -8,7 +9,7 @@ import org.koin.core.component.inject
 import repositoryFactory.VeiculoRepositoryFactory
 import ui.Veiculos.VeiculosListUiState
 
-class VeiculoViewModel() : ViewModel(), KoinComponent{
+class VeiculoViewModel() : ScreenModel, KoinComponent{
 
     private val veiculoRepositoryFactory: VeiculoRepositoryFactory by inject()
 

@@ -3,6 +3,7 @@ package data.repositories
 import app.cash.sqldelight.db.SqlDriver
 import data.*
 import data.models.Reabastecimento
+import data.models.Veiculo
 import germano.guilherme.automorama2.Automorama2Database
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,32 +14,35 @@ class ReabastecimentoRepository(driver: SqlDriver) {
     companion object {
         private val _reabastecimentos =
             MutableStateFlow<MutableList<Reabastecimento>>(mutableListOf())
+        private val _veiculo = MutableStateFlow<Veiculo?>(null)
     }
 
     val reabastecimentos get() = _reabastecimentos.asStateFlow()
+
+    val veiculo get() = _veiculo.asStateFlow()
+
     private val database = Automorama2Database(driver)
 
-    fun getReabastecimentoByVeiculo(veiculoid: Long) = _reabastecimentos.update {
-        database.getReabastecimetoByVeiculo(veiculoid)
+    fun getReabastecimentoByVeiculo(veiculoid: Long)  {
+        _reabastecimentos.update {
+            database.getReabastecimetoByVeiculo(veiculoid).sortedBy { it.data }.toMutableList()
+        }
+        _veiculo.update {
+            database.getVeiculoById(veiculoid)
+        }
     }
 
-    fun saveReabastecimento(reabastecimento: Reabastecimento){
-        _reabastecimentos.update { listReabastecimento ->
-            if (reabastecimento.id == null){
-                database.setReabastecimento(reabastecimento)
-                listReabastecimento.add(reabastecimento)
-            } else {
-                database.updateReabastecimento(reabastecimento)
-//                listReabastecimento.find { it.id == reabastecimento.id }?.let {
-//                    it.fabricante = veiculo.fabricante
-//                    it.modelo = veiculo.modelo
-//                    it.anoFabricacao = veiculo.anoFabricacao
-//                    it.anoModelo = veiculo.anoModelo
-//                    it.placa = veiculo.placa
-//                    it.apelido = veiculo.apelido
-//                }
-            }
-            listReabastecimento
+    fun saveReabastecimento(reabastecimento:Reabastecimento) {
+        if (reabastecimento.id == null) {
+            val id = database.setReabastecimento(reabastecimento)
+            val newReabastecimento = reabastecimento.copy(id = id)
+            _reabastecimentos.value =
+                (_reabastecimentos.value + newReabastecimento).toMutableList() // Append new item
+        } else {
+            database.updateReabastecimento(reabastecimento)
+            _reabastecimentos.value = _reabastecimentos.value.map {
+                if(it.id == reabastecimento.id) reabastecimento else it // Update existing item
+            }.toMutableList()
         }
     }
 
