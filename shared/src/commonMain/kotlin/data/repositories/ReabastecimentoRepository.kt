@@ -37,12 +37,12 @@ class ReabastecimentoRepository(driver: SqlDriver) {
             val id = database.setReabastecimento(reabastecimento)
             val newReabastecimento = reabastecimento.copy(id = id)
             _reabastecimentos.value =
-                (_reabastecimentos.value + newReabastecimento).toMutableList() // Append new item
+                (_reabastecimentos.value + newReabastecimento).sortedBy { it.data }.toMutableList() // Append new item
         } else {
             database.updateReabastecimento(reabastecimento)
             _reabastecimentos.value = _reabastecimentos.value.map {
                 if(it.id == reabastecimento.id) reabastecimento else it // Update existing item
-            }.toMutableList()
+            }.sortedBy { it.data }.toMutableList()
         }
     }
 
@@ -62,6 +62,6 @@ class ReabastecimentoRepository(driver: SqlDriver) {
             it.removeAll { it.id == id }
         }
         // Emite a nova lista para o Flow
-        _reabastecimentos.value = novaLista
+        _reabastecimentos.value = novaLista.sortedBy { it.data }.toMutableList()
     }
 }
