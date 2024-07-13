@@ -46,13 +46,22 @@ class ReabastecimentoRepository(driver: SqlDriver) {
         }
     }
 
+//    fun deleteReabastecimento(id: Long) {
+//        _reabastecimentos.update {
+//            database.deleteReabastecimentio(id)
+//            it.remove(it.find { reabastecimento ->
+//                reabastecimento.id == id
+//            })
+//            it
+//        }
+//    }
     fun deleteReabastecimento(id: Long) {
-        _reabastecimentos.update {
-            database.deleteReabastecimentio(id)
-            it.remove(it.find { reabastecimento ->
-                reabastecimento.id == id
-            })
-            it
+        database.deleteReabastecimentio(id)
+        // Cria uma nova lista sem o item excluído
+        val novaLista = _reabastecimentos.value.toMutableList().also {
+            it.removeAll { it.id == id }
         }
+        // Emite a nova lista para o Flow
+        _reabastecimentos.value = novaLista
     }
 }

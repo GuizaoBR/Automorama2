@@ -35,6 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.Reabastecimento
 import data.models.Veiculo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
@@ -176,7 +180,7 @@ fun ReabastecimentoList(
 
 
 
-                    items(uiState.reabastecimentos, key = { it.id!! }) { reabastecimento ->
+                    items(uiState.reabastecimentos.toList(), key = { it.id!! }) { reabastecimento ->
                         AnimatedListItem(
                             reabastecimento,
                             editReabastecimento,
@@ -222,8 +226,11 @@ fun AnimatedListItem(
             reabastecimento,
             editReabastecimento
         ) {
-            visibleState.value = false
-            onDelete(reabastecimento.id!!)
+            CoroutineScope(Dispatchers.Main).launch {
+                visibleState.value = false
+                delay(500) // Ajuste o tempo de atraso conforme necessário
+                onDelete(reabastecimento.id!!)
+            }
         }
     }
 }

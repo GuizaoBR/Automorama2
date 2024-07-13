@@ -11,9 +11,8 @@ INSERT INTO Reabastecimentos(combustivelId, veiculoId, valorTotal, valorLitro, l
 VALUES
 (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
-lastInsertRowId:
-SELECT last_insert_rowid();
-
+lastInsertRowIdReabastecimento:
+SELECT id FROM Reabastecimentos ORDER BY id DESC LIMIT 1;
 
 
 deleteReabastecimento:

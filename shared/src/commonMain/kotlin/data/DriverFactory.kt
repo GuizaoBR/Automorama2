@@ -115,6 +115,7 @@ fun Automorama2Database.setReabastecimento(reabastecimento: Reabastecimento): Lo
         reabastecimento.quilometragemAtual,
         reabastecimento.quilometragemLitro
     )
-    return reabastecimentosQueries.lastInsertRowId().executeAsOne()
+    val id = reabastecimentosQueries.lastInsertRowIdReabastecimento().executeAsOne()
+    return id
 }
 

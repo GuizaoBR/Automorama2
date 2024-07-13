@@ -8,7 +8,7 @@ INSERT INTO Veiculos(id, fabricante, modelo, anoFabricacao, anoModelo, placa, ap
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
 lastInsertRowId:
-SELECT last_insert_rowid();
+SELECT id FROM Veiculos ORDER BY id DESC LIMIT 1;
 
 deleteVeiculo:
 DELETE FROM  Veiculos WHERE  id = ?;
