@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.TrendingFlat
@@ -155,41 +156,40 @@ fun ReabastecimentoList(
         topBar = { VeiculoDropDownTopAppBar(uiState) },
         floatingActionButton = { AnimatedFAB(uiState, newReabastecimento) },
     ) { padding ->
-        AnimatedVisibility(
-            visible = true,
-            enter = fadeIn(animationSpec = tween(300)) + expandVertically(
-                animationSpec = tween(
-                    durationMillis = 3000,
-                    easing = LinearOutSlowInEasing
-                )
-            ),
-            exit = shrinkVertically(
-                animationSpec = tween(
-                    durationMillis = 500,
-                    easing = LinearOutSlowInEasing
-                )
-            ) + fadeOut(animationSpec = tween(300))
-        ){
-
-            Box(Modifier.fillMaxSize()) {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(300.dp),
-                    contentPadding = padding,
-
+//        AnimatedVisibility(
+//            visible = true,
+//            enter = fadeIn(animationSpec = tween(300)) + expandVertically(
+//                animationSpec = tween(
+//                    durationMillis = 3000,
+//                    easing = LinearOutSlowInEasing
+//                )
+//            ),
+//            exit = shrinkVertically(
+//                animationSpec = tween(
+//                    durationMillis = 500,
+//                    easing = LinearOutSlowInEasing
+//                )
+//            ) + fadeOut(animationSpec = tween(300))
+//        ){
+//
+//
+//        }
+        Box(Modifier.fillMaxSize()) {
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(300.dp),
+                contentPadding = padding,
                 ) {
 
 
 
-                    items(uiState.reabastecimentos.toList(), key = { it.id!! }) { reabastecimento ->
-                        AnimatedListItem(
-                            reabastecimento,
-                            editReabastecimento,
-                            onDelete = { id ->
-                                uiState.onDelete(id)
-                            },
-                            isVisible = reabastecimento.isVisibe
-                        )
-                    }
+                items(uiState.reabastecimentos.toList(), key = { it.id!! },) { reabastecimento ->
+                    AnimatedListItem(
+                        reabastecimento,
+                        editReabastecimento,
+                        onDelete = { id ->
+                            uiState.onDelete(id)
+                        },
+                    )
                 }
             }
         }
@@ -202,12 +202,11 @@ fun AnimatedListItem(
     reabastecimento: Reabastecimento,
     editReabastecimento: (Long, Long) -> Unit,
     onDelete: (Long) -> Unit,
-    isVisible: Boolean
 ) {
     val visibleState = remember { mutableStateOf(true) }
 
     AnimatedVisibility(
-        visible = isVisible && visibleState.value, // Controla se o item está visível
+        visible = visibleState.value, // Controla se o item está visível
         enter = fadeIn(animationSpec = tween(3000)) + expandVertically(
             animationSpec = tween(
                 durationMillis = 3000,
@@ -337,7 +336,7 @@ fun CardContent(
                 )
             }
 
-            Column(modifier = Modifier.weight(3f)) {
+            Column(modifier = Modifier) {
 
                 FlowRow(
                     modifier = Modifier
@@ -370,14 +369,14 @@ fun CardContent(
                             .fillMaxWidth()
                             .padding(start = 8.dp, end = 50.dp)
                     ) {
-                        Box(Modifier.align(Alignment.CenterVertically)) {
+                        Box() {
                             Text(
                                 text = reabastecimento.combustivel.nome,
                                 style = TextStyle.Default.copy(
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold
                                 ),
-                                textAlign = TextAlign.End
+                                textAlign = TextAlign.Start
                             )
                         }
                         Spacer(modifier = Modifier.padding(start = 8.dp))

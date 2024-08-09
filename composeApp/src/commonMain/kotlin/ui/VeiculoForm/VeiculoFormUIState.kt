@@ -1,4 +1,4 @@
-package ui.VeiculoForm
+package ui.veiculoForm
 
 data class VeiculoFormUIState (
     val fabricante: String = "",
@@ -14,6 +14,7 @@ data class VeiculoFormUIState (
     val onAnoModeloChange: (String) -> Unit = {},
     val onPlacaChange: (String) -> Unit = {},
     val onApelidoChange: (String) -> Unit = {},
-    val isValid: Boolean = false
+    val isValid: Boolean = false,
+    val isPlateValid: Boolean = true,
 
 )

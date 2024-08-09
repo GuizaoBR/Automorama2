@@ -1,7 +1,6 @@
 package viewModels
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import com.hoc081098.kmp.viewmodel.ViewModel
 import data.models.Combustivel
 import data.repositories.CombustivelRepository
 import kotlinx.coroutines.MainScope
@@ -30,7 +29,10 @@ class CombustivelFormViewModel(
         _uiState.update { curresteState ->
             curresteState.copy(onNomeChange = {nome ->
                 _uiState.update {
-                    it.copy(nome = nome)
+                    it.copy(nome = nome, nameAlreadyExist = checkNameAlreadyExists(nome))
+                }
+                _uiState.update {
+                    it.copy(isValid = checkIsValid())
                 }
             })
         }
@@ -44,6 +46,7 @@ class CombustivelFormViewModel(
                     _uiState.update {
                         it.copy(nome = combustivel.nome, topAppBarTitle = "Editando Combustível")
                     }
+                    
                 }
             }
         }
@@ -57,6 +60,15 @@ class CombustivelFormViewModel(
                 )
             )
         }
+    }
+    fun checkIsValid(): Boolean {
+        return with(_uiState.value) {
+            this.nome.isNotEmpty() && !checkNameAlreadyExists(this.nome)
+        }
+    }
+    
+    fun checkNameAlreadyExists(nome: String): Boolean {
+        return combustivelRepository.combustiveis.value.any { it.nome == nome && it.id != id }
     }
 }
 

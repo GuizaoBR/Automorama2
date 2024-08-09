@@ -153,7 +153,8 @@ fun ReabastecimentoForm(
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxWidth()
-                ) {
+                )
+                {
                     item {
                         composable { modifier ->
 
