@@ -30,10 +30,10 @@ fun commonModule() = module {
     single<CombustivelRepositoryFactory> {
         CombustivelRepositoryFactory(get())
     }
-    single<ReabastecimentoRepositoryFactory> {
+    single<ReabastecimentoRepositoryFactory> {6
         ReabastecimentoRepositoryFactory(get())
     }
-    single<ReabastecimentoListViewModelFactory> {
+    factory<ReabastecimentoListViewModelFactory> {
         ReabastecimentoListViewModelFactory()
 
     }

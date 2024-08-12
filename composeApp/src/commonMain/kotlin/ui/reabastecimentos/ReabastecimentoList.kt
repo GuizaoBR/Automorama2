@@ -38,6 +38,7 @@ import data.models.Reabastecimento
 import data.models.Veiculo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -225,7 +226,7 @@ fun AnimatedListItem(
             reabastecimento,
             editReabastecimento
         ) {
-            CoroutineScope(Dispatchers.Main).launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 visibleState.value = false
                 delay(500) // Ajuste o tempo de atraso conforme necessário
                 onDelete(reabastecimento.id!!)

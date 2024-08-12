@@ -53,7 +53,7 @@ class ReabastecimentoListViewModel: ScreenModel, KoinComponent {
         if (_uiState.value.veiculo != null) {
             _uiState.update {
                 repository.getReabastecimentoByVeiculo(_uiState.value.veiculo!!.id!!)
-                it.copy(reabastecimentos = repository.reabastecimentos.value.toList())
+                it.copy(reabastecimentos = repository.reabastecimentos.value[it.veiculo!!.id!!]?: listOf())
             }
         }
 
@@ -67,7 +67,7 @@ class ReabastecimentoListViewModel: ScreenModel, KoinComponent {
                     _uiState.update { it.copy(veiculo = selectedVeiculo) }
                     _uiState.update {
                         repository.getReabastecimentoByVeiculo(selectedVeiculo.id!!)
-                        it.copy(reabastecimentos = repository.reabastecimentos.value.toList())
+                        it.copy(reabastecimentos = repository.reabastecimentos.value[selectedVeiculo.id!!]?: listOf())
                     }
 
                 }
@@ -75,9 +75,9 @@ class ReabastecimentoListViewModel: ScreenModel, KoinComponent {
         }
         screenModelScope.launch {
             repository.reabastecimentos.collect { updatedReabastecimentos ->
-                _uiState.update {
-                    it.copy(
-                        reabastecimentos = updatedReabastecimentos.toList()
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        reabastecimentos = updatedReabastecimentos[currentState.veiculo?.id] ?: listOf()
                     )
                 }
             }
@@ -93,9 +93,5 @@ class ReabastecimentoListViewModel: ScreenModel, KoinComponent {
             }
         }
     }
-
-
-
-
 
 }

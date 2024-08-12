@@ -6,10 +6,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import data.models.Veiculo
 import ui.Veiculos.VeiculosListScreen
 import ui.Veiculos.VeiculosListUiState
+import ui.theme.AutomoramaTheme
 
 @Preview
 @Composable
 fun VeiculoListPreview() {
+
     val veiculos : MutableList<Veiculo> = emptyList<Veiculo>().toMutableList()
 
     repeat(20){
@@ -20,11 +22,13 @@ fun VeiculoListPreview() {
             "teste",
             2021,
             2023,
-            "abc1d23"
+            "abc1d23",
+                "teste",
+                10.0
         )
         )
     }
-    Surface {
+    AutomoramaTheme(true) {
         VeiculosListScreen(
             uiState = VeiculosListUiState(
                 veiculos.toList()

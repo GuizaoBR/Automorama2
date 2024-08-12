@@ -1,10 +1,16 @@
 package ui.Combustiveis
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,12 +20,15 @@ import androidx.compose.foundation.layout.FlowColumn
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -45,12 +54,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import data.models.Combustivel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
@@ -80,33 +96,54 @@ fun CombustivelListScreen(
                 .zIndex(1f)
         )
 
-        LazyVerticalGrid(columns = GridCells.Adaptive(300.dp)) {
+        LazyVerticalGrid(columns = GridCells.Adaptive(200.dp)) {
             items(uiState.combustiveis) { combustivel ->
-
-                ElevatedCard(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .combinedClickable(
-                            onClick = {
-                                onCombustivelClick(combustivel)
-                            },
+                val visibleState = remember { mutableStateOf(true) }
+                AnimatedVisibility(
+                    visible = visibleState.value, // Controla se o item está visível
+                    enter = fadeIn(animationSpec = tween(3000)) + expandVertically(
+                        animationSpec = tween(
+                            durationMillis = 3000,
+                            easing = LinearOutSlowInEasing
                         )
-                        .animateContentSize(
-                            animationSpec = tween(
-                                durationMillis = 300,
-                                easing = LinearOutSlowInEasing
+                    ),
+                    exit = shrinkVertically(
+                        animationSpec = tween(
+                            durationMillis = 500,
+                            easing = LinearOutSlowInEasing
+                        )
+                    ) + fadeOut(animationSpec = tween(300))
+                ){
+                    ElevatedCard(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .defaultMinSize(minHeight = 100.dp)
+                            .combinedClickable(
+                                onClick = {
+                                    onCombustivelClick(combustivel)
+                                },
                             )
-                        ),
-                    //shape = RoundedCornerShape(50.dp),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 6.dp
-                    )
+                            .animateContentSize(
+                                animationSpec = tween(
+                                    durationMillis = 300,
+                                    easing = LinearOutSlowInEasing
+                                )
+                            ),
+                        //shape = RoundedCornerShape(50.dp),
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = 6.dp
+                        )
 
-                ) {
-                    CardContent(combustivel, Modifier, uiState.onDelete)
+                    ) {
+                        CardContent(combustivel, Modifier) {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                visibleState.value = false
+                                delay(500)
+                                uiState.onDelete(combustivel)
+                            }
+                        }
+                    }
                 }
-
-
             }
         }
 
@@ -124,44 +161,43 @@ fun CardContent(combustivel: Combustivel, modifier: Modifier, onDeleteClick: (Co
     var showDeleteDialog by remember { mutableStateOf(false) }
 
 
-    Box(modifier) {
-        FlowColumn(
-            modifier = Modifier.align(Alignment.BottomEnd)
-        ) {
+    Box(modifier = Modifier
+        .defaultMinSize(minHeight = 100.dp)
+        .fillMaxSize()) {
+        Column(modifier = Modifier
+            .align(Alignment.BottomEnd)
+            ) {
 
             IconButton(
                 modifier = Modifier
-                    .weight(1f)
                     .alpha(0.2f)
+                    .align(Alignment.End)
                     .rotate(rotationState),
-                onClick = {
-                    expandedState = !expandedState
-                }) {
+                onClick = { expandedState = !expandedState }
+            ) {
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = "Drop-Down Arrow"
                 )
             }
         }
-        FlowColumn(
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.Center
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            FlowRow(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                Text(
-                    text = combustivel.nome,
-                    style = TextStyle.Default.copy(
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+            Text(
+                text = combustivel.nome,
+                style = TextStyle.Default.copy(
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
                 )
+            )
 
-            }
             if (expandedState) {
+                Spacer(modifier = Modifier.size(16.dp))
                 FlowRow(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -179,9 +215,7 @@ fun CardContent(combustivel: Combustivel, modifier: Modifier, onDeleteClick: (Co
                     }
                 }
             }
-
         }
-
 
     }
     if(showDeleteDialog){
@@ -189,7 +223,6 @@ fun CardContent(combustivel: Combustivel, modifier: Modifier, onDeleteClick: (Co
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AlertDeleteCombustivel(combustivel: Combustivel, onDeleteClick: (Combustivel) -> Unit = {}, onCancelClick: () -> Unit = {}){
     AlertDialog(

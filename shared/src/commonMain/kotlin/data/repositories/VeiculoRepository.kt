@@ -16,7 +16,7 @@ class VeiculoRepository(driver: SqlDriver) {
 
     companion object {
         private val _veiculos =
-            MutableStateFlow<MutableList<Veiculo>>(mutableListOf())
+            MutableStateFlow<List<Veiculo>>(emptyList())
     }
 
     val veiculos get() = _veiculos.asStateFlow()
@@ -26,36 +26,25 @@ class VeiculoRepository(driver: SqlDriver) {
         database.getAllVeiculos()
     }
 
-    fun saveVeiculo(veiculo: Veiculo){
-        _veiculos.update { listVeiculo ->
-            if (veiculo.id == null){
-                val id = database.setVeiculo(veiculo)
-                val newVeiculo = veiculo.copy(id = id)
-                listVeiculo.add(newVeiculo)
-            } else {
-                database.updateVeiculo(veiculo)
-                listVeiculo.find { it.id == veiculo.id }?.let {
-                    it.fabricante = veiculo.fabricante
-                    it.modelo = veiculo.modelo
-                    it.anoFabricacao = veiculo.anoFabricacao
-                    it.anoModelo = veiculo.anoModelo
-                    it.placa = veiculo.placa
-                    it.apelido = veiculo.apelido
-                }
+    fun saveVeiculo(veiculo: Veiculo) {
+        if (veiculo.id == null) {
+            val id = database.setVeiculo(veiculo)
+            val newVeiculo = veiculo.copy(id = id)
+            _veiculos.update { it + newVeiculo } // Use '+' to create a new list
+        } else {
+            database.updateVeiculo(veiculo)
+            _veiculos.update { currentList ->
+                currentList.map { if (it.id == veiculo.id) veiculo else it }
             }
-            listVeiculo
         }
     }
 
     fun deleteVeiculo(veiculo: Veiculo) {
-        _veiculos.update {
-            database.deleteVeiculo(veiculo.id!!)
-            it.remove(veiculo)
-            it
-        }
+        database.deleteVeiculo(veiculo.id!!)
+        _veiculos.update { it - veiculo }
     }
 
-    fun getVeiculosById(id: Long) : Veiculo {
+    fun getVeiculosById(id: Long): Veiculo {
         return database.getVeiculoById(id)
     }
 }

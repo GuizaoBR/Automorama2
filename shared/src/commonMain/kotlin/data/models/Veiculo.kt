@@ -6,5 +6,6 @@ data class Veiculo(
     var anoFabricacao: Long = 0,
     var anoModelo: Long = 0,
     var placa: String = "",
-    var apelido: String = ""
+    var apelido: String = "",
+    var media: Double = 0.0
 )

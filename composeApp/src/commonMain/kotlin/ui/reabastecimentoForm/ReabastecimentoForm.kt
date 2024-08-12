@@ -1,8 +1,10 @@
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -149,188 +151,188 @@ fun ReabastecimentoForm(
                         }
                     }
                 }
-                LazyColumn(
+                Column(
                     modifier = Modifier
                         .padding(16.dp)
+                        .verticalScroll(rememberScrollState())
                         .fillMaxWidth()
                 )
                 {
-                    item {
-                        composable { modifier ->
+                    composable { modifier ->
 
-                            TextField(
-                                value = filterNumbersAndDecimal(quilometragemAnterior),
-                                onValueChange = uiState.onQuilometragemAnteriorChange,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                label = {
-                                    Row(modifier = Modifier.fillMaxWidth()) {
-                                        Icon(
-                                            imageVector = Icons.Default.Moving,
-                                            contentDescription = null
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
+                        TextField(
+                            value = filterNumbersAndDecimal(quilometragemAnterior),
+                            onValueChange = uiState.onQuilometragemAnteriorChange,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            label = {
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    Icon(
+                                        imageVector = Icons.Default.Moving,
+                                        contentDescription = null
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
 
-                                        Text("Quilometragem Anterior")
+                                    Text("Quilometragem Anterior")
 
-                                    }
-                                },
-                                isError = quilometragemAnterior.isEmpty(),
-                                modifier = modifier.onKeyEvent {
-                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
-                                        focusManager.moveFocus(FocusDirection.Next)
-                                        true
-                                    } else {
-                                        false
-                                    }
                                 }
-                            )
-
-
-                            if (screenSize == WindowSize.LARGE || screenSize == WindowSize.MEDIUM) {
-                                Spacer(modifier = Modifier.width(8.dp))
-                            } else {
-                                Spacer(modifier = Modifier.height(16.dp))
+                            },
+                            isError = quilometragemAnterior.isEmpty(),
+                            modifier = modifier.onKeyEvent {
+                                if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                    focusManager.moveFocus(FocusDirection.Next)
+                                    true
+                                } else {
+                                    false
+                                }
                             }
+                        )
 
 
-                            TextField(
-                                value = filterNumbersAndDecimal(quilometragemAtual),
-                                onValueChange = uiState.onQuilometragemAtualChange,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                label = {
-                                    Row(modifier = Modifier.fillMaxWidth()) {
-                                        Icon(
-                                            imageVector = Icons.Default.LocationOn,
-                                            contentDescription = null
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text("Quilometragem Final")
-                                    }
-
-
-                                },
-                                isError = quilometragemAtual.isEmpty(),
-                                modifier = modifier.onKeyEvent {
-                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
-                                        focusManager.moveFocus(FocusDirection.Next)
-                                        true
-                                    } else {
-                                        false
-                                    }
-                                }
-                            )
-
+                        if (screenSize == WindowSize.LARGE || screenSize == WindowSize.MEDIUM) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                        } else {
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
 
-                        Spacer(modifier = Modifier.height(16.dp))
 
-
-                        composable { modifier ->
-
-                            TextField(
-                                value = filterNumbersAndDecimal(litro),
-                                onValueChange = uiState.onLitroChange,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                label = {
-                                    Row(modifier = Modifier.fillMaxWidth()) {
-                                        Icon(
-                                            imageVector = Icons.Default.FormatColorFill,
-                                            contentDescription = null
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text("Litros")
-                                    }
-
-
-                                },
-                                isError = litro.isEmpty(),
-                                modifier = modifier.onKeyEvent {
-                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter ) {
-                                        focusManager.moveFocus(FocusDirection.Next)
-                                        true
-                                    } else {
-                                        false
-                                    }
+                        TextField(
+                            value = filterNumbersAndDecimal(quilometragemAtual),
+                            onValueChange = uiState.onQuilometragemAtualChange,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            label = {
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    Icon(
+                                        imageVector = Icons.Default.LocationOn,
+                                        contentDescription = null
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("Quilometragem Final")
                                 }
-                            )
 
 
-                            if (screenSize == WindowSize.LARGE || screenSize == WindowSize.MEDIUM) {
-                                Spacer(modifier = Modifier.width(8.dp))
-                            } else {
-                                Spacer(modifier = Modifier.height(16.dp))
+                            },
+                            isError = quilometragemAtual.isEmpty(),
+                            modifier = modifier.onKeyEvent {
+                                if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                    focusManager.moveFocus(FocusDirection.Next)
+                                    true
+                                } else {
+                                    false
+                                }
                             }
+                        )
+
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
 
 
-                            TextField(
-                                value = filterNumbersAndDecimal(valorTotal),
-                                onValueChange = uiState.onValorTotalChange,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                label = {
+                    composable { modifier ->
 
-                                    Row(modifier = Modifier.fillMaxWidth()) {
-                                        Icon(
-                                            imageVector = Icons.Default.Payment,
-                                            contentDescription = null
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text("Valor Total")
-                                    }
-
-                                },
-                                isError = valorTotal.isEmpty(),
-                                modifier = modifier.onKeyEvent {
-                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
-                                        focusManager.moveFocus(FocusDirection.Next)
-                                        true
-                                    } else {
-                                        false
-                                    }
+                        TextField(
+                            value = filterNumbersAndDecimal(litro),
+                            onValueChange = uiState.onLitroChange,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            label = {
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    Icon(
+                                        imageVector = Icons.Default.FormatColorFill,
+                                        contentDescription = null
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("Litros")
                                 }
-                            )
 
+
+                            },
+                            isError = litro.isEmpty(),
+                            modifier = modifier.onKeyEvent {
+                                if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter ) {
+                                    focusManager.moveFocus(FocusDirection.Next)
+                                    true
+                                } else {
+                                    false
+                                }
+                            }
+                        )
+
+
+                        if (screenSize == WindowSize.LARGE || screenSize == WindowSize.MEDIUM) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                        } else {
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
 
-                        Spacer(modifier = Modifier.height(16.dp))
 
-                        composable { modifier ->
+                        TextField(
+                            value = filterNumbersAndDecimal(valorTotal),
+                            onValueChange = uiState.onValorTotalChange,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            label = {
 
-                            TextField(
-                                value = filterNumbersAndDecimal(valorLitro),
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                onValueChange = uiState.onValorLitroChange,
-                                label = {
-                                    Row(modifier = Modifier.fillMaxWidth()) {
-                                        Icon(
-                                            imageVector = Icons.Default.Payments,
-                                            contentDescription = null
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text("Valor Litro")
-                                    }
-
-                                },
-                                isError = valorLitro.isEmpty(),
-                                modifier = modifier.onKeyEvent {
-                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
-                                        focusManager.moveFocus(FocusDirection.Next)
-                                        true
-                                    } else {
-                                        false
-                                    }
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    Icon(
+                                        imageVector = Icons.Default.Payment,
+                                        contentDescription = null
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("Valor Total")
                                 }
-                            )
 
-
-                            if (screenSize == WindowSize.LARGE || screenSize == WindowSize.MEDIUM) {
-                                Spacer(modifier = Modifier.width(8.dp))
-                            } else {
-                                Spacer(modifier = Modifier.height(16.dp))
+                            },
+                            isError = valorTotal.isEmpty(),
+                            modifier = modifier.onKeyEvent {
+                                if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                    focusManager.moveFocus(FocusDirection.Next)
+                                    true
+                                } else {
+                                    false
+                                }
                             }
+                        )
 
-                            var openDialog by remember { mutableStateOf(false) }
-                            val dateMask = "__/__/____"
-                            val BrazilDateFormatOffSet = object :OffsetMapping {
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    composable { modifier ->
+
+                        TextField(
+                            value = filterNumbersAndDecimal(valorLitro),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            onValueChange = uiState.onValorLitroChange,
+                            label = {
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    Icon(
+                                        imageVector = Icons.Default.Payments,
+                                        contentDescription = null
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("Valor Litro")
+                                }
+
+                            },
+                            isError = valorLitro.isEmpty(),
+                            modifier = modifier.onKeyEvent {
+                                if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                    focusManager.moveFocus(FocusDirection.Next)
+                                    true
+                                } else {
+                                    false
+                                }
+                            }
+                        )
+
+
+                        if (screenSize == WindowSize.LARGE || screenSize == WindowSize.MEDIUM) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                        } else {
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
+
+                        var openDialog by remember { mutableStateOf(false) }
+                        val dateMask = "__/__/____"
+                        val BrazilDateFormatOffSet = object :OffsetMapping {
                             override fun originalToTransformed(offset: Int): Int {
                                 return when {
                                     offset <= 1 -> offset
@@ -341,7 +343,7 @@ fun ReabastecimentoForm(
                             }
 
                             override fun transformedToOriginal(offset: Int): Int {
-                               return when {
+                                return when {
                                     offset <= 2 -> offset
                                     offset <= 5 -> offset - 1
                                     offset <= 10 -> offset - 2
@@ -349,23 +351,23 @@ fun ReabastecimentoForm(
                                 }
                             }
                         }
-                            TextField(
-                                value = data,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                onValueChange = { newValue ->
-                                    val filteredValue = newValue.filter { it.isDigit() }.take(8)
-                                    if(filteredValue.length == 1) {
-                                        if (filteredValue.toInt() > 3)
-                                            return@TextField
-                                    }
+                        TextField(
+                            value = data,
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            onValueChange = { newValue ->
+                                val filteredValue = newValue.filter { it.isDigit() }.take(8)
+                                if(filteredValue.length == 1) {
+                                    if (filteredValue.toInt() > 3)
+                                        return@TextField
+                                }
 
-                                    val day = if (filteredValue.length >= 2) filteredValue.substring(0, 2) else ""
-                                    if(filteredValue.length == 3){
-                                        if(filteredValue.substring(2,3).toInt() > 1)
-                                            return@TextField
-                                    }
-                                    val month = if (filteredValue.length >= 4) filteredValue.substring(2, 4) else ""
-                                    if (
+                                val day = if (filteredValue.length >= 2) filteredValue.substring(0, 2) else ""
+                                if(filteredValue.length == 3){
+                                    if(filteredValue.substring(2,3).toInt() > 1)
+                                        return@TextField
+                                }
+                                val month = if (filteredValue.length >= 4) filteredValue.substring(2, 4) else ""
+                                if (
                                     (day.isEmpty() || (isValidDay(day) && day.length == 2)) &&
                                     (month.isEmpty() || (isValidMonth(month) && month.length == 2))
                                 ) {
@@ -374,157 +376,155 @@ fun ReabastecimentoForm(
                                     // Optionally: provide feedback to the user about invalid input
                                 }
 
-                                },
-                                visualTransformation = VisualTransformation { text ->
+                            },
+                            visualTransformation = VisualTransformation { text ->
 
-                                    val maskedText = StringBuilder()
-                                    var textIndex = 0
-                                    for (i in dateMask.indices) {
-                                        if (textIndex < text.length) { // Use text.length here
-                                            maskedText.append(text[textIndex++]) // Use text[textIndex] here
-                                            if (i == 1 || i == 3) {
-                                                maskedText.append('/')
+                                val maskedText = StringBuilder()
+                                var textIndex = 0
+                                for (i in dateMask.indices) {
+                                    if (textIndex < text.length) { // Use text.length here
+                                        maskedText.append(text[textIndex++]) // Use text[textIndex] here
+                                        if (i == 1 || i == 3) {
+                                            maskedText.append('/')
 
-                                            }
-                                        } else {
-                                            break
                                         }
-                                    }
-                                    TransformedText(
-                                        text = AnnotatedString(maskedText.toString()),
-                                        offsetMapping = BrazilDateFormatOffSet
-                                    )
-                                },
-                                trailingIcon = {
-                                    IconButton(
-                                        onClick = { openDialog = true },
-
-                                        ){
-                                        Icon(
-                                            imageVector = Icons.Default.CalendarMonth,
-                                            contentDescription = null,
-                                            modifier = Modifier.clickable { openDialog = true }
-                                        )
-                                    }
-
-                                },
-                                label = {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.CalendarMonth,
-                                            contentDescription = null
-                                        )
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text("Data")
-
-
-                                    }
-                                },
-                                isError = data.isEmpty() || !data.chekDateValidWithouScape() ,
-                                modifier = modifier.onKeyEvent {
-                                    if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
-
-                                        focusManager.moveFocus(FocusDirection.Next)
-                                        true
                                     } else {
-                                        false
+                                        break
+                                    }
+                                }
+                                TransformedText(
+                                    text = AnnotatedString(maskedText.toString()),
+                                    offsetMapping = BrazilDateFormatOffSet
+                                )
+                            },
+                            trailingIcon = {
+                                IconButton(
+                                    onClick = { openDialog = true },
+
+                                    ){
+                                    Icon(
+                                        imageVector = Icons.Default.CalendarMonth,
+                                        contentDescription = null,
+                                        modifier = Modifier.clickable { openDialog = true }
+                                    )
+                                }
+
+                            },
+                            label = {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.CalendarMonth,
+                                        contentDescription = null
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text("Data")
+
+
+                                }
+                            },
+                            isError = data.isEmpty() || !data.chekDateValidWithouScape() ,
+                            modifier = modifier.onKeyEvent {
+                                if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+
+                                    focusManager.moveFocus(FocusDirection.Next)
+                                    true
+                                } else {
+                                    false
+                                }
+                            },
+                            colors = TextFieldDefaults.textFieldColors(
+                                disabledTextColor = LocalContentColor.current.copy(
+                                    LocalContentAlpha.current
+                                ), // Cor do texto desabilitado igual ao habilitado
+                                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant, // Cor da label desabilitada
+                                disabledIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant, // Cor do indicador desabilitado
+                                focusedIndicatorColor = MaterialTheme.colorScheme.primary, // Cor do indicador focado (igual ao habilitado)
+                                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant // Cor do indicador não focado
+                            )
+                        )
+
+                        if (openDialog) {
+                            val datePickerState = rememberDatePickerState()
+                            val confirmEnabled = remember {
+                                derivedStateOf { datePickerState.selectedDateMillis != null }
+                            }
+                            DatePickerDialog(
+                                onDismissRequest = {
+                                    openDialog = false
+                                },
+                                confirmButton = {
+                                    TextButton(
+                                        onClick = {
+                                            openDialog = false
+                                            data = Instant.fromEpochMilliseconds(datePickerState.selectedDateMillis!!)
+                                                .toLocalDateTime(TimeZone.UTC).date.toBrazilFormatWithoutScape()
+                                            uiState.onDataChange(data)
+
+                                        },
+                                        enabled = confirmEnabled.value
+                                    ) {
+                                        Text("OK")
                                     }
                                 },
-                                colors = TextFieldDefaults.textFieldColors(
-                                    disabledTextColor = LocalContentColor.current.copy(
-                                        LocalContentAlpha.current
-                                    ), // Cor do texto desabilitado igual ao habilitado
-                                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant, // Cor da label desabilitada
-                                    disabledIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant, // Cor do indicador desabilitado
-                                    focusedIndicatorColor = MaterialTheme.colorScheme.primary, // Cor do indicador focado (igual ao habilitado)
-                                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurfaceVariant // Cor do indicador não focado
-                                )
-                            )
-
-                            if (openDialog) {
-                                val datePickerState = rememberDatePickerState()
-                                val confirmEnabled = remember {
-                                    derivedStateOf { datePickerState.selectedDateMillis != null }
-                                }
-                                DatePickerDialog(
-                                    onDismissRequest = {
+                                dismissButton = {
+                                    TextButton(onClick = {
                                         openDialog = false
-                                    },
-                                    confirmButton = {
-                                        TextButton(
-                                            onClick = {
-                                                openDialog = false
-                                                data = Instant.fromEpochMilliseconds(datePickerState.selectedDateMillis!!)
-                                                    .toLocalDateTime(TimeZone.UTC).date.toBrazilFormatWithoutScape()
-                                                uiState.onDataChange(data)
-
-                                            },
-                                            enabled = confirmEnabled.value
-                                        ) {
-                                            Text("OK")
-                                        }
-                                    },
-                                    dismissButton = {
-                                        TextButton(onClick = {
-                                            openDialog = false
-                                        }) { Text("Cancel") }
-                                    }
-                                ) {
-                                    DatePicker(state = datePickerState)
+                                    }) { Text("Cancel") }
                                 }
+                            ) {
+                                DatePicker(state = datePickerState)
                             }
-
                         }
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                    }
 
-                        composable { modifier ->
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                            var expanded by remember { mutableStateOf(false) }
+                    composable { modifier ->
 
-                            ExposedDropdownMenuBox(
-                                expanded = expanded,
-                                onExpandedChange = { expanded = !expanded }
-                            ) {
-                                TextField(
-                                    value = uiState.combustivel?.nome?: "Selecione",
-                                    onValueChange = {
+                        var expanded by remember { mutableStateOf(false) }
+
+                        ExposedDropdownMenuBox(
+                            expanded = expanded,
+                            onExpandedChange = { expanded = !expanded }
+                        ) {
+                            TextField(
+                                value = uiState.combustivel?.nome?: "Selecione",
+                                onValueChange = {
 //                                            uiState.onCombustivelChange(combustivel!!)
 
-                                    },
-                                    readOnly = true,
-                                    label = { Text("Combustível") },
-                                    trailingIcon = {
-                                        ExposedDropdownMenuDefaults.TrailingIcon(
-                                            expanded = expanded
-                                        )
-                                    },
-                                    modifier = modifier.menuAnchor()
-                                )
+                                },
+                                readOnly = true,
+                                label = { Text("Combustível") },
+                                trailingIcon = {
+                                    ExposedDropdownMenuDefaults.TrailingIcon(
+                                        expanded = expanded
+                                    )
+                                },
+                                modifier = modifier.menuAnchor()
+                            )
 
-                                ExposedDropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false }
-                                ) {
-                                    uiState.combustiveis.forEach { combustivel ->
-                                        DropdownMenuItem(
-                                            text = { Text(combustivel.nome) },
-                                            onClick = {
-                                                uiState.onCombustivelChange(combustivel)
-                                                expanded = false
-                                            }
-                                        )
-                                    }
+                            ExposedDropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                uiState.combustiveis.forEach { combustivel ->
+                                    DropdownMenuItem(
+                                        text = { Text(combustivel.nome) },
+                                        onClick = {
+                                            uiState.onCombustivelChange(combustivel)
+                                            expanded = false
+                                        }
+                                    )
                                 }
                             }
-
-
                         }
 
 
                     }
+
                 }
             }
         }

@@ -4,6 +4,10 @@ fun filterNumbersAndDecimal(text: String): String {
     return text.filter { it.isDigit() || it == '.' || it == ',' }.replace(Regex("([.,])(\\1+)"), "$1") // Allow only one decimal point
 }
 
+fun filterNumbers(text: String): String {
+    return text.filter { it.isDigit() }
+}
+
 
 val dayRegex = Regex("^(0[1-9]|[12]\\d|3[01])$")
 val monthRegex = Regex("^(0[1-9]|1[0-2])$")

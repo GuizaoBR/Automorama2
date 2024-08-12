@@ -7,18 +7,19 @@ import data.models.Combustivel
 import data.models.Veiculo
 import ui.Combustiveis.CombustivelListScreen
 import ui.Combustiveis.CombustivelListUIState
+import ui.theme.AutomoramaTheme
 
 @Preview
 @Composable
-fun CombustivelListPrevuew(){
+fun CombustivelListPreview(){
     val combustiveis : MutableList<Combustivel> = emptyList<Combustivel>().toMutableList()
 
     repeat(20){
         combustiveis.add(
-           Combustivel(nome= "SHELL V POWER")
+           Combustivel(nome= "Gasolina Premium")
         )
     }
-    Surface {
+    AutomoramaTheme(true) {
             CombustivelListScreen(uiState = CombustivelListUIState(combustiveis))
 
     }

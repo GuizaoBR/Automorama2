@@ -147,10 +147,10 @@ class App() : KoinComponent {
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Menu,
-                        contentDescription = "Localized description"
+                        contentDescription = "Menu"
                     )
                 }
-            }
+            },
         )
     }
 

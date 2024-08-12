@@ -13,7 +13,7 @@ class ReabastecimentoRepository(driver: SqlDriver) {
 
     companion object {
         private val _reabastecimentos =
-            MutableStateFlow<MutableList<Reabastecimento>>(mutableListOf())
+            MutableStateFlow<Map<Long, List<Reabastecimento>>>(emptyMap())
         private val _veiculo = MutableStateFlow<Veiculo?>(null)
     }
 
@@ -23,45 +23,40 @@ class ReabastecimentoRepository(driver: SqlDriver) {
 
     private val database = Automorama2Database(driver)
 
-    fun getReabastecimentoByVeiculo(veiculoid: Long)  {
-        _reabastecimentos.update {
-            database.getReabastecimetoByVeiculo(veiculoid).sortedBy { it.data }.toMutableList()
-        }
-        _veiculo.update {
-            database.getVeiculoById(veiculoid)
-        }
+    fun getReabastecimentoByVeiculo(veiculoId: Long) {
+        val reabastecimentos = database.getReabastecimetoByVeiculo(veiculoId).sortedBy { it.data }
+        _reabastecimentos.update { it + (veiculoId to reabastecimentos) }
     }
 
-    fun saveReabastecimento(reabastecimento:Reabastecimento) {
+    fun saveReabastecimento(reabastecimento: Reabastecimento) {
         if (reabastecimento.id == null) {
             val id = database.setReabastecimento(reabastecimento)
             val newReabastecimento = reabastecimento.copy(id = id)
-            _reabastecimentos.value =
-                (_reabastecimentos.value + newReabastecimento).sortedBy { it.data }.toMutableList() // Append new item
+            _reabastecimentos.update {
+                val updatedList = (it[reabastecimento.veiculo.id] ?: emptyList()) + newReabastecimento
+                it + (reabastecimento.veiculo.id!! to updatedList.sortedBy { it.data })
+            }
         } else {
             database.updateReabastecimento(reabastecimento)
-            _reabastecimentos.value = _reabastecimentos.value.map {
-                if(it.id == reabastecimento.id) reabastecimento else it // Update existing item
-            }.sortedBy { it.data }.toMutableList()
+            _reabastecimentos.update {
+                it.mapValues { (veiculoId, reabastecimentos) ->
+                    if (veiculoId == reabastecimento.veiculo.id) {
+                        reabastecimentos.map { if (it.id == reabastecimento.id) reabastecimento else it }
+                            .sortedBy { it.data }
+                    } else {
+                        reabastecimentos
+                    }
+                }
+            }
         }
     }
 
-//    fun deleteReabastecimento(id: Long) {
-//        _reabastecimentos.update {
-//            database.deleteReabastecimentio(id)
-//            it.remove(it.find { reabastecimento ->
-//                reabastecimento.id == id
-//            })
-//            it
-//        }
-//    }
     fun deleteReabastecimento(id: Long) {
         database.deleteReabastecimentio(id)
-        // Cria uma nova lista sem o item excluído
-        val novaLista = _reabastecimentos.value.toMutableList().also {
-            it.removeAll { it.id == id }
+        _reabastecimentos.update { map ->
+            map.mapValues { (veiculoId, reabastecimentos) ->
+                reabastecimentos.filterNot { it.id == id }
+            }
         }
-        // Emite a nova lista para o Flow
-        _reabastecimentos.value = novaLista.sortedBy { it.data }.toMutableList()
     }
 }

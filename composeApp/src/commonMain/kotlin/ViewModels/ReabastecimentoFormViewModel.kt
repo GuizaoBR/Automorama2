@@ -87,7 +87,7 @@ class ReabastecimentoFormViewModel(
         if (id != null) {
             screenModelScope.launch {
                 _uiState.update { it.copy(isLoading = true) }
-                val reabastecimento = repository.reabastecimentos.value.find {
+                val reabastecimento = repository.reabastecimentos.value.values.flatten().find {
                     it.id == id
                 }
                 if (reabastecimento != null) {
