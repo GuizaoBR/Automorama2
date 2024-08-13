@@ -46,6 +46,7 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.theme.AutomoramaTheme
+import ui.theme.secondaryDark
 
 
 @Composable
@@ -84,6 +85,9 @@ fun VeiculoDropDownTopAppBar(
                             .background(Color.Black.copy(alpha = 0.2f), shape = RoundedCornerShape(16.dp))
                             .fillMaxWidth(),
                         onClick = { expanded = true },
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = secondaryDark
+                        ),
                         content = { Text(uiState.veiculo?.modelo ?: "Selecione") }
                     )
                     DropdownMenu(
@@ -112,8 +116,8 @@ fun VeiculoDropDownTopAppBar(
             }
                 },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            titleContentColor = secondaryDark
         )
 
     )

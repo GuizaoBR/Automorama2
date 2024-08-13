@@ -46,6 +46,7 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.reabastecimentoForm.ReabastecimentoFormUIState
 import ui.theme.AutomoramaTheme
+import ui.topAppBar.TopAppBarSave
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -63,37 +64,12 @@ fun ReabastecimentoForm(
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Reabastecimento",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                ),
-                actions = {
-                    OutlinedButton(
-                        onClick = onSaveClick,
-                        enabled = uiState.isValid,
-                        shape = RoundedCornerShape(50.dp)
-
-                    ) {
-                        Text("Salvar")
-                    }
-                },
-
-                )
-
-
+            TopAppBarSave(
+                title = uiState.topAppBarTitle,
+                onSave = onSaveClick,
+                onBack = onBackClick,
+                isValid = uiState.isValid
+            )
         }) { innerPadding ->
         var screenWidth by remember { mutableStateOf(0.dp) }
         var screenHeight by remember { mutableStateOf(0.dp) }

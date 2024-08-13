@@ -7,9 +7,16 @@ import ui.theme.AutomoramaTheme
 
 @Composable
 @Preview
-fun ReabastecimentoListPreview() {
+fun ReabastecimentoListPreviewDark() {
     AutomoramaTheme(true) {
+        ReabastecimentoList()
+    }
+}
 
+@Composable
+@Preview
+fun ReabastecimentoListPreview() {
+    AutomoramaTheme(false) {
         ReabastecimentoList()
     }
 }

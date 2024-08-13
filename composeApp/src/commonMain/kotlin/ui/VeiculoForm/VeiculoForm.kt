@@ -1,9 +1,12 @@
 package ui.veiculoForm
 
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
@@ -13,14 +16,21 @@ import helpers.WindowSize
 import helpers.WindowSize.Companion.screenSizeWidth
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import helpers.filterNumbers
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.veiculoForm.VeiculoFormUIState
 import ui.theme.AutomoramaTheme
+import ui.topAppBar.TopAppBarSave
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,39 +45,10 @@ fun VeiculoForm(
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        uiState.topAppBarTitle,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                ),
-                actions = {
-                    OutlinedButton(
-                        onClick = {
-                            onSaveClick()
-                        },
-                        enabled = uiState.isValid,
-                        shape = RoundedCornerShape(50.dp)
-
-                    ) {
-                        Text("Salvar")
-                    }
-                },
-
-                )
-
-
+            TopAppBarSave(title = uiState.topAppBarTitle,
+                onBack = onBackClick,
+                onSave = onSaveClick,
+                isValid = uiState.isValid,)
         },
         content = { innerPadding ->
             CardContent(uiState, modifier.padding(innerPadding))
@@ -143,86 +124,128 @@ private fun CardContent(
                 }
             }
 
-
-            LazyColumn(
-
+            val focusManager = LocalFocusManager.current
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.Top),
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
             )
             {
-                item {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.Top),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
 
-                        OutlinedTextField(
-                            value = fabricante,
-                            onValueChange = uiState.onFabricanteChange,
-                            label = {
-                                Text("Fabricante")
-                            },
-                            isError = fabricante.isEmpty()
-                        )
-                        OutlinedTextField(
-                            value = modelo,
-                            onValueChange = uiState.onModeloChange,
-                            label = {
-                                Text("Modelo")
-                            },
-                            isError = uiState.modelo.isEmpty()
-                        )
-                        composable {
-                            OutlinedTextField(
-                                value = anoFabricacao,
-                                onValueChange = uiState.onAnoFabricacaoChange,
-                                label = {
-                                    Text("Ano Fabricação")
-                                },
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                isError = uiState.anoFabricacao.isEmpty()
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            OutlinedTextField(
-                                value = anoModelo,
-                                onValueChange = uiState.onAnoModeloChange,
-                                label = {
-                                    Text("Ano Modelo")
-                                },
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                isError = uiState.anoModelo.isEmpty()
+                OutlinedTextField(
+                    value = fabricante,
+                    onValueChange = uiState.onFabricanteChange,
+                    label = {
+                        Text("Fabricante")
+                    },
+                    isError = fabricante.isEmpty(),
+                    modifier = Modifier.onKeyEvent {
+                        if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                            focusManager.moveFocus(FocusDirection.Next)
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                )
+                OutlinedTextField(
+                    value = modelo,
+                    onValueChange = uiState.onModeloChange,
+                    label = {
+                        Text("Modelo")
+                    },
+                    isError = uiState.modelo.isEmpty(),
+                    modifier = Modifier.onKeyEvent {
+                        if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                            focusManager.moveFocus(FocusDirection.Next)
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                )
+                composable {
+                    OutlinedTextField(
+                        value = filterNumbers(anoFabricacao),
+                        onValueChange = uiState.onAnoFabricacaoChange,
+                        label = {
+                            Text("Ano Fabricação")
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        isError = uiState.anoFabricacao.isEmpty(),
+                        modifier = Modifier.onKeyEvent {
+                            if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                focusManager.moveFocus(FocusDirection.Next)
+                                true
+                            } else {
+                                false
+                            }
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    OutlinedTextField(
+                        value = filterNumbers(anoModelo),
+                        onValueChange = uiState.onAnoModeloChange,
+                        label = {
+                            Text("Ano Modelo")
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        isError = uiState.anoModelo.isEmpty(),
+                        modifier = Modifier.onKeyEvent {
+                            if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                focusManager.moveFocus(FocusDirection.Next)
+                                true
+                            } else {
+                                false
+                            }
+                        }
+                    )
+
+                }
+                OutlinedTextField(
+                    value = placa,
+                    onValueChange = uiState.onPlacaChange,
+                    label = {
+                        Text("Placa")
+                    },
+                    isError = uiState.placa.isEmpty() || !uiState.isPlateValid,
+                    supportingText = {
+                        if (!uiState.isPlateValid) {
+                            Text(
+                                text = "Já existe um veículo com essa placa",
+                                color = MaterialTheme.colorScheme.error,
+                                fontSize = 12.sp
                             )
 
                         }
-                        OutlinedTextField(
-                            value = placa,
-                            onValueChange = uiState.onPlacaChange,
-                            label = {
-                                Text("Placa")
-                            },
-                            isError = uiState.placa.isEmpty() || !uiState.isPlateValid,
-                            supportingText = {
-                                if (!uiState.isPlateValid) {
-                                    Text(
-                                        text = "Já existe um veículo com essa placa",
-                                        color = MaterialTheme.colorScheme.error,
-                                        fontSize = 12.sp
-                                    )
-
-                                }
-                            }
-
-                        )
-                        OutlinedTextField(
-                            value = apelido,
-                            onValueChange = uiState.onApelidoChange,
-                            label = {
-                                Text("Apelido")
-                            },
-                        )
+                    },
+                    modifier = Modifier.onKeyEvent {
+                        if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                            focusManager.moveFocus(FocusDirection.Next)
+                            true
+                        } else {
+                            false
+                        }
                     }
-                }
 
+                )
+                OutlinedTextField(
+                    value = apelido,
+                    onValueChange = uiState.onApelidoChange,
+                    label = {
+                        Text("Apelido")
+                    },
+                    modifier = Modifier.onKeyEvent {
+                        if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                            focusManager.moveFocus(FocusDirection.Next)
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                )
             }
         }
     }

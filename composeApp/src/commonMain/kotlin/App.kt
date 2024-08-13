@@ -151,6 +151,13 @@ class App() : KoinComponent {
                     )
                 }
             },
+            colors = TopAppBarColors(
+                containerColor = NavigationBarDefaults.containerColor,
+                titleContentColor = MaterialTheme.colorScheme.primary,
+                navigationIconContentColor = MaterialTheme.colorScheme.primary,
+                actionIconContentColor = MaterialTheme.colorScheme.primary,
+                scrolledContainerColor = MaterialTheme.colorScheme.primaryContainer,
+            )
         )
     }
 

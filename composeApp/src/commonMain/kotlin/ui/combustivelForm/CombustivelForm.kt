@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.combustivelForm.CombustivelFormUIState
 import ui.theme.AutomoramaTheme
+import ui.topAppBar.TopAppBarSave
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -23,35 +24,11 @@ fun CombustivelFormScreen(
 ) {
     Scaffold(modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        uiState.topAppBarTitle,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                ),
-                actions = {
-                    OutlinedButton(
-                        onClick = {
-                            onSaveClick()
-                        },
-                        enabled = uiState.isValid,
-                        shape = RoundedCornerShape(50.dp)
-
-                    ) {
-                        Text("Salvar")
-                    }
-                }
+            TopAppBarSave(
+                title = uiState.topAppBarTitle,
+                onSave = onSaveClick,
+                onBack = onBackClick,
+                isValid = uiState.isValid
             )
         },
         content = { innerPadding ->
