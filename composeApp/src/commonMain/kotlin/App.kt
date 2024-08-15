@@ -1,3 +1,4 @@
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -5,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -70,7 +72,7 @@ class App() : KoinComponent {
 
     @Composable
     @Preview
-    fun DrawerMenu(navigator: Navigator, drawerState: DrawerState, modifier: Modifier) {
+    fun DrawerMenu(navigator: Navigator? = null, drawerState: DrawerState? = null, modifier: Modifier = Modifier) {
         val scope = rememberCoroutineScope()
         ModalDrawerSheet {
             val typography = Typography(
@@ -80,24 +82,31 @@ class App() : KoinComponent {
                     lineHeight =  28.sp
                 )
             )
+            var selectedItem by remember { mutableStateOf(NavigationItem(name = "Cadastro", onClick = {}))}
+
             val cadastroItem = NavigationItem(
                 name = "Cadastro",
                 label = {
-                    Icon(Icons.Default.Add, contentDescription = "Cadastro", modifier = Modifier.padding(start = 16.dp, top = 6.dp) )
-                    Spacer(modifier = Modifier.padding(start = 32.dp))
-                    Text("Cadastro",
-                         fontWeight = typography.titleMedium.fontWeight,
-                         fontSize = typography.titleMedium.fontSize,
-                         lineHeight = typography.titleMedium.lineHeight
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.Add, contentDescription = "Cadastro"  )
+                        Spacer(modifier = Modifier.padding(start = 32.dp))
+                        Text("Cadastro",
+                             fontWeight = typography.titleMedium.fontWeight,
+                             fontSize = typography.titleMedium.fontSize,
+                             lineHeight = typography.titleMedium.lineHeight
+                        )
+                    }
                         },
                 onClick = {
+                    if(selectedItem == it) return@NavigationItem
                     scope.launch {
-                        drawerState.apply {
+                        drawerState!!.apply {
                             if (isOpen) close()
                         }
                     }
-                    navigator.replace(ShowGroupScreen())
+
+                    selectedItem = it
+                    navigator!!.replace(ShowGroupScreen())
 
                 },
                 modifier = Modifier.padding(start = 16.dp, top = 6.dp)
@@ -105,26 +114,30 @@ class App() : KoinComponent {
             val gastosItem = NavigationItem(
                 name = "Gastos",
                 label = {
-                    Icon(Icons.Default.Payments, contentDescription = "Gastos", modifier = Modifier.padding(start = 16.dp, top = 6.dp) )
-                    Spacer(modifier = Modifier.padding(start = 32.dp))
-                    Text("Gastos",
-                         fontWeight = typography.titleMedium.fontWeight,
-                         fontSize = typography.titleMedium.fontSize,
-                         lineHeight = typography.titleMedium.lineHeight
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.Payments, contentDescription = "Gastos" )
+                        Spacer(modifier = Modifier.padding(start = 32.dp))
+                        Text("Gastos",
+                             fontWeight = typography.titleMedium.fontWeight,
+                             fontSize = typography.titleMedium.fontSize,
+                             lineHeight = typography.titleMedium.lineHeight
+                        )
+                    }
                         },
                 onClick = {
+                    if(selectedItem == it) return@NavigationItem
                     scope.launch {
-                        drawerState.apply {
+                        drawerState!!.apply {
                             if (isOpen) close()
                         }
                     }
-                    navigator.replace(ReabastecimentoListScreen())
+                    selectedItem = it
+                    navigator!!.replace(ReabastecimentoListScreen())
 
                 },
                 modifier = Modifier.padding(start = 16.dp, top = 6.dp)
             )
-            DrawerMenuItens(listOf(cadastroItem, gastosItem))
+            DrawerMenuItens(listOf(cadastroItem, gastosItem), selectedItem = selectedItem)
         }
     }
 
