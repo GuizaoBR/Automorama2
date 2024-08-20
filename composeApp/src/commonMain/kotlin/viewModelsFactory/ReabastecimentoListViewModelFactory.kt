@@ -5,8 +5,8 @@ import viewModels.ReabastecimentoListViewModel
 
 class ReabastecimentoListViewModelFactory():
     IReabastecimentoListViewModelFactory {
-    override fun create(): ReabastecimentoListViewModel {
-        return ReabastecimentoListViewModel()
+    override fun create(veiculoId: Long?): ReabastecimentoListViewModel {
+        return ReabastecimentoListViewModel(veiculoId)
     }
 
 }

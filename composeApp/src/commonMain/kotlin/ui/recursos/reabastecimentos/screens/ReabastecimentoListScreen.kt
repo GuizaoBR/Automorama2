@@ -17,14 +17,14 @@ import ui.reabastecimentos.ReabastecimentoList
 import ui.reabastecimentos.ReabastecimentoListUIState
 import viewModelsFactory.ReabastecimentoListViewModelFactory
 
-class ReabastecimentoListScreen : Screen, KoinComponent {
+class ReabastecimentoListScreen(val veiculoId: Long? = null) : Screen, KoinComponent {
 
 
     @Composable
     override fun Content() {
         val navigator: Navigator = LocalNavigator.currentOrThrow
         val reabastecimentoViewModelFactory: ReabastecimentoListViewModelFactory by inject()
-        val viewModel = rememberScreenModel {reabastecimentoViewModelFactory.create() }
+        val viewModel = rememberScreenModel {reabastecimentoViewModelFactory.create(veiculoId) }
 
 
         val uiState by viewModel.uiState.collectAsState(ReabastecimentoListUIState())

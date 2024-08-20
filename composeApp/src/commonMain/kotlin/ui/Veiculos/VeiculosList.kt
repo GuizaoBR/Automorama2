@@ -63,13 +63,13 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.theme.AutomoramaTheme
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun VeiculosListScreen(
     uiState: VeiculosListUiState,
     modifier: Modifier = Modifier,
     onNewVeiculoClick: () -> Unit = {},
     onVeiculoClick: (Veiculo) -> Unit = {},
+    onEditVeiculoClick: (Veiculo) -> Unit = {},
 ) {
 
 
@@ -115,7 +115,7 @@ fun VeiculosListScreen(
                             delay(500)
                             uiState.onDelete(veiculo)
                         }
-                    }, onVeiculoClick)
+                    }, onVeiculoClick, onEditVeiculoClick)
                 }
             }
         }
@@ -138,6 +138,7 @@ fun CardContentPreview() {
                         placa = "AAA-1234",
                         apelido = "Meu carro"
                     ),
+                    onEditVeiculoClick = {},
                     )
             }
         }
@@ -150,7 +151,8 @@ fun CardContent(
     veiculo: Veiculo,
     modifier: Modifier = Modifier,
     onDeleteClick: (Veiculo) -> Unit = {},
-    onVeiculoClick: (Veiculo) -> Unit = {}
+    onVeiculoClick: (Veiculo) -> Unit = {},
+    onEditVeiculoClick: (Veiculo) -> Unit
 ) {
     var expandedState by remember { mutableStateOf(false) }
     val rotationState by animateFloatAsState(
@@ -285,6 +287,16 @@ fun CardContent(
 
                         ) {
                             Text("Deletar")
+                        }
+                        Spacer(modifier = Modifier.size(8.dp))
+                        OutlinedButton(
+                            onClick = {
+                                onEditVeiculoClick(veiculo)
+                            },
+                            shape = RoundedCornerShape(50.dp)
+
+                        ) {
+                            Text("Editar")
                         }
                     }
                 }

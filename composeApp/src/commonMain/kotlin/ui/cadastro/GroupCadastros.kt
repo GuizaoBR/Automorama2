@@ -29,9 +29,7 @@ import ui.cadastro.screens.VeiculoListScreen
 
 @Composable
 fun GroupCadastros(resolution: Pair<Int, Int>, modifier: Modifier = Modifier){
-    var showBottom by remember { mutableStateOf(true) }
-    val onHideBottom = { showBottom = false }
-    val onShowBottomScreen = { showBottom = true }
+    val showBottom by remember { mutableStateOf(true) }
     Navigator(
         screen = VeiculoListScreen(),
     ) { navigator ->
@@ -45,44 +43,25 @@ fun GroupCadastros(resolution: Pair<Int, Int>, modifier: Modifier = Modifier){
                 },
                 label = "offset"
             )
-            var selectedItem by remember { mutableStateOf(NavigationItem(
-                name = "Veículos",
-                label = { Text("Veículos") },
-                icon = { Icon(Icons.Default.DirectionsCar, contentDescription = null) },
-                onClick = {
 
-                }
-            )) }
             val combustivelItem = NavigationItem(
                 name = "Combustíveis",
                 label = { Text("Combustíveis") },
                 icon = { Icon(Icons.Default.LocalGasStation, contentDescription = null) },
-                onClick = {
-                    if(selectedItem == it) return@NavigationItem
-                    selectedItem = it
-                    navigator.replace(
-                        CombustivelListScreen(
-                        )
-                    )
-                }
+                screen = CombustivelListScreen(),
             )
 
             val veiculoItem = NavigationItem(
                 name = "Veículos",
                 label = { Text("Veículos") },
                 icon = { Icon(Icons.Default.DirectionsCar, contentDescription = null) },
-                onClick = {
-                    if(selectedItem == it) return@NavigationItem
-                    selectedItem = it
-                    navigator.replace(
-                        VeiculoListScreen()
-                    )
-                }
+                screen = VeiculoListScreen(),
+
             )
 
 
             if (showBottom){
-                BottomBar(listOf(veiculoItem, combustivelItem), selectedItem,  modifier = Modifier.offset { offset })
+                BottomBar(listOf(veiculoItem, combustivelItem),  modifier = Modifier.offset { offset })
             }
         }) {
             SlideTransition(navigator, modifier= Modifier.padding(it))
@@ -94,7 +73,6 @@ fun GroupCadastros(resolution: Pair<Int, Int>, modifier: Modifier = Modifier){
 @Composable
 fun BottomBar(
     itens: List<NavigationItem>,
-    selectedItem: NavigationItem,
     modifier: Modifier = Modifier
 ) {
     val navigator = LocalNavigator.current
@@ -106,8 +84,7 @@ fun BottomBar(
         ) {
             NavigationBar(
                 itens = itens,
-                selectedItem = selectedItem,
-                modifier =modifier.fillMaxWidth()
+                modifier = modifier.fillMaxWidth()
             )
         }
     }

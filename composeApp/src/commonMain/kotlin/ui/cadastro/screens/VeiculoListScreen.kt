@@ -14,6 +14,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import ui.Veiculos.VeiculosListScreen
 import ui.Veiculos.VeiculosListUiState
+import ui.recursos.reabastecimentos.screens.ReabastecimentoListScreen
 import viewModelsFactory.VeiculosViewModelFactory
 
 class VeiculoListScreen(
@@ -25,6 +26,7 @@ class VeiculoListScreen(
     override fun Content() {
         val veiculosViewModelFactory: VeiculosViewModelFactory by inject()
         val navigator: Navigator = LocalNavigator.currentOrThrow
+
         val viewModel = rememberScreenModel {
             veiculosViewModelFactory.create()
         }
@@ -36,9 +38,12 @@ class VeiculoListScreen(
 
             },
             onVeiculoClick = {
-                navigator.push(VeiculoFormScreen(it.id))
+                navigator.parent?.push(ReabastecimentoListScreen(it.id))
 
             },
+            onEditVeiculoClick = {
+                navigator.push(VeiculoFormScreen(it.id))
+            }
 
         )
     }

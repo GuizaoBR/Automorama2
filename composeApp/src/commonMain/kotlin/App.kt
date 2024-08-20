@@ -82,8 +82,6 @@ class App() : KoinComponent {
                     lineHeight =  28.sp
                 )
             )
-            var selectedItem by remember { mutableStateOf(NavigationItem(name = "Cadastro", onClick = {}))}
-
             val cadastroItem = NavigationItem(
                 name = "Cadastro",
                 label = {
@@ -97,18 +95,8 @@ class App() : KoinComponent {
                         )
                     }
                         },
-                onClick = {
-                    if(selectedItem == it) return@NavigationItem
-                    scope.launch {
-                        drawerState!!.apply {
-                            if (isOpen) close()
-                        }
-                    }
+                screen = GroupCadastrosScreen(),
 
-                    selectedItem = it
-                    navigator!!.replace(ShowGroupScreen())
-
-                },
                 modifier = Modifier.padding(start = 16.dp, top = 6.dp)
             )
             val gastosItem = NavigationItem(
@@ -124,20 +112,17 @@ class App() : KoinComponent {
                         )
                     }
                         },
-                onClick = {
-                    if(selectedItem == it) return@NavigationItem
-                    scope.launch {
-                        drawerState!!.apply {
-                            if (isOpen) close()
-                        }
-                    }
-                    selectedItem = it
-                    navigator!!.replace(ReabastecimentoListScreen())
-
-                },
+                screen = ReabastecimentoListScreen(),
                 modifier = Modifier.padding(start = 16.dp, top = 6.dp)
             )
-            DrawerMenuItens(listOf(cadastroItem, gastosItem), selectedItem = selectedItem)
+
+            DrawerMenuItens(listOf(cadastroItem, gastosItem)) {
+                scope.launch {
+                    drawerState!!.apply {
+                        if (isOpen) close()
+                    }
+                }
+            }
         }
     }
 

@@ -20,7 +20,7 @@ import repositoryFactory.ReabastecimentoRepositoryFactory
 import repositoryFactory.VeiculoRepositoryFactory
 import ui.reabastecimentos.ReabastecimentoListUIState
 
-class ReabastecimentoListViewModel: ScreenModel, KoinComponent {
+class ReabastecimentoListViewModel(veiculoId: Long? = null): ScreenModel, KoinComponent {
 
     private val repositoryFactory: ReabastecimentoRepositoryFactory by inject()
     private val veiculoRepositoryFactory: VeiculoRepositoryFactory by inject()
@@ -32,6 +32,16 @@ class ReabastecimentoListViewModel: ScreenModel, KoinComponent {
     val uiState: StateFlow<ReabastecimentoListUIState> = _uiState.asStateFlow()
 
     init {
+        veiculoId?.let { veiculoId ->
+            screenModelScope.launch {
+                _uiState.update {
+                    repository.getReabastecimentoByVeiculo(veiculoId)
+                    val veiculo = veiculoRepository.getVeiculosById(veiculoId)
+                    it.copy(veiculo = veiculo,
+                        reabastecimentos = repository.reabastecimentos.value[veiculoId]?: listOf())
+                }
+            }
+        }
 
         _uiState.update {
             it.copy(veiculos = veiculoRepository.veiculos.value,
@@ -83,15 +93,6 @@ class ReabastecimentoListViewModel: ScreenModel, KoinComponent {
             }
         }
 
-        screenModelScope.launch {
-            repository.veiculo.collect{ updatedVeiculo ->
-                _uiState.update {
-                    it.copy(
-                        veiculo = updatedVeiculo
-                    )
-                }
-            }
-        }
     }
 
 }
