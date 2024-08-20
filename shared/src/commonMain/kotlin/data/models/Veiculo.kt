@@ -8,4 +8,11 @@ data class Veiculo(
     var placa: String = "",
     var apelido: String = "",
     var media: Double = 0.0
-)
+){
+    fun ShowIdentifier(): String{
+        if (apelido.isNotEmpty()){
+            return apelido
+        }
+        return "$modelo - $placa"
+    }
+}

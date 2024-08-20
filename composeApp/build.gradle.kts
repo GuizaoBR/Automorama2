@@ -1,4 +1,3 @@
-import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -32,7 +31,6 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            export(libs.io.github.hoc081098.kmp.viewmodel)
         }
     }
 
@@ -58,7 +56,6 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.material)
-            @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
             implementation(projects.shared)
             implementation (libs.androidx.material.icons.extended)
@@ -70,8 +67,6 @@ kotlin {
             implementation(libs.voyager.tab.navigator)
             implementation(libs.voyager.transitions)
 //            implementation(libs.voyager.hilt)
-            //api(libs.precompose.viewmodel)
-            api(libs.io.github.hoc081098.kmp.viewmodel)
             implementation(compose.ui)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.kotlinx.datetime)
@@ -100,9 +95,7 @@ android {
     buildFeatures {
         compose = true
     }
-//    composeOptions {
-//        this.kotlinCompilerExtensionVersion = "1.5.11-dev-k2.0.0-Beta4-21f5e479a96"
-//    }
+
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")

@@ -2,7 +2,6 @@ package viewModels
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.hoc081098.kmp.viewmodel.ViewModel
 import data.models.Veiculo
 import data.repositories.ReabastecimentoRepository
 import data.repositories.VeiculoRepository

@@ -1,4 +1,4 @@
-package ui.Combustiveis
+package ui.combustiveis
 
 import data.models.Combustivel
 

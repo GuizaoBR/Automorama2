@@ -1,11 +1,10 @@
 package germano.guilherme.automorama2.PreviewLayout
 
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import data.models.Veiculo
-import ui.Veiculos.VeiculosListScreen
-import ui.Veiculos.VeiculosListUiState
+import ui.veiculos.VeiculosListScreen
+import ui.veiculos.VeiculosListUiState
 import ui.theme.AutomoramaTheme
 
 @Preview

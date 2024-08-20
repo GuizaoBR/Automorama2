@@ -6,8 +6,8 @@ import data.models.Veiculo
 import di.deviceInfoModule
 import di.driverFactoryModule
 import di.initKoin
-import ui.Veiculos.VeiculosListScreen
-import ui.Veiculos.VeiculosListUiState
+import ui.veiculos.VeiculosListScreen
+import ui.veiculos.VeiculosListUiState
 
 fun main() = application {
 

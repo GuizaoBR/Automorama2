@@ -16,5 +16,6 @@ data class VeiculoFormUIState (
     val onApelidoChange: (String) -> Unit = {},
     val isValid: Boolean = false,
     val isPlateValid: Boolean = true,
+    val isApelidoValid: Boolean = true,
 
 )

@@ -3,7 +3,7 @@ package germano.guilherme.automorama2.PreviewLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import data.models.Veiculo
-import ui.Veiculos.AlertDeleteVeiculo
+import ui.veiculos.AlertDeleteVeiculo
 
 @Preview
 @Composable

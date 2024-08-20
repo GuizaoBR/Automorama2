@@ -78,7 +78,7 @@ class VeiculoFormViewModel(
                         it.copy(apelido = apelido)
                     }
                     _uiState.update {
-                        it.copy(isValid = checkIsValid())
+                        it.copy(isValid = checkIsValid(), isApelidoValid = !checkApelidoAlreadyExists(apelido))
                     }
 
                 },
@@ -117,12 +117,15 @@ class VeiculoFormViewModel(
     fun checkIsValid(): Boolean {
         return with(_uiState.value) {
             this.fabricante.isNotEmpty() && this.modelo.isNotEmpty() && this.anoModelo.isNotEmpty() && this.anoFabricacao.isNotEmpty() && this.placa.isNotEmpty()
-            && !checkPlateAlreadyExists(this.placa)
+            && !checkPlateAlreadyExists(this.placa) && !checkApelidoAlreadyExists(this.apelido)
         }
     }
 
     fun checkPlateAlreadyExists(placa: String): Boolean {
         return repository.veiculos.value.any { it.placa == placa && it.id != id }
+    }
+    fun checkApelidoAlreadyExists(apelido: String): Boolean {
+        return repository.veiculos.value.any { it.apelido.isNotEmpty() && it.apelido == apelido && it.id != id }
     }
     fun save() {
         with(_uiState.value) {

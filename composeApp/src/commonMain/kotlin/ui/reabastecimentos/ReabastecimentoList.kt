@@ -88,7 +88,7 @@ fun VeiculoDropDownTopAppBar(
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = secondaryDark
                         ),
-                        content = { Text(uiState.veiculo?.modelo ?: "Selecione") }
+                        content = { Text(uiState.veiculo?.ShowIdentifier() ?: "Selecione") }
                     )
                     DropdownMenu(
                         modifier = Modifier.align(Alignment.Center).fillMaxWidth(fraction = 0.7f),
@@ -101,7 +101,7 @@ fun VeiculoDropDownTopAppBar(
                                 uiState.onChangeVeiculo(veiculo)
                                 expanded = false
                             },
-                                text = { Text("${veiculo.fabricante} ${veiculo.modelo}")})
+                                text = { Text(veiculo.ShowIdentifier())})
                         }
                     }
                 Icon(

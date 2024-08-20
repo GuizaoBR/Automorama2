@@ -2,17 +2,15 @@ package viewModels
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.hoc081098.kmp.viewmodel.ViewModel
 import data.models.Reabastecimento
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import repositoryFactory.ReabastecimentoRepositoryFactory
 import repositoryFactory.VeiculoRepositoryFactory
-import ui.Veiculos.VeiculosListUiState
+import ui.veiculos.VeiculosListUiState
 
 class VeiculoViewModel() : ScreenModel, KoinComponent {
 
@@ -42,7 +40,7 @@ class VeiculoViewModel() : ScreenModel, KoinComponent {
                 }
                 _uiState.value = VeiculosListUiState(
                     veiculos = veiculosWithMedia,
-                    onDelete = { veiculo -> repository.deleteVeiculo(veiculo) }
+                    onDelete = { veiculo -> repository.deleteVeiculo(veiculo) },
                 )
             }
         }
