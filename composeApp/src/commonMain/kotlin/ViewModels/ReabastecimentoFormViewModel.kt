@@ -49,7 +49,7 @@ class ReabastecimentoFormViewModel(
             currentState.copy(
                 onValorTotalChange = { valorTotal ->
                     _uiState.update { it.copy(valorTotal = valorTotal, isValid = checkIsValid()) }
-                    if(_uiState.value.litro.isNotEmpty() && _uiState.value.litro != "\n" && _uiState.value.litro.toDouble() > 0 ){
+                    if(_uiState.value.litro.isNotEmpty() && _uiState.value.litro != "\n"  ){
                         val valorLitro = (_uiState.value.litro.toDoubleOrNull()?.let {
                             valorTotal.toDoubleOrNull()
                                 ?.div(it)

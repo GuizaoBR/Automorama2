@@ -31,6 +31,7 @@ import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import helpers.DecimalCommaTransformation
 
 import helpers.WindowSize
 import helpers.WindowSize.Companion.screenSizeWidth
@@ -139,6 +140,7 @@ fun ReabastecimentoForm(
                         TextField(
                             value = filterNumbersAndDecimal(quilometragemAnterior),
                             onValueChange = uiState.onQuilometragemAnteriorChange,
+                            visualTransformation = DecimalCommaTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             label = {
                                 Row(modifier = Modifier.fillMaxWidth()) {
@@ -175,6 +177,7 @@ fun ReabastecimentoForm(
                             value = filterNumbersAndDecimal(quilometragemAtual),
                             onValueChange = uiState.onQuilometragemAtualChange,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            visualTransformation = DecimalCommaTransformation(),
                             label = {
                                 Row(modifier = Modifier.fillMaxWidth()) {
                                     Icon(
@@ -209,6 +212,7 @@ fun ReabastecimentoForm(
                             value = filterNumbersAndDecimal(litro),
                             onValueChange = uiState.onLitroChange,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            visualTransformation = DecimalCommaTransformation(),
                             label = {
                                 Row(modifier = Modifier.fillMaxWidth()) {
                                     Icon(
@@ -243,6 +247,7 @@ fun ReabastecimentoForm(
                         TextField(
                             value = filterNumbersAndDecimal(valorTotal),
                             onValueChange = uiState.onValorTotalChange,
+                            visualTransformation = DecimalCommaTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             label = {
 
@@ -275,6 +280,7 @@ fun ReabastecimentoForm(
 
                         TextField(
                             value = filterNumbersAndDecimal(valorLitro),
+                            visualTransformation = DecimalCommaTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             onValueChange = uiState.onValorLitroChange,
                             label = {

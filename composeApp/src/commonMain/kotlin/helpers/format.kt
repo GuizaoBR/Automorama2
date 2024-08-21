@@ -1,13 +1,15 @@
 package helpers
 
 fun filterNumbersAndDecimal(text: String): String {
-    return text.filter { it.isDigit() || it == '.' || it == ',' }.replace(Regex("([.,])(\\1+)"), "$1") // Allow only one decimal point
+    return text
+        .filter { it.isDigit() || it =='.' || it == ',' }
+        .replace(Regex("([.,])(\\1+)"), "$1")
+        .replace(Regex("(\\d+)([.,])(\\d{0,2}).*"), "$1$2$3")
 }
 
 fun filterNumbers(text: String): String {
     return text.filter { it.isDigit() }
 }
-
 
 val dayRegex = Regex("^(0[1-9]|[12]\\d|3[01])$")
 val monthRegex = Regex("^(0[1-9]|1[0-2])$")
