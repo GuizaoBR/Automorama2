@@ -15,4 +15,8 @@ data class Veiculo(
         }
         return "$modelo - $placa"
     }
+    fun ShowMedia(): String{
+        return media.toString().replace(".", ",")
+    }
+
 }

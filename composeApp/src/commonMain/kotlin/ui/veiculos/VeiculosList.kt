@@ -262,7 +262,7 @@ fun CardContent(
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = "${veiculo.media} Km/L",
+                        text = "${veiculo.ShowMedia()} Km/L",
                         style = TextStyle.Default.copy(
                             fontWeight = FontWeight.Medium,
                             fontSize = 20.sp
