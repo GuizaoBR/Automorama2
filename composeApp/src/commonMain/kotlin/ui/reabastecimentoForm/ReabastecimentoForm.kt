@@ -190,7 +190,13 @@ fun ReabastecimentoForm(
 
 
                             },
-                            isError = quilometragemAtual.isEmpty(),
+                            isError = quilometragemAtual.isEmpty() || !uiState.isValidQuilometroAtual,
+                            supportingText = {
+                                if (!uiState.isValidQuilometroAtual) {
+                                    Text(text = "A quilometragem final deve ser maior que a quilometragem anterior")
+                                }
+
+                            },
                             modifier = modifier.onKeyEvent {
                                 if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
                                     focusManager.moveFocus(FocusDirection.Next)
@@ -199,6 +205,7 @@ fun ReabastecimentoForm(
                                     false
                                 }
                             }
+
                         )
 
                     }

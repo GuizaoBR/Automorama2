@@ -45,6 +45,14 @@ class ReabastecimentoFormViewModel(
             it.copy(veiculoId = veiculoId)
         }
 
+        val reabatecimentosVehicle = repository.reabastecimentos.value.values.flatten().filter {
+            it.veiculo.id == veiculoId
+        }
+        if(reabatecimentosVehicle.isNotEmpty()){
+            val reabastecimentoAnterior = reabatecimentosVehicle.maxBy { it.data }
+            _uiState.update { it.copy(quilometragemAnterior = reabastecimentoAnterior.quilometragemAtual.toString()) }
+        }
+
         _uiState.update { currentState ->
             currentState.copy(
                 onValorTotalChange = { valorTotal ->
@@ -58,22 +66,33 @@ class ReabastecimentoFormViewModel(
                     }
                 },
                 onValorLitroChange = { valorLitro ->
-                    _uiState.update { it.copy(valorLitro = valorLitro, isValid = checkIsValid()) }
+                    _uiState.update { it.copy(valorLitro = valorLitro) }
+                    _uiState.update { it.copy(isValid = checkIsValid()) }
+
                 },
                 onLitroChange = { litro ->
-                    _uiState.update { it.copy(litro = litro, isValid = checkIsValid()) }
+                    _uiState.update { it.copy(litro = litro) }
+                    _uiState.update { it.copy(isValid = checkIsValid()) }
+
                 },
                 onDataChange = { data ->
-                    _uiState.update { it.copy(data = data, isValid = checkIsValid()) }
+                    _uiState.update { it.copy(data = data) }
+                    _uiState.update { it.copy(isValid = checkIsValid()) }
                 },
                 onQuilometragemAnteriorChange = { quilometragemAnterior ->
-                    _uiState.update { it.copy(quilometragemAnterior = quilometragemAnterior, isValid = checkIsValid()) }
+                    _uiState.update { it.copy(quilometragemAnterior = quilometragemAnterior) }
+                    _uiState.update { it.copy(isValid = checkIsValid()) }
+
                 },
                 onQuilometragemAtualChange = { quilometragemAtual ->
-                    _uiState.update { it.copy(quilometragemAtual = quilometragemAtual, isValid = checkIsValid()) }
+                    _uiState.update { it.copy(quilometragemAtual = quilometragemAtual) }
+                    _uiState.update { it.copy(isValid = checkIsValid(), isValidQuilometroAtual = checkQuilometragemAtualBiggerThanAnterior()) }
+
                 },
                 onQuilometroLitroChange = { quilometroLitro ->
-                    _uiState.update { it.copy(quilometroLitro = quilometroLitro, isValid = checkIsValid()) }
+                    _uiState.update { it.copy(quilometroLitro = quilometroLitro) }
+                    _uiState.update { it.copy(isValid = checkIsValid()) }
+
                 },
                 onCombustivelChange = { combustivel ->
                     _uiState.update { it.copy(combustivel = combustivel) }
@@ -85,7 +104,6 @@ class ReabastecimentoFormViewModel(
 
         if (id != null) {
             screenModelScope.launch {
-                _uiState.update { it.copy(isLoading = true) }
                 val reabastecimento = repository.reabastecimentos.value.values.flatten().find {
                     it.id == id
                 }
@@ -102,11 +120,10 @@ class ReabastecimentoFormViewModel(
                             quilometragemAnterior = reabastecimento.quilometragemAnterior.toString(),
                             quilometragemAtual = reabastecimento.quilometragemAtual.toString(),
                             quilometroLitro = reabastecimento.quilometragemLitro.toString(),
-                            isLoading = false
                         )
                     }
                 } else {
-                    _uiState.update { it.copy(errorMessage = "Reabastecimento not found", isLoading = false) }
+                    _uiState.update { it.copy(errorMessage = "Reabastecimento not found") }
                 }
             }
         }
@@ -121,13 +138,24 @@ class ReabastecimentoFormViewModel(
                     data.isNotEmpty() &&
                     quilometragemAnterior.isNotEmpty() &&
                     quilometragemAtual.isNotEmpty() &&
-                    combustivel != null
+                    combustivel != null &&
+                    checkQuilometragemAtualBiggerThanAnterior()
         }
     }
 
+    fun checkQuilometragemAtualBiggerThanAnterior(): Boolean{
+        with(_uiState.value){
+            if(quilometragemAnterior.isNotEmpty() && quilometragemAtual.isNotEmpty()
+                && quilometragemAnterior.toDouble() >= quilometragemAtual.toDouble()){
+                return false
+            }
+        }
+        return true
+    }
+
+
     fun saveReabastecimento() {
         screenModelScope.launch {
-            _uiState.update { it.copy(isLoading = true)}
 
             with(_uiState.value) { // Use with(_uiState.value) here
                 val formatter = LocalDate.Format {
@@ -151,11 +179,8 @@ class ReabastecimentoFormViewModel(
                 try {
                     repository.saveReabastecimento(reabastecimentoToSave)
 
-                    // ... (Navigation/Success message logic)
                 } catch (e: Exception) {
                     _uiState.update { it.copy(errorMessage = "Error saving reabastecimento: ${e.message}") }
-                } finally {
-                    _uiState.update { it.copy(isLoading = false) }
                 }
             } // End of with(_uiState.value) block
         }

@@ -15,7 +15,6 @@ data class ReabastecimentoFormUIState(
     val quilometragemAtual: String = "",
     val quilometroLitro: String = "",
     val combustiveis: List<Combustivel> = emptyList(),
-    val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val topAppBarTitle: String = "",
     val isValid: Boolean = false,
@@ -29,4 +28,5 @@ data class ReabastecimentoFormUIState(
     val onCombustivelChange: (Combustivel?) -> Unit = {},
     val onVeiculoChange: (Veiculo) -> Unit = {},
     val onSaveClick: () -> Unit = {},
+    val isValidQuilometroAtual: Boolean = true,
 )
