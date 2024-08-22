@@ -161,24 +161,7 @@ fun ReabastecimentoList(
         topBar = { VeiculoDropDownTopAppBar(uiState) },
         floatingActionButton = { AnimatedFAB(uiState, newReabastecimento) },
     ) { padding ->
-//        AnimatedVisibility(
-//            visible = true,
-//            enter = fadeIn(animationSpec = tween(300)) + expandVertically(
-//                animationSpec = tween(
-//                    durationMillis = 3000,
-//                    easing = LinearOutSlowInEasing
-//                )
-//            ),
-//            exit = shrinkVertically(
-//                animationSpec = tween(
-//                    durationMillis = 500,
-//                    easing = LinearOutSlowInEasing
-//                )
-//            ) + fadeOut(animationSpec = tween(300))
-//        ){
-//
-//
-//        }
+
         Box(Modifier.fillMaxSize()) {
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(300.dp),

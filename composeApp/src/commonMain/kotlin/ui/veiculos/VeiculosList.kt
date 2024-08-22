@@ -92,7 +92,7 @@ fun VeiculosListScreen(
         )
 
         LazyVerticalGrid(columns = GridCells.Adaptive(300.dp)) {
-            items(uiState.veiculos) { veiculo ->
+            items(uiState.veiculos, key = { veiculo -> veiculo.id!! }) { veiculo ->
                 val visibleState = remember { mutableStateOf(true) }
                 AnimatedVisibility(
                     visible = visibleState.value, // Controla se o item está visível

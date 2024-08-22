@@ -90,7 +90,7 @@ fun CombustivelListScreen(
         )
 
         LazyVerticalGrid(columns = GridCells.Adaptive(200.dp)) {
-            items(uiState.combustiveis) { combustivel ->
+            items(uiState.combustiveis, key = { combustivel -> combustivel.id!! }) { combustivel ->
                 val visibleState = remember { mutableStateOf(true) }
                 AnimatedVisibility(
                     visible = visibleState.value, // Controla se o item está visível
