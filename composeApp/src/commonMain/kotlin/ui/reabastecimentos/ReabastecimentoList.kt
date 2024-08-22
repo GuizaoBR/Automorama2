@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.Reabastecimento
 import data.models.Veiculo
+import helpers.toStringeWithCommaFormat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -377,7 +378,7 @@ fun CardContent(
                         Spacer(modifier = Modifier.padding(start = 8.dp))
                         Box(Modifier.align(Alignment.CenterVertically)) {
                             Text(
-                                text = "${reabastecimento.quilometragemLitro} km/l",
+                                text = "${reabastecimento.quilometragemLitro.toStringeWithCommaFormat()} km/l",
                                 style = TextStyle.Default.copy(
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Medium
@@ -392,7 +393,7 @@ fun CardContent(
                     ) {
                         Box(Modifier.align(Alignment.CenterVertically)) {
                             Text(
-                                text = "R$ ${reabastecimento.valorTotal}",
+                                text = "R$ ${reabastecimento.valorTotal.toStringeWithCommaFormat()}",
                                 style = TextStyle.Default.copy(
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Medium
@@ -409,7 +410,7 @@ fun CardContent(
                         Box(Modifier.align(Alignment.CenterVertically)) {
 
                             Text(
-                                text = "R$ ${reabastecimento.valorLitro} /l",
+                                text = "R$ ${reabastecimento.valorLitro.toStringeWithCommaFormat()} /l",
                                 style = TextStyle.Default.copy(
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Medium
@@ -432,7 +433,7 @@ fun CardContent(
                     Spacer(modifier = Modifier.padding(start = 8.dp))
                     Box(Modifier.align(Alignment.CenterVertically)) {
                         Text(
-                            text = "${reabastecimento.quilometragemAtual - reabastecimento.quilometragemAnterior} Km"
+                            text = "${(reabastecimento.quilometragemAtual - reabastecimento.quilometragemAnterior).toStringeWithCommaFormat()} Km"
                         )
                     }
                 }

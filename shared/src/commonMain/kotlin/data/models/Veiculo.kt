@@ -1,4 +1,7 @@
 package data.models
+
+import helpers.toStringeWithCommaFormat
+
 data class Veiculo(
     val id: Long? = 0,
     var fabricante: String = "",
@@ -16,7 +19,7 @@ data class Veiculo(
         return "$modelo - $placa"
     }
     fun ShowMedia(): String{
-        return media.toString().replace(".", ",")
+        return media.toStringeWithCommaFormat()
     }
 
 }

@@ -44,3 +44,6 @@ fun String.chekDateValidWithouScape(): Boolean{
     }
 }
 
+fun Double.toStringeWithCommaFormat(): String{
+    return this.toString().replace(".", ",")
+}

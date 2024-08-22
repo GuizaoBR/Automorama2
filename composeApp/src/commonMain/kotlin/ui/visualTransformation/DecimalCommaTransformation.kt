@@ -1,4 +1,4 @@
-package helpers
+package ui.visualTransformation
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
