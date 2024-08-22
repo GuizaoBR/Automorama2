@@ -3,6 +3,7 @@ package viewModels
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import data.models.Reabastecimento
+import helpers.round
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -65,7 +66,7 @@ class VeiculoViewModel() : ScreenModel, KoinComponent {
 
         val totalMedia = reabastecimentos.sumOf { it.quilometragemLitro }
         val qtd = reabastecimentos.count()
-        return if (qtd > 0) totalMedia / qtd else 0.0
+        return if (qtd > 0) (totalMedia / qtd).round(2) else 0.0
     }
 
 
