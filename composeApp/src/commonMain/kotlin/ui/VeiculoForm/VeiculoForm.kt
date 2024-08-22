@@ -18,6 +18,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
@@ -45,10 +47,12 @@ fun VeiculoForm(
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBarSave(title = uiState.topAppBarTitle,
+            TopAppBarSave(
+                title = uiState.topAppBarTitle,
                 onBack = onBackClick,
                 onSave = onSaveClick,
-                isValid = uiState.isValid,)
+                isValid = uiState.isValid,
+            )
         },
         content = { innerPadding ->
             CardContent(uiState, modifier.padding(innerPadding), onSaveClick)
@@ -127,6 +131,11 @@ private fun CardContent(
 
             val focusManager = LocalFocusManager.current
             val (modeloFocus, anoFabricacaoFocus, anoModeloFocus, placaFocus, apelidoFocus) = FocusRequester.createRefs()
+            var focused by mutableStateOf(false)
+            var anoFabricacaoFocused by mutableStateOf(false)
+            var anoModeloFocused by mutableStateOf(false)
+            var placaFocused by mutableStateOf(false)
+            var apelidoFocused by mutableStateOf(false)
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(24.dp, Alignment.Top),
@@ -151,13 +160,11 @@ private fun CardContent(
                     modifier = Modifier
                         .focusable()
                         .onKeyEvent {
-                        if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
-                            focusManager.moveFocus(FocusDirection.Next)
+                            if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
+                                modeloFocus.requestFocus()
+                            }
                             true
-                        } else {
-                            false
                         }
-                    }
                 )
                 OutlinedTextField(
                     value = modelo,
@@ -172,16 +179,20 @@ private fun CardContent(
                     }),
                     isError = uiState.modelo.isEmpty(),
                     modifier = Modifier
-                        .focusable()
                         .focusRequester(modeloFocus)
-                        .onKeyEvent {
-                        if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
-                            focusManager.moveFocus(FocusDirection.Next)
-                            true
-                        } else {
-                            false
+                        .onFocusChanged {
+                            if (it.isFocused && !focused) {
+                                focused = true
+                                return@onFocusChanged
+                            }
                         }
-                    }
+                        .onKeyEvent {
+                            if ((it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) && !focused) {
+                                anoFabricacaoFocus.requestFocus()
+                            }
+                            focused = false
+                            true
+                        }
                 )
                 composable {
                     OutlinedTextField(
@@ -191,22 +202,29 @@ private fun CardContent(
                         label = {
                             Text("Ano Fabricação")
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        ),
                         keyboardActions = KeyboardActions(onNext = {
                             anoModeloFocus.requestFocus()
                         }),
                         isError = uiState.anoFabricacao.isEmpty(),
                         modifier = Modifier
-                            .focusable()
                             .focusRequester(anoFabricacaoFocus)
-                            .onKeyEvent {
-                            if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
-                                focusManager.moveFocus(FocusDirection.Next)
-                                true
-                            } else {
-                                false
+                            .onFocusChanged {
+                                if (it.isFocused && !anoFabricacaoFocused) {
+                                    anoFabricacaoFocused = true
+                                    return@onFocusChanged
+                                }
                             }
-                        }
+                            .onKeyEvent {
+                                if ((it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) && !anoFabricacaoFocused) {
+                                    anoModeloFocus.requestFocus()
+                                }
+                                anoFabricacaoFocused = false
+                                true
+                            }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     OutlinedTextField(
@@ -216,22 +234,29 @@ private fun CardContent(
                         label = {
                             Text("Ano Modelo")
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        ),
                         keyboardActions = KeyboardActions(onNext = {
                             placaFocus.requestFocus()
                         }),
                         isError = uiState.anoModelo.isEmpty(),
                         modifier = Modifier
-                            .focusable()
                             .focusRequester(anoModeloFocus)
-                            .onKeyEvent {
-                            if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
-                                focusManager.moveFocus(FocusDirection.Next)
-                                true
-                            } else {
-                                false
+                            .onFocusChanged {
+                                if (it.isFocused && !focused) {
+                                    anoModeloFocused = true
+                                    return@onFocusChanged
+                                }
                             }
-                        }
+                            .onKeyEvent {
+                                if ((it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) && !anoModeloFocused) {
+                                    placaFocus.requestFocus()
+                                }
+                                anoModeloFocused = false
+                                true
+                            }
                     )
 
                 }
@@ -258,16 +283,20 @@ private fun CardContent(
                         }
                     },
                     modifier = Modifier
-                        .focusable()
                         .focusRequester(placaFocus)
-                        .onKeyEvent {
-                        if (it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) {
-                            focusManager.moveFocus(FocusDirection.Next)
-                            true
-                        } else {
-                            false
+                        .onFocusChanged {
+                            if (it.isFocused && !placaFocused) {
+                                placaFocused = true
+                                return@onFocusChanged
+                            }
                         }
-                    }
+                        .onKeyEvent {
+                            if ((it.key == Key.Enter || it.key == Key.Tab || it.key == Key.NumPadEnter) && !placaFocused) {
+                                apelidoFocus.requestFocus()
+                            }
+                            placaFocused = false
+                            true
+                        }
 
                 )
                 OutlinedTextField(
@@ -282,7 +311,7 @@ private fun CardContent(
                         focusManager.clearFocus()
                         if (uiState.isValid) onSaveClick()
                     }),
-                    isError =  !uiState.isApelidoValid,
+                    isError = !uiState.isApelidoValid,
                     supportingText = {
                         if (!uiState.isApelidoValid) {
                             Text(
@@ -294,8 +323,14 @@ private fun CardContent(
                         }
                     },
                     modifier = Modifier
-                        .focusable()
                         .focusRequester(apelidoFocus)
+                        .onFocusChanged {
+                            if (it.isFocused && !apelidoFocused) {
+                                apelidoFocused = true
+                                return@onFocusChanged
+                            }
+                            apelidoFocused = false
+                        }
                 )
             }
         }
