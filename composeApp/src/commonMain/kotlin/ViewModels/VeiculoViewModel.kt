@@ -30,17 +30,25 @@ class VeiculoViewModel() : ScreenModel, KoinComponent {
     }
 
     private fun observeData() {
-        screenModelScope.launch{
+        screenModelScope.launch {
             repository.veiculos.collect { veiculos ->
                 val veiculosWithMedia = veiculos.map { veiculo ->
                     reabastecimentoRepository.getReabastecimentoByVeiculo(veiculo.id!!)
-                    val reabastecimentosVeiculo = reabastecimentoRepository.reabastecimentos.value[veiculo.id] ?: emptyList()
+                    val reabastecimentosVeiculo =
+                        reabastecimentoRepository.reabastecimentos.value[veiculo.id] ?: emptyList()
                     val mediaCombustivel = calculateMediaCombustivel(reabastecimentosVeiculo)
                     veiculo.copy(media = mediaCombustivel)
                 }
                 _uiState.value = VeiculosListUiState(
                     veiculos = veiculosWithMedia,
-                    onDelete = { veiculo -> repository.deleteVeiculo(veiculo) },
+                    onDelete = { veiculo ->
+                        val hasReabastecimentos =
+                            reabastecimentoRepository.reabastecimentos.value.containsKey(veiculo.id)
+                        if (hasReabastecimentos) {
+                            reabastecimentoRepository.deleteReabastecimentoByVeiculo(veiculo.id!!)
+                        }
+                        repository.deleteVeiculo(veiculo)
+                    },
                 )
             }
         }
