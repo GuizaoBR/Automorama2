@@ -25,7 +25,7 @@ class ReabastecimentoRepository(driver: SqlDriver) {
 
     fun getReabastecimentoByVeiculo(veiculoId: Long) {
         val reabastecimentos = database.getReabastecimetoByVeiculo(veiculoId).sortedBy { it.data }
-        _reabastecimentos.update { it + (veiculoId to reabastecimentos) }
+        if (reabastecimentos.isNotEmpty())  _reabastecimentos.update { it + (veiculoId to reabastecimentos) }
     }
 
     fun saveReabastecimento(reabastecimento: Reabastecimento) {
@@ -52,11 +52,29 @@ class ReabastecimentoRepository(driver: SqlDriver) {
     }
 
     fun deleteReabastecimento(id: Long) {
-        database.deleteReabastecimentio(id)
+        database.deleteReabastecimento(id)
         _reabastecimentos.update { map ->
             map.mapValues { (veiculoId, reabastecimentos) ->
                 reabastecimentos.filterNot { it.id == id }
             }
         }
     }
+
+    fun deleteReabastecimentoByVeiculo(veiculoId: Long) {
+        database.deleteReabastecimentoByVeiculo(veiculoId)
+        _reabastecimentos.update { map ->
+            map.filterNot { it.key == veiculoId }
+        }
+    }
+
+    fun deleteReabastecimentoByCombustivel(combustivelId: Long) {
+        database.deleteReabastecimentoByCombustivel(combustivelId)
+        _reabastecimentos.update { map ->
+            map.mapValues { (veiculoId, reabastecimentos) ->
+                reabastecimentos.filterNot { it.combustivel.id == combustivelId }
+            }
+        }
+    }
+
+    fun checkReabastecimentoByCombustivel(combustivelId: Long) : Boolean  = database.checkReabastecimentoByCombustivel(combustivelId)
 }

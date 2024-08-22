@@ -13,8 +13,6 @@ SELECT id FROM Combustiveis ORDER BY id DESC LIMIT 1;
 deleteCombustivei:
 DELETE FROM Combustiveis WHERE  id = ?;
 
-
-
 updateCombustivei:
 UPDATE Combustiveis
 SET  nome = :nome

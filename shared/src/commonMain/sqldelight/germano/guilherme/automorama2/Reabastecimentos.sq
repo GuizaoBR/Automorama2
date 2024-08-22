@@ -18,6 +18,15 @@ SELECT id FROM Reabastecimentos ORDER BY id DESC LIMIT 1;
 deleteReabastecimento:
 DELETE FROM Reabastecimentos WHERE  id = ?;
 
+deleteReabastecimentosByVeiculo:
+DELETE FROM Reabastecimentos WHERE  veiculoId = :veiculoId;
+
+deleteReabastecimentosByCombustivel:
+DELETE FROM Reabastecimentos WHERE  combustivelId = :combustivelId;
+
+checkReabastecimentoByCombustivel:
+SELECT 1 FROM Reabastecimentos Reabastecimentos WHERE combustivelId = :combustivelId LIMIT 1;
+
 updateReabastecimento:
 UPDATE Reabastecimentos
 SET  combustivelId = :combustivelId, veiculoId = :veiculoId, valorTotal = :valorToral, valorLitro = :valorLitro, litro = :litro, data = :data

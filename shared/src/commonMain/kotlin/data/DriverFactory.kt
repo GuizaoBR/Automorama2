@@ -101,7 +101,13 @@ fun Automorama2Database.updateReabastecimento(reabastecimento: Reabastecimento){
         reabastecimento.id?: 0
     )
 }
-fun Automorama2Database.deleteReabastecimentio(id: Long) = reabastecimentosQueries.deleteReabastecimento(id)
+fun Automorama2Database.deleteReabastecimento(id: Long) = reabastecimentosQueries.deleteReabastecimento(id)
+
+fun Automorama2Database.deleteReabastecimentoByVeiculo(veiculoId: Long) = reabastecimentosQueries.deleteReabastecimentosByVeiculo(veiculoId)
+
+fun Automorama2Database.deleteReabastecimentoByCombustivel(combustivelId: Long) = reabastecimentosQueries.deleteReabastecimentosByCombustivel(combustivelId)
+
+fun Automorama2Database.checkReabastecimentoByCombustivel(combustivelId: Long): Boolean = reabastecimentosQueries.checkReabastecimentoByCombustivel(combustivelId).executeAsOne() == 1L
 
 fun Automorama2Database.setReabastecimento(reabastecimento: Reabastecimento): Long{
     reabastecimentosQueries.insertReabastecimento(
