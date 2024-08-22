@@ -1,19 +1,37 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Desktop, Server.
+# Automorama 
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+Esse é um projeto para estudo do Compose Multiplatform.
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+O objetivo dele é ser um aplicativo para controle de gastos do seu veículo. Atualmente só é possivel adicionar abastecimentos, mas estão nos planos adicionar mais recursos.
 
-* `/server` is for the Ktor server application.
-
-* `/shared` is for the code that will be shared between all targets in the project.
-  The most important subfolder is `commonMain`. If preferred, you can add code to the platform-specific folders here too.
+Essa primeira versão estável teve como objetivo criar um aplicativo simples mas que atenda bem todas as plataformas com um layout único e responsivo.
 
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+Mobile | Desktop
+:-:|:-:
+![android](assets/androidVideo.gif)  |  ![desktop](assets/desktopVideo.gif)
+
+
+# :computer: Plataformas Suportadas - testadas
+
+ Plataforma | testada       
+:-:|:-:|
+Android  | :heavy_check_mark: 
+IOS      | :heavy_check_mark: 
+Windows  | :heavy_check_mark: 
+MACOS    | :heavy_check_mark:
+Linux    | :x:
+
+
+
+# :hammer_and_wrench: Futuras funcionalidades
+
+Recursos |
+:-------------------------:
+Cadastros de gastos gerais |
+Biometria ao entrar no aplicativo |
+Cadastrar uma imagem do veículo |
+Sincronismo entre plataformas |
+
+
+
