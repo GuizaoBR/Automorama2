@@ -143,10 +143,11 @@ class ReabastecimentoFormViewModel(
         }
     }
 
-    fun checkQuilometragemAtualBiggerThanAnterior(): Boolean{
-        with(_uiState.value){
-            if(quilometragemAnterior.isNotEmpty() && quilometragemAtual.isNotEmpty()
-                && quilometragemAnterior.toDouble() >= quilometragemAtual.toDouble()){
+    fun checkQuilometragemAtualBiggerThanAnterior(): Boolean {
+        with(_uiState.value) {
+            val anterior = quilometragemAnterior.toDoubleOrNull()
+            val atual = quilometragemAtual.toDoubleOrNull()
+            if (anterior != null && atual != null && anterior >= atual) {
                 return false
             }
         }
