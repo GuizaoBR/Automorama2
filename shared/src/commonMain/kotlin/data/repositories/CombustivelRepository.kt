@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 class CombustivelRepository(driver: SqlDriver) {
     companion object {
         private val _combustiveis =
-            MutableStateFlow<MutableList<Combustivel>>(mutableListOf())
+            MutableStateFlow<List<Combustivel>>(emptyList())
     }
 
     val combustiveis get() = _combustiveis.asStateFlow()
@@ -29,26 +29,19 @@ class CombustivelRepository(driver: SqlDriver) {
             if(combustivel.id == null) {
                 val id = database.setCombustivel(combustivel)
                 val newCombustivel = combustivel.copy(id = id)
-                list.add(newCombustivel)
+                list + newCombustivel
             } else {
                 database.updateCombustivel(combustivel)
-                list.find {
-                    it.id == combustivel.id
-                }?.let {
-                    it.nome == combustivel.nome
-                }
-            }
-            list
+                list.map { if (it.id == combustivel.id) combustivel else it}}
         }
     }
     
 
     
     fun deleteCombustivel(combustivel: Combustivel) {
+        database.deleteCombustivel(combustivel.id!!)
          _combustiveis.update { list ->
-             database.deleteCombustivel(combustivel.id!!)
-             list.remove(combustivel)
-             list
+             list - combustivel
          }
     }
 
